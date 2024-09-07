@@ -13,9 +13,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+<<<<<<< HEAD
       
       - name: "CD into project folder"
         run: cd game
+=======
+>>>>>>> 983e78e46448d99d09fee2de8b5a9aa904191bb7
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -23,6 +26,12 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
+<<<<<<< HEAD
+=======
+      - name: "CD into project folder"
+        run: cd game
+
+>>>>>>> 983e78e46448d99d09fee2de8b5a9aa904191bb7
       - name: Build project
         run: npm run build
 
