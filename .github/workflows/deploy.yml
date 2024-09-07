@@ -14,9 +14,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: CD into game folder
-        run: cd game
-
       - name: Setup Node
         uses: actions/setup-node@v3
 
