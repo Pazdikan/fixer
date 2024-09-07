@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      
-      - name: "CD into project folder"
+
+      - name: CD into game folder
         run: cd game
 
       - name: Setup Node
