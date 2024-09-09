@@ -11,5 +11,11 @@ The best way to help right now is to play the game and fill out [issues](https:/
 
 All contributions will be acknowledged in the game. Thanks in advance!
 
-##### Disclaimer
+# Tech stack
+The tech stack is pretty basic:
+[Vite](https://vitejs.dev/) - Build
+[Preact](https://preactjs.com/) - UI
+[TailwindCSS](https://tailwindcss.com/) - Style
+
+# Disclaimer
 This game is not affiliated with or endorsed by R. Talsorian Games, CD Projekt RED, or any related properties. They did not invent the concept of a fixer, which has appeared in various narratives long before. Since the game takes place in similar settings, any similarities in naming, characters, and other elements are purely coincidental.
