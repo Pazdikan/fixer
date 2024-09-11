@@ -1,12 +1,20 @@
+import InfoBanner from './components/InfoBanner';
+import GameHomePage from './pages/GameHomePage';
 import WelcomeScreen from './pages/WelcomePage'
 
 export function App() {
-  const isPlayerNew: boolean = true;
+  const isPlayerNew: boolean = JSON.parse(window.localStorage.getItem("isPlayerNew") || "true");
 
   return (
     <>
        {
-        isPlayerNew ? WelcomeScreen() : <p>Game</p>
+        isPlayerNew ? WelcomeScreen() : (
+          <>
+            {InfoBanner()}
+            {GameHomePage()}
+          </>
+          
+        )
        }
     </>
   )
