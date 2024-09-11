@@ -1,5 +1,5 @@
 # What's planned for the game?
-You'll play as a [fixer](https://en.wikipedia.org/wiki/Fixer_(person)). Starting out unknown, you’ll use social media to find people in need of help. You’ll complete your first job (code name: gig) to earn some recognition (code name: creed).
+You'll play as a [fixer](https://en.wikipedia.org/wiki/Fixer_(person)). Starting out unknown, you’ll use social media to find people in need of help. You’ll complete your first job (code name: gig) to earn some recognition (code name: cred).
 
 Eventually, people will start reaching out to you instead. You can also build your own team of mercenaries - individuals willing to take on dirty jobs for cash. Each human in this generated world will have unique skills, traits and personalities.
 
