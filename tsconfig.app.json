@@ -29,8 +29,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src"],
-  "exclude": [
-    "./src/components/ui",
-  ]
+  "include": ["src"]
 }
