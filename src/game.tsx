@@ -9,10 +9,10 @@ export function App() {
     <>
        {
         isPlayerNew ? WelcomeScreen() : (
-          <>
+          <div className={"flex flex-col h-screen"}>
             {InfoBanner()}
             {GameHomePage()}
-          </>
+          </div>
         )
        }
     </>
