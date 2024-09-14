@@ -18,7 +18,7 @@ The best way to help right now is to play the game and either report new issues 
 All contributors will be acknowledged in the game. Thanks in advance!
 
 # Tech stack
-[Vite](https://vitejs.dev/) - Build, [Preact](https://preactjs.com/) - UI, [TailwindCSS](https://tailwindcss.com/) - Styling
+[Vite](https://vitejs.dev/), [Preact](https://preactjs.com/), [Shadcn/ui](https://ui.shadcn.com/), [TailwindCSS](https://tailwindcss.com/)
 
 # Why keep this repository public?
 Why not? The game probably won't get much attention, but if someone finds it, they might want to help by playtesting or even contributing.
