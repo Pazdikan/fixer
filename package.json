@@ -20,7 +20,8 @@
     "preact": "^10.23.1",
     "react-i18next": "^15.0.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "translation-check": "^1.1.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.0",
