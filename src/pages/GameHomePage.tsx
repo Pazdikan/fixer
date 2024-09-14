@@ -49,23 +49,23 @@ export default function GameHomePage() {
             className={`w-64 bg-gray-800 text-white p-4 fixed lg:static h-full z-30 flex flex-col justify-between transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
           >
             <div>
-              <h1 className="text-2xl font-bold mb-4">Fixer Simulator</h1>
+              <h1 className="text-2xl font-bold mb-4">{t('game_name')}</h1>
               <nav>
                 <ul className="space-y-2">
-                  <li><a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">Home</a></li>
-                  <li><a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">Database</a></li>
+                  <li><a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">{t('page_title_home')}</a></li>
+                  <li><a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">{t('page_title_database')}</a></li>
                 </ul>
               </nav>
             </div>
 
             <div className="flex justify-center space-x-4 mb-4">
-              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label="Debug Mode">
+              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('debug_mode_title')}>
                 <FlaskConical />
               </button>
-              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label="Settings">
+              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('settings_title')}>
                 <Bolt />
               </button>
-              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label="Account">
+              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('account_title')}>
                 <User />
               </button>
             </div>
@@ -74,13 +74,13 @@ export default function GameHomePage() {
           <div className="flex flex-col flex-1">
             {/* Top Bar */}
             <header className="bg-white shadow-md p-4 flex justify-between items-center">
-              <h1 className="text-xl font-bold">Home</h1>
+              <h1 className="text-xl font-bold">{t('page_title_home')}</h1>
               <div className="flex items-center">
                 <button
                   ref={toggleButtonRef}
                   onClick={toggleSidebar}
                   className="lg:hidden mr-4"
-                  aria-label="Toggle Sidebar"
+                  aria-label={t('toggle_sidebar_title')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -92,7 +92,7 @@ export default function GameHomePage() {
             {/* Main Content Area */}
             <main className="flex-1 p-6 overflow-auto">
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">Welcome to the Fixer Simulator</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('welcome_notice')}</h3>
                 <div className="text-gray-600">
                   <p>{t('newNotifications', { count: 0 })}</p>
                   <p>{t('newNotifications', { count: 1 })}</p>

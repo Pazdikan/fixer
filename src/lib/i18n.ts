@@ -5,6 +5,7 @@ import { initReactI18next  } from 'react-i18next';
 import { i18nextPlugin } from 'translation-check'
 
 import translation_en from "../../locales/en/translation.json";
+import translation_pl from "../../locales/pl/translation.json";
 
 i18n
   .use(ICU)
@@ -18,6 +19,9 @@ i18n
     resources: {
         en: {
             translation: translation_en
+        },
+        pl: {
+          translation: translation_pl
         }
     },
   });

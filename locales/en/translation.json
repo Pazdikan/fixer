@@ -1,3 +1,13 @@
 {
-    "newNotifications": "{count, plural, =0 {You have no new notifications.} one {You have 1 new notification.} other {You have {count} new notifications.}}"
+  "newNotifications": "{count, plural, =0 {You have no new notifications.} one {You have 1 new notification.} other {You have {count} new notifications.}}",
+  "game_name": "Fixer Simulator",
+  "page_title_home": "Home",
+  "page_title_database": "Database",
+  "debug_mode_title": "Debug Mode",
+  "settings_title": "Settings",
+  "account_title": "Account",
+  "toggle_sidebar_title": "Toggle Sidebar",
+  "welcome_notice": "Welcome home",
+  "view_on_github": "View on GitHub",
+  "early_development_notice": "This game is in early development"
 }

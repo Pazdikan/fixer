@@ -1,7 +1,9 @@
 import { useState } from 'preact/hooks'
+import { useTranslation } from 'react-i18next';
 
 export default function InfoBanner() {
   const [isVisible, setIsVisible] = useState(true)
+  const { t } = useTranslation();
 
   if (!isVisible) return null
 
@@ -22,7 +24,7 @@ export default function InfoBanner() {
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
           />
         </svg>
-        <span className="font-medium text-sm">This game is in early development</span>
+        <span className="font-medium text-sm">{t('early_development_notice')}</span>
       </div>
       <div className="flex items-center">
         <a
@@ -31,7 +33,7 @@ export default function InfoBanner() {
           rel="noopener noreferrer"
           className="flex items-center text-sm font-medium text-red-700 hover:text-red-900 transition-colors duration-200"
         >
-          View on GitHub
+          {t('view_on_github')}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 ml-1"

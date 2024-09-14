@@ -1,0 +1,13 @@
+{
+  "account_title": "Konto",
+  "debug_mode_title": "Tryb debugowania",
+  "game_name": "Symulator Fixera",
+  "newNotifications": "{count, plural, =0 {Nie masz nowych powiadomień.} one {Masz 1 nowe powiadomienie.} other {Masz {count} nowych powiadomień.}}",
+  "page_title_database": "Baza danych",
+  "page_title_home": "Strona główna",
+  "settings_title": "Ustawienia",
+  "toggle_sidebar_title": "Przełącz pasek boczny",
+  "welcome_notice": "Witamy w domu",
+  "early_development_notice": "Ta gra jest na wczesnym etapie rozwoju",
+  "view_on_github": "Zobacz na GitHubie"
+}
