@@ -1,0 +1,3 @@
+{
+    "newNotifications": "{count, plural, =0 {You have no new notifications.} one {You have 1 new notification.} other {You have {count} new notifications.}}"
+}

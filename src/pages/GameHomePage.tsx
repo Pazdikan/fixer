@@ -1,10 +1,13 @@
 import { Bolt, FlaskConical, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 
 export default function TextGameLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const { t } = useTranslation();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -89,9 +92,11 @@ export default function TextGameLayout() {
         <main className="flex-1 p-6 overflow-auto">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-4">Welcome to the Fixer Simulator</h3>
-            <p className="text-gray-600">
-              This is where the game will be bruh
-            </p>
+            <div className="text-gray-600">
+              <p>{t('newNotifications', { count: 0})}</p>
+              <p>{t('newNotifications', { count: 1})}</p>
+              <p>{t('newNotifications', { count: 20})}</p>
+            </div>
           </div>
         </main>
       </div>
