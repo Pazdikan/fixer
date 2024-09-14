@@ -4,8 +4,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next  } from 'react-i18next';
 import { i18nextPlugin } from 'translation-check'
 
-import translation_en from "../../locales/en/translation.json";
-import translation_pl from "../../locales/pl/translation.json";
+import translation_en from "../../locales/en.json";
+import translation_pl from "../../locales/pl.json";
 
 i18n
   .use(ICU)
