@@ -1,6 +1,8 @@
 import { Bolt, FlaskConical, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
+import SettingsModal from '@/components/SettingsModal';
+import { App } from '@/components/game/game';
 
 export default function GameHomePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -62,9 +64,7 @@ export default function GameHomePage() {
               <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('debugMode')}>
                 <FlaskConical />
               </button>
-              <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('settings')}>
-                <Bolt />
-              </button>
+              <SettingsModal />
               <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('profile')}>
                 <User />
               </button>
@@ -91,14 +91,7 @@ export default function GameHomePage() {
 
             {/* Main Content Area */}
             <main className="flex-1 p-6 overflow-auto">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">{t('welcomeNotice')}</h3>
-                <div className="text-gray-600">
-                  <p>{t('newNotifications', { count: 0 })}</p>
-                  <p>{t('newNotifications', { count: 1 })}</p>
-                  <p>{t('newNotifications', { count: 20 })}</p>
-                </div>
-              </div>
+              <App />
             </main>
           </div>
         </div>
