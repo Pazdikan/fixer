@@ -1,7 +1,7 @@
 // GameContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { GameStateManager } from './game-state-manager';
-import { GameState, initialState, GameContextType } from '../../types/game-state';
+import { GameState, GameContextType } from '../../types/game-state';
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
 

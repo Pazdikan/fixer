@@ -1,7 +1,7 @@
-import { Bolt, FlaskConical, User } from 'lucide-react';
+import { FlaskConical, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
-import SettingsModal from '@/components/SettingsModal';
+import SettingsModal from '@/components/ui/settings-modal';
 import { App } from '@/components/game/game';
 
 export default function GameHomePage() {
