@@ -1,20 +1,23 @@
 export interface Character {
     id: string;
     name: string;
-    level: number;
+    surname: string;
+}
+
+export interface World {
+    name: string;
 }
 
 export interface GameState {
     level: number;
     score: number;
-    items: string[];
     characters: Character[];
+    world?: World;  
 }
 
 export const initialState: GameState = {
     level: 1,
     score: 0,
-    items: [],
     characters: [],
 };
 

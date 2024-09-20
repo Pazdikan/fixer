@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
 import SettingsModal from '@/components/ui/settings-modal';
 import { App } from '@/components/game/game';
+import GenerateCharacters from '@/core/generation/generate-characters';
 
 export default function GameHomePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -92,6 +93,7 @@ export default function GameHomePage() {
             {/* Main Content Area */}
             <main className="flex-1 p-6 overflow-auto">
               <App />
+              <GenerateCharacters />
             </main>
           </div>
         </div>

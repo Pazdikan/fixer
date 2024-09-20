@@ -16,6 +16,6 @@ export class GameBrain {
   }
 
   private static tick() {
-    console.log('Tick');
+    // console.log('Tick');
   }
 }
