@@ -1,5 +1,5 @@
 export class GameBrain {
-  private static tickInterval: number = 1000 / 10; // 10 ticks per second
+  private static tickInterval: number = 1000 / 2; // 10 ticks per second
   private static intervalId: number | null = null;
 
   public static start() {
@@ -16,6 +16,6 @@ export class GameBrain {
   }
 
   private static tick() {
-    // console.log('Tick');
+    console.log('Tick');
   }
 }

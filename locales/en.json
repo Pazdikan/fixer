@@ -9,5 +9,6 @@
   "database": "Database",
   "debugMode": "Debug Mode",
   "settings": "Settings",
-  "profile": "Account"
+  "profile": "Account",
+  "character-creator": "Character Creator"
 }

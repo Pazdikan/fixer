@@ -1,22 +1,13 @@
 // Game.tsx
 import React from 'react';
 import { useGameState } from '../../hooks/use-game-state';
-import { Character } from '../../types/game-state';
+import { generateCharacter } from '@/lib/utils';
 
 export const App: React.FC = () => {
   const { gameState, updateGameState } = useGameState();
 
   const handleScoreIncrease = () => {
     updateGameState({ score: gameState.score + 1 });
-  };
-
-  const addCharacter = (name: string) => {
-    const newCharacter: Character = {
-      id: Date.now().toString(),
-      name,
-      surname: 'Doe',
-    };
-    updateGameState({ characters: [...gameState.characters, newCharacter] });
   };
 
   return (
@@ -32,7 +23,18 @@ export const App: React.FC = () => {
             </li>
           ))}
         </ul>
-        <button onClick={() => addCharacter(`Character ${gameState.characters.length + 1}`)}>
+        <button onClick={() => {
+          updateGameState(
+            {
+              characters: [
+                ...gameState.characters,
+                generateCharacter(
+                
+                )
+              ]
+            }
+          )
+        }}>
           Add Character
         </button>
       </div>
