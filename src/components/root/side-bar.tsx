@@ -16,7 +16,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
   
         <aside
           ref={sidebarRef}
-          className={`w-64 bg-gray-800 text-white p-4 fixed lg:static h-full z-30 flex flex-col justify-between transition-transform duration-300 ease-in-out ${
+          className={`bg-white shadow-md w-64 p-4 fixed lg:static h-full z-30 flex flex-col justify-between transition-transform duration-300 ease-in-out ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } lg:translate-x-0`}
         >
@@ -28,13 +28,13 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
                   <a
                     href="#"
                     onClick={() => setCurrentPage('home')}
-                    className="block py-2 px-4 hover:bg-gray-700 rounded"
+                    className="block py-2 px-4 hover:bg-gray-200 rounded"
                   >
                     {t('home')}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">
+                  <a href="#" className="block py-2 px-4 hover:bg-gray-200 rounded">
                     {t('database')}
                   </a>
                 </li>
@@ -42,7 +42,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
                   <a
                     href="#"
                     onClick={() => setCurrentPage('character-creator')}
-                    className="block py-2 px-4 hover:bg-gray-700 rounded"
+                    className="block py-2 px-4 hover:bg-gray-200 rounded"
                   >
                     {t('character-creator')}
                   </a>
@@ -52,11 +52,11 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
           </div>
   
           <div className="flex justify-center space-x-4 mb-4">
-            <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('debugMode')}>
+            <button className="p-2 hover:bg-gray-200 rounded-full" aria-label={t('debugMode')}>
               <FlaskConical />
             </button>
             <SettingsModal />
-            <button className="p-2 hover:bg-gray-700 rounded-full" aria-label={t('profile')}>
+            <button className="p-2 hover:bg-gray-200 rounded-full" aria-label={t('profile')}>
               <User />
             </button>
           </div>
