@@ -1,7 +1,21 @@
 export interface Character {
-    id: string;
-    name: string;
-    surname: string;
+    id: number;
+    first_name: string;
+    last_name: string;
+    backstory: CharacterBackstory;
+    previous_job: Job;
+}
+
+export enum CharacterBackstory {
+    STREET_KID = 'street_kid',
+    NOMAD = 'nomad',
+    CORPO = 'corpo',
+}
+
+export enum Job {
+    UNEMPLOYED = 'unemployed',
+    CELEBRITY = 'celebrity',
+    MERCENARY = 'mercenary',
 }
 
 export interface World {
@@ -9,15 +23,13 @@ export interface World {
 }
 
 export interface GameState {
-    level: number;
-    score: number;
+    player: number;
     characters: Character[];
     world?: World;  
 }
 
 export const initialState: GameState = {
-    level: 1,
-    score: 0,
+    player: -1,
     characters: [],
 };
 

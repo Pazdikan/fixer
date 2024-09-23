@@ -12,31 +12,15 @@ export const App: React.FC = () => {
 
   return (
     <div>
-      <h2>Score: {gameState.score}</h2>
-      <button onClick={handleScoreIncrease}>Increase Score</button>
       <div>
         <h3>Characters:</h3>
         <ul>
           {gameState.characters.map((character) => (
             <li key={character.id}>
-              {character.name} {character.surname}
+              {character.first_name} {character.last_name} - {character.backstory} - {character.previous_job}
             </li>
           ))}
         </ul>
-        <button onClick={() => {
-          updateGameState(
-            {
-              characters: [
-                ...gameState.characters,
-                generateCharacter(
-                
-                )
-              ]
-            }
-          )
-        }}>
-          Add Character
-        </button>
       </div>
     </div>
   );

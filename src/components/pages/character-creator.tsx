@@ -1,17 +1,38 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { useGameState } from "@/hooks/use-game-state";
+import { Character, CharacterBackstory, GameState, Job } from "@/types/game-state";
+import { useTranslation } from "react-i18next";
 
 export default function CharacterCreator() {
+  const { t } = useTranslation();
+  const { gameState, updateGameState } = useGameState();
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [backstory, setBackstory] = useState<CharacterBackstory | null>(null);
+  const [previousJob, setPreviousJob] = useState<Job | null>(null);
+
   const personalityTraits = [
     { name: "Peaceful - Aggressive", min: -10, max: 10 },
-    { name: "Introverted - Extroverted", min: -10, max: 10 },
-    { name: "Analytical - Intuitive", min: -10, max: 10 },
-    { name: "Cautious - Reckless", min: -10, max: 10 },
-    { name: "Loyal - Opportunistic", min: -10, max: 10 },
-  ]
+    { name: "Reckless - Caucious", min: -10, max: 10 },
+    { name: "Treacherous - Loyal", min: -10, max: 10 },
+  ];
+
+  const create_character = (object: Character, gameState: GameState, updateGameState: (newState: Object) => void) => {
+    if (!object.first_name || !object.last_name || !object.backstory || !object.previous_job) {
+      console.error("All fields are required");
+      return;
+    }
+    updateGameState({
+      characters: [...gameState.characters, object]
+    });
+    console.log(`updated: ${JSON.stringify(gameState)}`);
+  };
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-3xl">
@@ -22,11 +43,11 @@ export default function CharacterCreator() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" placeholder="Enter first name" />
+            <Input id="firstName" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" placeholder="Enter last name" />
+            <Input id="lastName" placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
         </div>
       </div>
@@ -35,31 +56,27 @@ export default function CharacterCreator() {
         <h2 className="text-2xl font-semibold">Background</h2>
         <div>
           <Label htmlFor="backstory">Backstory</Label>
-          <Select>
+          <Select onValueChange={(value) => setBackstory(value as CharacterBackstory)}>
             <SelectTrigger>
               <SelectValue placeholder="Select your backstory" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="street-kid">Street Kid</SelectItem>
-              <SelectItem value="corpo-rat">Corpo Rat</SelectItem>
-              <SelectItem value="nomad">Nomad</SelectItem>
-              <SelectItem value="ex-military">Ex-Military</SelectItem>
+              {Object.values(CharacterBackstory).map((backstory, index) => (
+                <SelectItem key={index} value={backstory}>{backstory}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
         <div>
           <Label htmlFor="previousJob">Previous Job</Label>
-          <Select>
+          <Select onValueChange={(value) => setPreviousJob(value as Job)}>
             <SelectTrigger>
               <SelectValue placeholder="Select your previous job" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="unemployed">Unemploted</SelectItem>
-              <SelectItem value="hacker">Hacker</SelectItem>
-              <SelectItem value="mercenary">Mercenary</SelectItem>
-              <SelectItem value="corporate-spy">Corporate Spy</SelectItem>
-              <SelectItem value="street-doc">Street Doc</SelectItem>
-              <SelectItem value="pd">Police officer</SelectItem>
+              {Object.values(Job).map((job, index) => (
+                <SelectItem key={index} value={job}>{job}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -69,7 +86,6 @@ export default function CharacterCreator() {
         <h2 className="text-2xl font-semibold">Personality Traits</h2>
         {personalityTraits.map((trait, index) => (
           <div key={index} className="space-y-2">
-            <Label>{trait.name}</Label>
             <Slider
               defaultValue={[0]}
               max={trait.max}
@@ -77,7 +93,7 @@ export default function CharacterCreator() {
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-sm text-gray-500">
+            <div className="flex justify-between text-sm">
               <span>{trait.name.split(" - ")[0]}</span>
               <span>{trait.name.split(" - ")[1]}</span>
             </div>
@@ -85,7 +101,17 @@ export default function CharacterCreator() {
         ))}
       </div>
 
-      <Button className="w-full">Create Character</Button>
+      <Button className="w-full" onClick={() => create_character(
+        {
+          id: gameState.characters.length,
+          first_name: firstName,
+          last_name: lastName,
+          backstory: backstory!,
+          previous_job: previousJob!,
+        },
+        gameState,
+        updateGameState
+      )}>Create Character</Button>
     </div>
-  )
+  );
 }
