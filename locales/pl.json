@@ -9,5 +9,19 @@
   "database": "Baza danych",
   "debugMode": "Tryb debugowania",
   "settings": "Ustawienia",
-  "profile": "Profile"
+  "profile": "Profile",
+  "background": "Przeszłość",
+  "backstory": "Historia",
+  "character-creator": "Kreator postaci",
+  "create-character": "Stwórz postać",
+  "create-character-notice": "Aby móc zagrać w grę, utwórz postać, którą chcesz grać.",
+  "enter-first-name": "Wpisz imię",
+  "enter-last-name": "Wpisz nazwisko",
+  "first-name": "Imię",
+  "last-name": "Nazwisko",
+  "personal-information": "Dane osobowe",
+  "personality-traits": "Cechy osobowości",
+  "previous-job": "Poprzednia praca",
+  "select-your-backstory": "Wybierz swoją historię",
+  "select-your-previous-job": "Wybierz swoją poprzednią pracę"
 }

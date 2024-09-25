@@ -21,7 +21,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
           } lg:translate-x-0`}
         >
           <div>
-            <h1 className="text-2xl inter-heavy text-center">{t('gameName')}</h1>
+            <h1 className="text-2xl font-bold text-center">{t('gameName')}</h1>
             <nav>
               <ul className="space-y-2">
                 <li>

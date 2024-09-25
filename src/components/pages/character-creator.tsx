@@ -26,33 +26,32 @@ export default function CharacterCreator() {
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-3xl">
-      <h1 className="text-4xl font-bold text-center mb-8">Character Creator</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">{t('character-creator')}</h1>
 
       <p class={"text-center"}>
-        Please create a character you wish to play as.
-      </p>
+        {t('create-character-notice')} </p>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Personal Information</h2>
+        <h2 className="text-2xl font-semibold">{t('personal-information')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <Label htmlFor="firstName">{t('first-name')}</Label>
+            <Input id="firstName" placeholder={t('enter-first-name')} value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div>
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <Label htmlFor="lastName">{t('last-name')}</Label>
+            <Input id="lastName" placeholder={t('enter-last-name')} value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Background</h2>
+        <h2 className="text-2xl font-semibold">{t('background')}</h2>
         <div>
-          <Label htmlFor="backstory">Backstory</Label>
+          <Label htmlFor="backstory">{t('backstory')}</Label>
           <Select onValueChange={(value) => setBackstory(value as CharacterBackstory)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select your backstory" />
+              <SelectValue placeholder={t('select-your-backstory')} />
             </SelectTrigger>
             <SelectContent>
               {Object.values(CharacterBackstory).map((backstory, index) => (
@@ -62,10 +61,10 @@ export default function CharacterCreator() {
           </Select>
         </div>
         <div>
-          <Label htmlFor="previousJob">Previous Job</Label>
+          <Label htmlFor="previousJob">{t('previous-job')}</Label>
           <Select onValueChange={(value) => setPreviousJob(value as Job)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select your previous job" />
+              <SelectValue placeholder={t('select-your-previous-job')} />
             </SelectTrigger>
             <SelectContent>
               {Object.values(Job).map((job, index) => (
@@ -77,7 +76,7 @@ export default function CharacterCreator() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Personality Traits</h2>
+        <h2 className="text-2xl font-semibold">{t('personality-traits')}</h2>
         {personalityTraits.map((trait, index) => (
           <div key={index} className="space-y-2">
             <Slider
@@ -104,7 +103,7 @@ export default function CharacterCreator() {
           previous_job: previousJob!,
         },
         updateGameState
-      )}>Create Character</Button>
+      )}>{t('create-character')}</Button>
     </div>
   );
 }
