@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useGameState } from "@/hooks/use-game-state";
-import { Character, CharacterBackstory, GameState, Job } from "@/types/game-state";
+import { CharacterBackstory, Job } from "@/types/game-state";
 import { useTranslation } from "react-i18next";
+import { create_character } from '@/core/generation/generate-characters';
 
 export default function CharacterCreator() {
   const { t } = useTranslation();
@@ -22,21 +23,6 @@ export default function CharacterCreator() {
     { name: "Reckless - Caucious", min: -10, max: 10 },
     { name: "Treacherous - Loyal", min: -10, max: 10 },
   ];
-
-  const create_character = (object: Character, updateGameState: (updates: ((prevState: GameState) => Partial<GameState>)) => void) => {
-    if (!object.first_name || !object.last_name || !object.backstory || !object.previous_job) {
-      console.error("All fields are required");
-      return;
-    }
-  
-    updateGameState(prevState => {
-      const updatedCharacters = [...prevState.characters, object];
-      return {
-        characters: updatedCharacters,
-        player_id: prevState.player_id === -1 ? updatedCharacters.length - 1 : prevState.player_id
-      };
-    });
-  };  
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-3xl">
