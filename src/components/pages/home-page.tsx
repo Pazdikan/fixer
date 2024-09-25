@@ -5,7 +5,7 @@ import Sidebar from '@/components/root/side-bar';
 import TopBar from '@/components/root/top-bar';
 import { useGameState } from '@/hooks/use-game-state';
 
-export default function RootPage() {
+export default function GameRoot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);

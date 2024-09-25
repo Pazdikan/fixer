@@ -2,14 +2,26 @@ import { render } from 'preact';
 import './index.css';
 import './lib/i18n.ts';
 import { GameProvider } from './components/game/game-context.tsx';
-import GameHomePage from '@/components/pages/home-page.tsx';
+import GameRoot from '@/components/pages/home-page.tsx';
+import { useGameState } from './hooks/use-game-state.ts';
+import CharacterCreator from './components/pages/character-creator.tsx';
 
-const App = () => {
+const Root = () => {
   return (
     <GameProvider>
-      <GameHomePage />
+      <RootContent />
     </GameProvider>
   );
 };
 
-render(<App />, document.getElementById('app')!);
+const RootContent = () => {
+  const { gameState } = useGameState();
+  
+  return (
+    <>
+      {gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}
+    </>
+  );
+};
+
+render(<Root />, document.getElementById('app')!);
