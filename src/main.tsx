@@ -1,13 +1,27 @@
-import { render } from 'preact'
-import './index.css'
-import './lib/i18n.ts'
-import { GameProvider } from './components/game/game-context.tsx'
-import GameHomePage from '@/components/pages/GameHomePage.tsx'
+import { render } from 'preact';
+import './index.css';
+import './lib/i18n.ts';
+import { GameProvider } from './components/game/game-context.tsx';
+import GameRoot from '@/components/pages/home-page.tsx';
+import { useGameState } from './hooks/use-game-state.ts';
+import CharacterCreator from './components/pages/character-creator.tsx';
 
-import { GameBrain } from '@/core/brain';
+const Root = () => {
+  return (
+    <GameProvider>
+      <RootContent />
+    </GameProvider>
+  );
+};
 
-render(<GameProvider>
-    <GameHomePage />
-</GameProvider>, document.getElementById('app')!)
+const RootContent = () => {
+  const { gameState } = useGameState();
+  
+  return (
+    <>
+      {gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}
+    </>
+  );
+};
 
-GameBrain.start();
+render(<Root />, document.getElementById('app')!);

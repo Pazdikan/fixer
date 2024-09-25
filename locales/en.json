@@ -9,5 +9,19 @@
   "database": "Database",
   "debugMode": "Debug Mode",
   "settings": "Settings",
-  "profile": "Account"
+  "profile": "Account",
+  "character-creator": "Character Creator",
+  "create-character-notice": "Please create a character you wish to play as, in order to play the game.",
+  "personal-information": "Personal Information",
+  "first-name": "First Name",
+  "enter-first-name": "Enter first name",
+  "last-name": "Last Name",
+  "enter-last-name": "Enter last name",
+  "background": "Background",
+  "backstory": "Backstory",
+  "select-your-backstory": "Select your backstory",
+  "previous-job": "Previous Job",
+  "select-your-previous-job": "Select your previous job",
+  "personality-traits": "Personality Traits",
+  "create-character": "Create Character"
 }

@@ -11,7 +11,7 @@ export default function SettingsModal() {
         <>
             <Dialog>
                 <DialogTrigger>
-                    <button className="p-2 hover:bg-gray-700 rounded-full">
+                    <button className="p-2 hover:bg-gray-200 rounded-full">
                         <Bolt />
                     </button>
                 </DialogTrigger>
