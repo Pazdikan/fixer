@@ -23,13 +23,13 @@ export interface World {
 }
 
 export interface GameState {
-    player: number;
+    player_id: number;
     characters: Character[];
-    world?: World;  
+    world?: World;
 }
 
 export const initialState: GameState = {
-    player: -1,
+    player_id: -1,
     characters: [],
 };
 

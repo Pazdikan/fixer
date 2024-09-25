@@ -1,13 +1,15 @@
-import { render } from 'preact'
-import './index.css'
-import './lib/i18n.ts'
-import { GameProvider } from './components/game/game-context.tsx'
-import GameHomePage from '@/components/pages/home-page.tsx'
+import { render } from 'preact';
+import './index.css';
+import './lib/i18n.ts';
+import { GameProvider } from './components/game/game-context.tsx';
+import GameHomePage from '@/components/pages/home-page.tsx';
 
-import { GameBrain } from '@/core/brain';
+const App = () => {
+  return (
+    <GameProvider>
+      <GameHomePage />
+    </GameProvider>
+  );
+};
 
-render(<GameProvider>
-    <GameHomePage />
-</GameProvider>, document.getElementById('app')!)
-
-GameBrain.start();
+render(<App />, document.getElementById('app')!);

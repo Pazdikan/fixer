@@ -21,7 +21,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
           } lg:translate-x-0`}
         >
           <div>
-            <h1 className="text-2xl font-bold mb-4">{t('gameName')}</h1>
+            <h1 className="text-2xl inter-heavy text-center">{t('gameName')}</h1>
             <nav>
               <ul className="space-y-2">
                 <li>
@@ -36,15 +36,6 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
                 <li>
                   <a href="#" className="block py-2 px-4 hover:bg-gray-200 rounded">
                     {t('database')}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={() => setCurrentPage('character-creator')}
-                    className="block py-2 px-4 hover:bg-gray-200 rounded"
-                  >
-                    {t('character-creator')}
                   </a>
                 </li>
               </ul>

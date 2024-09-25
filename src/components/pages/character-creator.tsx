@@ -23,20 +23,28 @@ export default function CharacterCreator() {
     { name: "Treacherous - Loyal", min: -10, max: 10 },
   ];
 
-  const create_character = (object: Character, gameState: GameState, updateGameState: (newState: Object) => void) => {
+  const create_character = (object: Character, updateGameState: (updates: ((prevState: GameState) => Partial<GameState>)) => void) => {
     if (!object.first_name || !object.last_name || !object.backstory || !object.previous_job) {
       console.error("All fields are required");
       return;
     }
-    updateGameState({
-      characters: [...gameState.characters, object]
+  
+    updateGameState(prevState => {
+      const updatedCharacters = [...prevState.characters, object];
+      return {
+        characters: updatedCharacters,
+        player_id: prevState.player_id === -1 ? updatedCharacters.length - 1 : prevState.player_id
+      };
     });
-    console.log(`updated: ${JSON.stringify(gameState)}`);
-  };
+  };  
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-3xl">
       <h1 className="text-4xl font-bold text-center mb-8">Character Creator</h1>
+
+      <p class={"text-center"}>
+        Please create a character you wish to play as.
+      </p>
 
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Personal Information</h2>
@@ -109,7 +117,6 @@ export default function CharacterCreator() {
           backstory: backstory!,
           previous_job: previousJob!,
         },
-        gameState,
         updateGameState
       )}>Create Character</Button>
     </div>

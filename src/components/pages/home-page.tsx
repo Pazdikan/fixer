@@ -3,12 +3,14 @@ import { App } from '@/components/game/game';
 import CharacterCreator from './character-creator';
 import Sidebar from '@/components/root/side-bar';
 import TopBar from '@/components/root/top-bar';
+import { useGameState } from '@/hooks/use-game-state';
 
 export default function RootPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const [currentPage, setCurrentPage] = useState('home');
+  const { gameState } = useGameState()
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -31,6 +33,10 @@ export default function RootPage() {
     };
   }, [isSidebarOpen]);
 
+  if (gameState.player_id == -1) {
+    setCurrentPage("character-creator")
+  }
+
   return (
     <div className="flex flex-col h-screen bg-gray-100 w-full">
       <div className="flex-1 h-full w-full">
@@ -48,7 +54,7 @@ export default function RootPage() {
 
             <main className="flex-1 p-6 overflow-y-auto">
               {currentPage === 'home' && <App />}
-              {currentPage === 'character-creator' && <CharacterCreator />}
+              {(currentPage === 'character-creator' && gameState.player_id == -1) && <CharacterCreator />}
             </main>
           </div>
         </div>

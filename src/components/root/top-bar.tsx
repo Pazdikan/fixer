@@ -1,11 +1,13 @@
+import { useGameState } from "@/hooks/use-game-state";
 import { useTranslation } from "react-i18next";
 
 export default function TopBar({ toggleSidebar, toggleButtonRef }) {
     const { t } = useTranslation();
+    const { gameState } = useGameState()
   
     return (
       <header className="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">{t('home')}</h1>
+        <h1 class={""}>Playing as {gameState.player_id == -1 ? "" : gameState.characters.at(gameState.player_id)?.first_name + " " + gameState.characters.at(gameState.player_id)?.last_name}</h1>
         <div className="flex items-center">
           <button
             ref={toggleButtonRef}
