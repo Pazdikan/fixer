@@ -1,6 +1,7 @@
 import { FlaskConical, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SettingsModal from "@/components/ui/settings-modal";
+import DebugModal from "../ui/debug-modal";
 
 export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, sidebarRef, toggleButtonRef }) {
     const { t } = useTranslation();
@@ -43,9 +44,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, setCurrentPage, 
           </div>
   
           <div className="flex justify-center space-x-4 mb-4">
-            <button className="p-2 hover:bg-gray-200 rounded-full" aria-label={t('debugMode')}>
-              <FlaskConical />
-            </button>
+            <DebugModal />
             <SettingsModal />
             <button className="p-2 hover:bg-gray-200 rounded-full" aria-label={t('profile')}>
               <User />

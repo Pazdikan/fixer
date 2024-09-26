@@ -7,11 +7,10 @@ import { Slider } from "@/components/ui/slider";
 import { useGameState } from "@/hooks/use-game-state";
 import { CharacterBackstory, Job } from "@/types/game-state";
 import { useTranslation } from "react-i18next";
-import { create_character } from '@/core/generation/generate-characters';
 
 export default function CharacterCreator() {
   const { t } = useTranslation();
-  const { gameState, updateGameState } = useGameState();
+  const { gameState, updateGameState, generator } = useGameState();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,6 +29,19 @@ export default function CharacterCreator() {
 
       <p class={"text-center"}>
         {t('create-character-notice')} </p>
+
+      <div className="items-center">
+        <Label htmlFor="seed">Seed</Label>
+        <Input 
+          type="text" 
+          id="seed" 
+          placeholder="Seed" 
+          value={gameState.seed}
+        />
+        <Button className={"min-w-full"} onClick={() => updateGameState({seed: (document.getElementById('seed') as HTMLInputElement).value})}>
+          Set Seed
+        </Button>
+      </div>
 
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">{t('personal-information')}</h2>
@@ -94,7 +106,8 @@ export default function CharacterCreator() {
         ))}
       </div>
 
-      <Button className="w-full" onClick={() => create_character(
+      <Button className="w-full" onClick={() => {
+        generator.character.create_character(
         {
           id: gameState.characters.length,
           first_name: firstName,
@@ -103,7 +116,8 @@ export default function CharacterCreator() {
           previous_job: previousJob!,
         },
         updateGameState
-      )}>{t('create-character')}</Button>
+      )}
+    }>{t('create-character')}</Button>
     </div>
   );
 }
