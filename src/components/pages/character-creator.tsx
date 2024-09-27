@@ -152,7 +152,7 @@ export default function CharacterCreator() {
             updateGameState
           );
 
-          // generator.world.populateWorld(generator, updateGameState);
+          generator.world.populateWorld(generator, updateGameState);
         }}
       >
         {t("create-character")}
