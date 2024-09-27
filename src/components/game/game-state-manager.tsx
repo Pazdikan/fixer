@@ -1,7 +1,7 @@
-import { GameState, initialState } from '../../types/game-state';
+import { GameState, initialState } from "../../types/game-state";
 
 export class GameStateManager {
-  private static storageKey = 'gameState';
+  private static storageKey = "gameState";
 
   public static load(): GameState {
     const savedState = localStorage.getItem(this.storageKey);

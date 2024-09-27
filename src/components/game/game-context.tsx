@@ -1,14 +1,18 @@
 // GameContext.tsx
-import React, { createContext, useEffect, useState } from 'react';
-import { GameStateManager } from './game-state-manager';
-import { GameState, GameContextType } from '../../types/game-state';
-import { GameBrain } from '@/core/brain';
-import seedrandom from 'seedrandom';
-import { Generator } from '@/core/generation/generator';
+import React, { createContext, useEffect, useState } from "react";
+import { GameStateManager } from "./game-state-manager";
+import { GameState, GameContextType } from "../../types/game-state";
+import { GameBrain } from "@/core/brain";
+import seedrandom from "seedrandom";
+import { Generator } from "@/core/generation/generator";
 
-export const GameContext = createContext<GameContextType | undefined>(undefined);
+export const GameContext = createContext<GameContextType | undefined>(
+  undefined
+);
 
-export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [gameState, setGameState] = useState<GameState>(() => {
     return GameStateManager.load();
   });
@@ -17,7 +21,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   let rng = seedrandom(seed, { state: true });
 
   if (gameState.seed_state) {
-    rng = seedrandom("", {state: gameState.seed_state});
+    rng = seedrandom("", { state: gameState.seed_state });
   }
 
   const saveGameState = (newState: GameState) => {
@@ -25,24 +29,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     GameStateManager.save(newState);
   };
 
-  const updateGameState = (updates: Partial<GameState> | ((prevState: GameState) => Partial<GameState>)) => {
+  const updateGameState = (
+    updates: Partial<GameState> | ((prevState: GameState) => Partial<GameState>)
+  ) => {
     setGameState((prevState) => {
-      const newUpdates = typeof updates === 'function' ? updates(prevState) : updates;
-  
+      const newUpdates =
+        typeof updates === "function" ? updates(prevState) : updates;
+
       const newState = { ...prevState, ...newUpdates };
       saveGameState(newState);
       return newState;
     });
   };
-  
 
   const generator = new Generator(rng);
-  
+
   useEffect(() => {
     const saveInterval = setInterval(() => {
       updateGameState({ seed_state: rng.state() });
       GameStateManager.save(gameState);
-      console.log("Game saved!")
+      console.log("Game saved!");
     }, 5000);
     return () => clearInterval(saveInterval);
   }, [gameState]);
@@ -50,7 +56,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   GameBrain.start(gameState);
 
   return (
-    <GameContext.Provider value={{ gameState, saveGameState, updateGameState, generator } }>
+    <GameContext.Provider
+      value={{ gameState, saveGameState, updateGameState, generator }}
+    >
       {children}
     </GameContext.Provider>
   );
