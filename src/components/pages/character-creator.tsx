@@ -40,23 +40,38 @@ export default function CharacterCreator() {
 
       <div className="items-center">
         <Label htmlFor="seed">Seed</Label>
-        <Input
-          type="text"
-          id="seed"
-          placeholder="Seed"
-          value={gameState.seed}
-        />
-        <Button
-          className={"min-w-full"}
-          onClick={() =>
-            updateGameState({
-              seed: (document.getElementById("seed") as HTMLInputElement).value,
-              seed_state: null,
-            })
-          }
-        >
-          Set Seed
-        </Button>
+        <div className={"space-y-2"}>
+          <Input
+            type="text"
+            id="seed"
+            placeholder="Seed"
+            value={gameState.seed}
+          />
+          <Button
+            className={"min-w-full"}
+            onClick={() =>
+              updateGameState({
+                seed: (document.getElementById("seed") as HTMLInputElement)
+                  .value,
+                seed_state: null,
+              })
+            }
+          >
+            Set Seed
+          </Button>
+          <Button
+            variant={"outline"}
+            className={"min-w-full"}
+            onClick={() => {
+              setFirstName(generator.character.generate_first_name());
+              setLastName(generator.character.generate_last_name());
+              setBackstory(generator.character.generate_backstory());
+              setPreviousJob(generator.character.generate_job());
+            }}
+          >
+            Generate all fields
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -65,7 +80,8 @@ export default function CharacterCreator() {
           <div>
             <Label htmlFor="firstName">{t("first-name")}</Label>
             <Input
-              id="firstName"
+              autocomplete="off"
+              id="fn"
               placeholder={t("enter-first-name")}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -74,7 +90,7 @@ export default function CharacterCreator() {
           <div>
             <Label htmlFor="lastName">{t("last-name")}</Label>
             <Input
-              id="lastName"
+              id="ln"
               placeholder={t("enter-last-name")}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -88,30 +104,39 @@ export default function CharacterCreator() {
         <div>
           <Label htmlFor="backstory">{t("backstory")}</Label>
           <Select
+            value={backstory ?? undefined} // Pass the selected backstory value
             onValueChange={(value) => setBackstory(value as CharacterBackstory)}
           >
             <SelectTrigger>
               <SelectValue placeholder={t("select-your-backstory")} />
             </SelectTrigger>
             <SelectContent>
-              {Object.values(CharacterBackstory).map((backstory, index) => (
-                <SelectItem key={index} value={backstory}>
-                  {backstory}
-                </SelectItem>
-              ))}
+              {Object.values(CharacterBackstory).map(
+                (backstoryOption, index) => (
+                  <SelectItem
+                    key={index}
+                    value={Object.keys(CharacterBackstory)[index]}
+                  >
+                    {backstoryOption}
+                  </SelectItem>
+                )
+              )}
             </SelectContent>
           </Select>
         </div>
         <div>
           <Label htmlFor="previousJob">{t("previous-job")}</Label>
-          <Select onValueChange={(value) => setPreviousJob(value as Job)}>
+          <Select
+            value={previousJob ?? undefined} // Pass the selected backstory value
+            onValueChange={(value) => setPreviousJob(value as Job)}
+          >
             <SelectTrigger>
               <SelectValue placeholder={t("select-your-previous-job")} />
             </SelectTrigger>
             <SelectContent>
-              {Object.values(Job).map((job, index) => (
-                <SelectItem key={index} value={job}>
-                  {job}
+              {Object.values(Job).map((jobOption, index) => (
+                <SelectItem key={index} value={Object.keys(Job)[index]}>
+                  {jobOption}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -3,6 +3,7 @@ import { FlaskConical } from "lucide-react";
 import { Button } from "./button";
 import { useGameState } from "@/hooks/use-game-state";
 import { Input } from "./input";
+import { Label } from "./label";
 
 export default function DebugModal() {
   const { generator, gameState } = useGameState();
@@ -16,27 +17,25 @@ export default function DebugModal() {
     <>
       <Dialog>
         <DialogTrigger>
-          <button className="p-2 hover:bg-gray-200 rounded-full">
-            <FlaskConical />
-          </button>
+          <FlaskConical />
         </DialogTrigger>
         <DialogContent>
           <h1>Debug Menu</h1>
           <Button onClick={clear_localstorage}>
             Clear localStorage (reset all data!)
           </Button>
-          <div>
-            <Button
-              onClick={() => {
-                const character = generator.character.generate_character();
-                document.getElementById("generated-character-text").innerText =
-                  JSON.stringify(character, null, 2);
-              }}
-            >
-              Generate character:
-            </Button>
-            <p id="generated-character-text"></p>
-          </div>
+          <Button
+            className={"min-w-max"}
+            onClick={() => {
+              const character = generator.character.generate_character();
+              document.getElementById("generated-character-text").innerText =
+                JSON.stringify(character, null, 2);
+            }}
+          >
+            Generate character
+          </Button>
+          <p id="generated-character-text"></p>
+          <Label htmlFor={"seed"}>Seed</Label>
           <Input
             className={"min-w-max"}
             disabled={true}

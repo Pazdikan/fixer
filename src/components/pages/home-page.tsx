@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'preact/hooks';
-import { App } from '@/components/game/game';
-import CharacterCreator from './character-creator';
-import Sidebar from '@/components/root/side-bar';
-import TopBar from '@/components/root/top-bar';
-import { useGameState } from '@/hooks/use-game-state';
+import { useState, useRef, useEffect } from "preact/hooks";
+import CharacterCreator from "./character-creator";
+import Sidebar from "@/components/root/side-bar";
+import TopBar from "@/components/root/top-bar";
+import { useGameState } from "@/hooks/use-game-state";
+import { DatabasePage } from "./database-page";
 
 export default function GameRoot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
-  const [currentPage, setCurrentPage] = useState('home');
-  const { gameState } = useGameState()
+  const [currentPage, setCurrentPage] = useState("home");
+  const { gameState } = useGameState();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -27,14 +27,14 @@ export default function GameRoot() {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebarOpen]);
 
   if (gameState.player_id == -1) {
-    setCurrentPage("character-creator")
+    setCurrentPage("character-creator");
   }
 
   return (
@@ -50,11 +50,16 @@ export default function GameRoot() {
           />
 
           <div className="flex flex-col flex-1">
-            <TopBar toggleSidebar={toggleSidebar} toggleButtonRef={toggleButtonRef} />
+            <TopBar
+              toggleSidebar={toggleSidebar}
+              toggleButtonRef={toggleButtonRef}
+            />
 
             <main className="flex-1 p-6 overflow-y-auto">
-              {currentPage === 'home' && <App />}
-              {(currentPage === 'character-creator' && gameState.player_id == -1) && <CharacterCreator />}
+              {currentPage === "home" && <div></div>}
+              {currentPage === "database" && <DatabasePage />}
+              {currentPage === "character-creator" &&
+                gameState.player_id == -1 && <CharacterCreator />}
             </main>
           </div>
         </div>
