@@ -119,7 +119,7 @@ export default function CharacterCreator() {
                   >
                     {backstoryOption}
                   </SelectItem>
-                )
+                ),
               )}
             </SelectContent>
           </Select>
@@ -174,10 +174,14 @@ export default function CharacterCreator() {
               backstory: backstory!,
               previous_job: previousJob!,
             },
-            updateGameState
+            updateGameState,
           );
 
           generator.world.populateWorld(generator, updateGameState);
+
+          for (let i = 0; i < 10; i++) {
+            generator.world.generateCompany(generator, updateGameState);
+          }
         }}
       >
         {t("create-character")}

@@ -17,6 +17,7 @@ export function DatabasePage() {
       <Tabs defaultValue="characters" className="w-full">
         <TabsList className="w-full space-x-6">
           <TabsTrigger value="characters">Characters</TabsTrigger>
+          <TabsTrigger value="companies">Companies</TabsTrigger>
         </TabsList>
         <TabsContent value="characters">
           <Table>
@@ -37,6 +38,26 @@ export function DatabasePage() {
                   }`}</TableCell>
                   <TableCell>{character.previous_job}</TableCell>
                   <TableCell>{character.backstory}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TabsContent>
+        <TabsContent value="companies">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Employees</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {gameState.companies.map((company, index) => (
+                <TableRow key={company.id}>
+                  <TableCell>{index}</TableCell>
+                  <TableCell>{company.name}</TableCell>
+                  <TableCell>{company.employees.length}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
