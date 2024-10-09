@@ -3,6 +3,7 @@ import {
   CharacterBackstory,
   GameState,
   Job,
+  UpdateGameState,
 } from "@/types/game-state";
 
 export class CharacterGenerator {
@@ -12,7 +13,7 @@ export class CharacterGenerator {
     this.rng = rng;
   }
 
-  create_character = (object: Character, updateGameState) => {
+  create_character = (object: Character, updateGameState: UpdateGameState) => {
     if (
       !object.first_name ||
       !object.last_name ||
@@ -34,7 +35,7 @@ export class CharacterGenerator {
           prevState.player_id === -1
             ? newCharacters.length - 1
             : prevState.player_id,
-      } as Partial<GameState>;
+      };
     });
   };
 

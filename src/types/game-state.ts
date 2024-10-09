@@ -43,12 +43,25 @@ export const initialState: GameState = {
 export interface GameContextType {
   gameState: GameState;
   saveGameState: (newState: GameState) => void;
-  updateGameState: (updates: Partial<GameState>) => void;
+  updateGameState: UpdateGameState;
   generator: Generator;
 }
 
 export interface Company {
   id: number;
   name: string;
-  employees: Character[];
+  employees: Employee[];
 }
+
+export interface Employee {
+  character: Character;
+  position: CompanyPosition;
+}
+
+export enum CompanyPosition {
+  OWNER,
+}
+
+export type UpdateGameState = (
+  update: (prevState: GameState) => Partial<GameState>
+) => GameState;

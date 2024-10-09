@@ -1,7 +1,7 @@
 import { FlaskConical, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import SettingsModal from "@/components/ui/settings-modal";
-import DebugModal from "../ui/debug-modal";
+import SettingsModal from "@/components/root/settings-modal";
+import DebugModal from "./debug-modal";
 
 export default function Sidebar({
   isSidebarOpen,

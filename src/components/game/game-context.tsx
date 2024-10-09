@@ -1,4 +1,3 @@
-// GameContext.tsx
 import React, { createContext, useEffect, useState } from "react";
 import { GameStateManager } from "./game-state-manager";
 import { GameState, GameContextType } from "../../types/game-state";
@@ -26,34 +25,44 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const saveGameState = (newState: GameState) => {
     setGameState(newState);
-    GameStateManager.save(newState);
   };
 
   const updateGameState = (
-    updates: Partial<GameState> | ((prevState: GameState) => Partial<GameState>)
-  ) => {
+    updates: (prevState: GameState) => Partial<GameState>
+  ): GameState => {
+    let newState: GameState;
+
     setGameState((prevState) => {
       const newUpdates =
         typeof updates === "function" ? updates(prevState) : updates;
 
-      const newState = { ...prevState, ...newUpdates };
-      saveGameState(newState);
+      newState = { ...prevState, ...newUpdates }; // Capture the new state
       return newState;
     });
+
+    return newState;
   };
 
   const generator = new Generator(rng);
 
   useEffect(() => {
     const saveInterval = setInterval(() => {
-      updateGameState({ seed_state: rng.state() });
-      GameStateManager.save(gameState);
+      updateGameState(() => {
+        return {
+          seed_state: rng.state(),
+        };
+      });
+      GameStateManager.save(gameState); // Save to localStorage only at intervals
       console.log("Game saved!");
     }, 5000);
+
     return () => clearInterval(saveInterval);
   }, [gameState]);
 
-  GameBrain.start(gameState);
+  // Ensure GameBrain starts correctly
+  useEffect(() => {
+    GameBrain.start(gameState);
+  }, [gameState]);
 
   return (
     <GameContext.Provider

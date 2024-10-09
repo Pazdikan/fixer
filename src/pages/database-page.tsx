@@ -57,7 +57,11 @@ export function DatabasePage() {
                 <TableRow key={company.id}>
                   <TableCell>{index}</TableCell>
                   <TableCell>{company.name}</TableCell>
-                  <TableCell>{company.employees.length}</TableCell>
+                  <TableCell>
+                    {company.employees
+                      .map((employee) => employee.character.id)
+                      .join(", ")}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
