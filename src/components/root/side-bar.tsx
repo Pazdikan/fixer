@@ -23,14 +23,14 @@ export default function Sidebar({
 
       <aside
         ref={sidebarRef}
-        className={`bg-white shadow-md w-64 p-4 fixed lg:static h-full z-30 flex flex-col justify-between transition-transform duration-300 ease-in-out ${
+        className={`bg-white shadow-md w-64 p-4 fixed lg:static h-full z-30 flex flex-col justify-between transition-transform duration-300 ease-in-out  ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
-        <div>
+        <div className={"space-y-2"}>
           <h1 className="text-2xl font-bold text-center">{t("gameName")}</h1>
           <nav>
-            <ul className="space-y-2">
+            <ul>
               <li>
                 <a
                   href="#"
