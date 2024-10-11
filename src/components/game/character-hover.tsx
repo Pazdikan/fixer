@@ -28,7 +28,11 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <p className={"font-medium cursor-pointer decoration-dotted"}>
+        <p
+          className={
+            "cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid"
+          }
+        >
           {getFullName(character)}
         </p>
       </HoverCardTrigger>
@@ -82,23 +86,3 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
     </HoverCard>
   );
 };
-
-// <HoverCard>
-//   <HoverCardTrigger asChild>
-//     <p className={"underline font-medium cursor-pointer"}>
-//       {getFullName(character)}
-//     </p>
-//   </HoverCardTrigger>
-//   <HoverCardContent className={"w-80 space-y-2"}>
-//     <div className="flex justify-between space-x-4">
-//       <h3>{getFullName(character)}</h3>
-//       <p>{character.backstory}</p>
-//       <p>{character.previous_job}</p>
-//     </div>
-//     <div>
-//       <div>
-
-//       </div>
-//     </div>
-//   </HoverCardContent>
-// </HoverCard>;
