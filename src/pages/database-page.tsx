@@ -8,6 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CharacterHover } from "@/components/game/character-hover";
+import { getCharacterById } from "@/lib/utils";
 
 export function DatabasePage() {
   const { gameState } = useGameState();
@@ -58,9 +60,16 @@ export function DatabasePage() {
                   <TableCell>{index}</TableCell>
                   <TableCell>{company.name}</TableCell>
                   <TableCell>
-                    {company.employees
-                      .map((employee) => employee.character.id)
-                      .join(", ")}
+                    {company.employees.map((employee, i) => {
+                      return (
+                        <CharacterHover
+                          key={i}
+                          character={
+                            getCharacterById(gameState, employee.characterID)!
+                          }
+                        />
+                      );
+                    })}
                   </TableCell>
                 </TableRow>
               ))}

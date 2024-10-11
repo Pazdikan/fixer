@@ -1,10 +1,12 @@
 import {
   Character,
   CharacterBackstory,
-  GameState,
   Job,
   UpdateGameState,
 } from "@/types/game-state";
+
+import first_names from "@/data/first_names.json";
+import last_names from "@/data/last_names.json";
 
 export class CharacterGenerator {
   rng: () => number;
@@ -27,8 +29,11 @@ export class CharacterGenerator {
       return;
     }
 
+    object["id"] = updateGameState((prevState) => prevState).characters.length;
+
     updateGameState((prevState) => {
       const newCharacters = [...prevState.characters, object];
+
       return {
         characters: newCharacters,
         player_id:
@@ -49,36 +54,10 @@ export class CharacterGenerator {
   };
 
   generate_first_name = () => {
-    const first_names = [
-      "John",
-      "Jane",
-      "Alice",
-      "Bob",
-      "Charlie",
-      "David",
-      "Eve",
-      "Frank",
-      "Grace",
-      "Hank",
-    ];
-
     return first_names[Math.floor(this.rng() * first_names.length)];
   };
 
   generate_last_name = () => {
-    const last_names = [
-      "Smith",
-      "Johnson",
-      "Williams",
-      "Jones",
-      "Brown",
-      "Davis",
-      "Miller",
-      "Wilson",
-      "Moore",
-      "Taylor",
-    ];
-
     return last_names[Math.floor(this.rng() * last_names.length)];
   };
 

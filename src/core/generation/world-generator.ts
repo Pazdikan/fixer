@@ -1,8 +1,10 @@
+import { getFullName, getUnemployedCharacters } from "@/lib/utils";
 import { Generator } from "./generator";
 import {
   Character,
   Company,
   CompanyPosition,
+  Employee,
   GameState,
   UpdateGameState,
 } from "@/types/game-state.ts";
@@ -22,10 +24,15 @@ export class WorldGenerator {
       );
     }
 
+    const unemployed = getUnemployedCharacters(
+      updateGameState((prevState) => prevState)
+    );
+
     for (let i = 0; i < 50; i++) {
       generator.world.create_company(
         generator.world.generateCompany(
-          updateGameState((prevState) => prevState)
+          updateGameState((prevState) => prevState),
+          unemployed
         ),
         updateGameState
       );
@@ -34,14 +41,11 @@ export class WorldGenerator {
 
   create_company = (object: Company, updateGameState: UpdateGameState) => {
     updateGameState((prevState: GameState) => {
-      const newCompany = this.generateCompany(prevState); // Use the latest state
-
       return {
-        ...prevState,
         companies: [
           ...prevState.companies,
           {
-            ...newCompany,
+            ...object,
             id: prevState.companies.length, // Ensure id is based on latest state
           },
         ],
@@ -49,7 +53,7 @@ export class WorldGenerator {
     });
   };
 
-  generateCompany(gameState: GameState) {
+  generateCompany(gameState: GameState, unemployed: Character[]) {
     if (this.rng() > 0.9 && gameState.characters.length > 0) {
       const numb = Math.floor(this.rng() * gameState.characters.length);
       const owner: Character = gameState.characters[numb];
@@ -58,24 +62,48 @@ export class WorldGenerator {
         name: `${getInitial(owner)} Industries`,
         employees: [
           {
-            character: owner,
+            characterID: owner.id,
             position: CompanyPosition.OWNER,
           },
         ],
       } as Company;
     } else {
-      return {
-        name: `${generateCompanySuffix(this.rng)}`,
+      const owner =
+        gameState.characters[
+          Math.floor(this.rng() * gameState.characters.length)
+        ];
+      let employees: Employee[] = [];
+
+      for (let i = 0; i < Math.floor(this.rng() * 3); i++) {
+        if (unemployed.length > 0) {
+          const numb = Math.floor(this.rng() * unemployed.length);
+          const employee: Character = unemployed[numb];
+
+          console.log(employee);
+
+          employees.push({
+            characterID: employee.id,
+            position: CompanyPosition.EMPLOYEE,
+          });
+
+          unemployed.splice(numb, 1);
+        }
+      }
+
+      const final = {
+        name: `${getFullName(owner)} ${generateCompanySuffix(this.rng)}`,
         employees: [
           {
-            character:
-              gameState.characters[
-                Math.floor(this.rng() * gameState.characters.length)
-              ],
+            characterID: owner.id,
             position: CompanyPosition.OWNER,
           },
+          ...employees,
         ],
       } as Company;
+
+      console.log(final);
+
+      return final;
     }
   }
 }
@@ -86,7 +114,7 @@ function getInitial(character: Character) {
   }`;
 }
 
-function generateCompanySuffix(rng) {
+function generateCompanySuffix(rng: () => number) {
   const suffixes = ["LLC", "Studios", "Company", "Logistics"];
 
   return suffixes[Math.floor(rng() * suffixes.length)];

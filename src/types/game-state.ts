@@ -54,12 +54,13 @@ export interface Company {
 }
 
 export interface Employee {
-  character: Character;
+  characterID: number;
   position: CompanyPosition;
 }
 
 export enum CompanyPosition {
   OWNER,
+  EMPLOYEE,
 }
 
 export type UpdateGameState = (
