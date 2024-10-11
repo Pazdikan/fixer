@@ -30,7 +30,7 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
           <p>{character.previous_job}</p>
         </div>
         <div>
-          <p>
+          <div>
             {gameState.companies
               .filter((company) =>
                 company.employees.some(
@@ -49,7 +49,7 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
                   </div>
                 );
               })}
-          </p>
+          </div>
         </div>
       </HoverCardContent>
     </HoverCard>
