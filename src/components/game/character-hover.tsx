@@ -30,7 +30,7 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
       <HoverCardTrigger asChild>
         <p
           className={
-            "cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid"
+            "cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid w-max"
           }
         >
           {getFullName(character)}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import { useGameState } from "@/hooks/use-game-state";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -10,73 +13,279 @@ import {
 } from "@/components/ui/table";
 import { CharacterHover } from "@/components/game/character-hover";
 import { getCharacterById } from "@/lib/utils";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Input } from "@/components/ui/input";
+import { CompanyHover } from "@/components/game/company-hover";
 
 export function DatabasePage() {
   const { gameState } = useGameState();
+  const [charactersPage, setCharactersPage] = useState(1);
+  const [companiesPage, setCompaniesPage] = useState(1);
+  const [characterSearch, setCharacterSearch] = useState("");
+  const [companySearch, setCompanySearch] = useState("");
+  const [characterPageInput, setCharacterPageInput] = useState("");
+  const [companyPageInput, setCompanyPageInput] = useState("");
+  const itemsPerPage = 100;
+
+  const filteredCharacters = useMemo(() => {
+    return gameState.characters.filter((character) => {
+      const searchLower = characterSearch.toLowerCase();
+      const fullName =
+        `${character.first_name} ${character.last_name}`.toLowerCase();
+      const company =
+        gameState.companies
+          .find((c) => c.employees.some((e) => e.characterID === character.id))
+          ?.name.toLowerCase() || "";
+
+      return (
+        fullName.includes(searchLower) ||
+        character.previous_job.toLowerCase().includes(searchLower) ||
+        character.backstory.toLowerCase().includes(searchLower) ||
+        company.includes(searchLower)
+      );
+    });
+  }, [gameState.characters, gameState.companies, characterSearch]);
+
+  const filteredCompanies = useMemo(() => {
+    return gameState.companies.filter((company) => {
+      const searchLower = companySearch.toLowerCase();
+      const employeeNames = company.employees
+        .map((e) => {
+          const character = getCharacterById(gameState, e.characterID);
+          return `${character?.first_name} ${character?.last_name}`.toLowerCase();
+        })
+        .join(" ");
+
+      return (
+        company.name.toLowerCase().includes(searchLower) ||
+        employeeNames.includes(searchLower)
+      );
+    });
+  }, [gameState.companies, companySearch, gameState]);
+
+  const paginateData = (data, page) => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return data.slice(startIndex, endIndex);
+  };
+
+  const charactersData = paginateData(filteredCharacters, charactersPage);
+  const companiesData = paginateData(filteredCompanies, companiesPage);
+
+  const renderPagination = (
+    currentPage,
+    setPage,
+    totalItems,
+    pageInput,
+    setPageInput
+  ) => {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+    }
+
+    const pageNumbers = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+
+    const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPageInput(e.target.value);
+    };
+
+    const handlePageInputSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      const newPage = parseInt(pageInput, 10);
+      if (newPage >= 1 && newPage <= totalPages) {
+        setPage(newPage);
+        setPageInput("");
+      }
+    };
+
+    return (
+      <Pagination className="mt-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            />
+          </PaginationItem>
+          {startPage > 1 && (
+            <>
+              <PaginationItem>
+                <PaginationLink onClick={() => setPage(1)}>1</PaginationLink>
+              </PaginationItem>
+              {startPage > 2 && <PaginationEllipsis />}
+            </>
+          )}
+          {pageNumbers.map((pageNumber) => (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                onClick={() => setPage(pageNumber)}
+                isActive={currentPage === pageNumber}
+              >
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {endPage < totalPages && (
+            <>
+              {endPage < totalPages - 1 && <PaginationEllipsis />}
+              <PaginationItem>
+                <PaginationLink onClick={() => setPage(totalPages)}>
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
+          <PaginationItem>
+            <PaginationNext
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            />
+          </PaginationItem>
+          {/* <form
+            onSubmit={handlePageInputSubmit}
+            className="flex items-center ml-2"
+          >
+            <Input
+              type="number"
+              min="1"
+              max={totalPages}
+              value={pageInput}
+              onChange={handlePageInputChange}
+              className="w-16 h-8 text-sm appearance-none"
+              placeholder="Page"
+            />
+            <Button type="submit" variant="outline" size="sm" className="ml-2">
+              Go
+            </Button>
+          </form> */}
+        </PaginationContent>
+      </Pagination>
+    );
+  };
 
   return (
-    <>
-      <Tabs defaultValue="characters" className="w-full">
-        <TabsList className="w-full space-x-6">
-          <TabsTrigger value="characters">Characters</TabsTrigger>
-          <TabsTrigger value="companies">Companies</TabsTrigger>
-        </TabsList>
-        <TabsContent value="characters">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Job</TableHead>
-                <TableHead>Backstory</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {gameState.characters.map((character, index) => (
+    <Tabs defaultValue="characters" className="w-full">
+      <TabsList className="w-full space-x-6">
+        <TabsTrigger value="characters">Characters</TabsTrigger>
+        <TabsTrigger value="companies">Companies</TabsTrigger>
+      </TabsList>
+      <TabsContent value="characters">
+        <div className="mb-4">
+          <Input
+            placeholder="Search characters by name, job, backstory, or company"
+            value={characterSearch}
+            onChange={(e) => {
+              setCharacterSearch(e.target.value);
+              setCharactersPage(1);
+            }}
+          />
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Job</TableHead>
+              <TableHead>Backstory</TableHead>
+              <TableHead>Company</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {charactersData.map((character, index) => {
+              const company = gameState.companies.find((c) =>
+                c.employees.some((e) => e.characterID === character.id)
+              );
+              return (
                 <TableRow key={character.id}>
-                  <TableCell>{index}</TableCell>
+                  <TableCell>
+                    {(charactersPage - 1) * itemsPerPage + index + 1}
+                  </TableCell>
                   <TableCell>{`${character.first_name} ${character.last_name}${
                     character.id == gameState.player_id ? " (you)" : ""
                   }`}</TableCell>
                   <TableCell>{character.previous_job}</TableCell>
                   <TableCell>{character.backstory}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TabsContent>
-        <TabsContent value="companies">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Employees</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {gameState.companies.map((company, index) => (
-                <TableRow key={company.id}>
-                  <TableCell>{index}</TableCell>
-                  <TableCell>{company.name}</TableCell>
                   <TableCell>
-                    {company.employees.map((employee, i) => {
-                      return (
-                        <CharacterHover
-                          key={i}
-                          character={
-                            getCharacterById(gameState, employee.characterID)!
-                          }
-                        />
-                      );
-                    })}
+                    {company ? <CompanyHover company={company} /> : "N/A"}
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TabsContent>
-      </Tabs>
-    </>
+              );
+            })}
+          </TableBody>
+        </Table>
+        {renderPagination(
+          charactersPage,
+          setCharactersPage,
+          filteredCharacters.length,
+          characterPageInput,
+          setCharacterPageInput
+        )}
+      </TabsContent>
+      <TabsContent value="companies">
+        <div className="mb-4">
+          <Input
+            placeholder="Search companies by name or employee names"
+            value={companySearch}
+            onChange={(e) => {
+              setCompanySearch(e.target.value);
+              setCompaniesPage(1);
+            }}
+          />
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Employees</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {companiesData.map((company, index) => (
+              <TableRow key={company.id}>
+                <TableCell>
+                  {(companiesPage - 1) * itemsPerPage + index + 1}
+                </TableCell>
+                <TableCell>{company.name}</TableCell>
+                <TableCell>
+                  {company.employees.map((employee, i) => (
+                    <CharacterHover
+                      key={i}
+                      character={
+                        getCharacterById(gameState, employee.characterID)!
+                      }
+                    />
+                  ))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {renderPagination(
+          companiesPage,
+          setCompaniesPage,
+          filteredCompanies.length,
+          companyPageInput,
+          setCompanyPageInput
+        )}
+      </TabsContent>
+    </Tabs>
   );
 }

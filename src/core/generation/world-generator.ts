@@ -17,7 +17,7 @@ export class WorldGenerator {
   }
 
   populateWorld(generator: Generator, updateGameState: UpdateGameState) {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 5000; i++) {
       generator.character.create_character(
         generator.character.generate_character(),
         updateGameState
@@ -28,7 +28,7 @@ export class WorldGenerator {
       updateGameState((prevState) => prevState)
     );
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 500; i++) {
       generator.world.create_company(
         generator.world.generateCompany(
           updateGameState((prevState) => prevState),
@@ -79,8 +79,6 @@ export class WorldGenerator {
           const numb = Math.floor(this.rng() * unemployed.length);
           const employee: Character = unemployed[numb];
 
-          console.log(employee);
-
           employees.push({
             characterID: employee.id,
             position: CompanyPosition.EMPLOYEE,
@@ -90,7 +88,7 @@ export class WorldGenerator {
         }
       }
 
-      const final = {
+      return {
         name: `${getFullName(owner)} ${generateCompanySuffix(this.rng)}`,
         employees: [
           {
@@ -99,11 +97,7 @@ export class WorldGenerator {
           },
           ...employees,
         ],
-      } as Company;
-
-      console.log(final);
-
-      return final;
+      };
     }
   }
 }
