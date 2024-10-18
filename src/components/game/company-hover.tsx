@@ -1,8 +1,8 @@
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useGameState } from "@/hooks/use-game-state";
 import { getFullName } from "@/lib/utils";
 import { Company, CompanyPosition } from "@/types/game-state";
@@ -18,11 +18,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Building2 } from "lucide-react";
 
-interface CompanyHoverProps {
+interface CompanyPopoverProps {
   company: Company;
 }
 
-export const CompanyHover: FC<CompanyHoverProps> = ({ company }) => {
+export const CompanyMiniInfo: FC<CompanyPopoverProps> = ({ company }) => {
   const { gameState } = useGameState();
 
   const getEmployeeDetails = (characterID: number) => {
@@ -30,13 +30,13 @@ export const CompanyHover: FC<CompanyHoverProps> = ({ company }) => {
   };
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <p className="cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid w-max">
           {company.name}
         </p>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-96 p-0">
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-screen md:w-96">
         <Card className="border-none">
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
@@ -84,7 +84,7 @@ export const CompanyHover: FC<CompanyHoverProps> = ({ company }) => {
             </div>
           </CardContent>
         </Card>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };

@@ -1,8 +1,8 @@
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useGameState } from "@/hooks/use-game-state";
 import { getFullName } from "@/lib/utils";
 import { Character, CompanyPosition } from "@/types/game-state";
@@ -18,16 +18,16 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 
-interface CharacterHoverProps {
+interface CharacterPopoverProps {
   character: Character;
 }
 
-export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
+export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
   const { gameState } = useGameState();
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <p
           className={
             "cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid w-max"
@@ -35,8 +35,8 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
         >
           {getFullName(character)}
         </p>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-96 p-0">
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-screen md:w-96">
         <Card className={"border-none"}>
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
@@ -82,7 +82,7 @@ export const CharacterHover: FC<CharacterHoverProps> = ({ character }) => {
             </div>
           </CardContent>
         </Card>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };

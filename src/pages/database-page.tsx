@@ -11,7 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CharacterHover } from "@/components/game/character-hover";
+import {
+  CharacterHover,
+  CharacterMiniInfo,
+} from "@/components/game/character-hover";
 import { getCharacterById } from "@/lib/utils";
 import {
   Pagination,
@@ -23,7 +26,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
-import { CompanyHover } from "@/components/game/company-hover";
+import { CompanyHover, CompanyMiniInfo } from "@/components/game/company-hover";
 
 export function DatabasePage() {
   const { gameState } = useGameState();
@@ -158,23 +161,6 @@ export function DatabasePage() {
               disabled={currentPage === totalPages}
             />
           </PaginationItem>
-          {/* <form
-            onSubmit={handlePageInputSubmit}
-            className="flex items-center ml-2"
-          >
-            <Input
-              type="number"
-              min="1"
-              max={totalPages}
-              value={pageInput}
-              onChange={handlePageInputChange}
-              className="w-16 h-8 text-sm appearance-none"
-              placeholder="Page"
-            />
-            <Button type="submit" variant="outline" size="sm" className="ml-2">
-              Go
-            </Button>
-          </form> */}
         </PaginationContent>
       </Pagination>
     );
@@ -223,7 +209,7 @@ export function DatabasePage() {
                   <TableCell>{character.previous_job}</TableCell>
                   <TableCell>{character.backstory}</TableCell>
                   <TableCell>
-                    {company ? <CompanyHover company={company} /> : "N/A"}
+                    {company ? <CompanyMiniInfo company={company} /> : "N/A"}
                   </TableCell>
                 </TableRow>
               );
@@ -266,7 +252,7 @@ export function DatabasePage() {
                 <TableCell>{company.name}</TableCell>
                 <TableCell>
                   {company.employees.map((employee, i) => (
-                    <CharacterHover
+                    <CharacterMiniInfo
                       key={i}
                       character={
                         getCharacterById(gameState, employee.characterID)!
