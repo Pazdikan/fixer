@@ -66,7 +66,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <GameContext.Provider
-      value={{ gameState, saveGameState, updateGameState, generator }}
+      value={
+        {
+          gameState,
+          saveGameState,
+          updateGameState,
+          generator,
+        } as GameContextType
+      }
     >
       {children}
     </GameContext.Provider>

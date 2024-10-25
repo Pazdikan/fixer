@@ -1,8 +1,7 @@
-import { GameState } from "@/types/game-state";
-import { Generator } from "../generation/generator";
+import { GameContextType } from "@/types/game-state";
 
 export interface Event {
   getName(): string;
   getDescription(): string;
-  execute(gameState: GameState, generator: Generator): void;
+  execute(game: GameContextType): void;
 }

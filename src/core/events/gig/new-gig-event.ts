@@ -1,4 +1,4 @@
-import { GameState } from "@/types/game-state";
+import { GameContextType, GameState } from "@/types/game-state";
 import { Event } from "../event";
 import { Generator } from "@/core/generation/generator";
 
@@ -9,7 +9,7 @@ export class NewGigEvent implements Event {
   getDescription(): string {
     return "You have a new gig!";
   }
-  execute(gameState: GameState, generator: Generator): void {
+  execute(game: GameContextType): void {
     throw new Error("Method not implemented.");
   }
 }

@@ -10,13 +10,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { CharacterBackstory, Job } from "@/types/game-state";
 import { useTranslation } from "react-i18next";
 
 export default function CharacterCreator() {
   const { t } = useTranslation();
-  const { gameState, updateGameState, generator } = useGameState();
+  const { gameState, updateGameState, generator } = useGameContext();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

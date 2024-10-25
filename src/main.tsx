@@ -3,7 +3,7 @@ import "./index.css";
 import "./lib/i18n.ts";
 import { GameProvider } from "./components/game/game-context.tsx";
 import GameRoot from "@/pages/home-page.tsx";
-import { useGameState } from "./hooks/use-game-state.ts";
+import { useGameContext } from "./hooks/use-game-context.ts";
 import CharacterCreator from "./pages/character-creator.tsx";
 
 const Root = () => {
@@ -15,7 +15,7 @@ const Root = () => {
 };
 
 const RootContent = () => {
-  const { gameState } = useGameState();
+  const { gameState } = useGameContext();
 
   return (
     <>{gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>

@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { getFullName } from "@/lib/utils";
 import { Company, CompanyPosition } from "@/types/game-state";
 import { FC } from "react";
@@ -23,10 +23,10 @@ interface CompanyPopoverProps {
 }
 
 export const CompanyMiniInfo: FC<CompanyPopoverProps> = ({ company }) => {
-  const { gameState } = useGameState();
+  const game = useGameContext();
 
   const getEmployeeDetails = (characterID: number) => {
-    return gameState.characters.find((char) => char.id === characterID);
+    return game.gameState.characters.find((char) => char.id === characterID);
   };
 
   return (

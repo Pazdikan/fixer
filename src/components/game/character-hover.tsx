@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { getFullName } from "@/lib/utils";
 import { Character, CompanyPosition } from "@/types/game-state";
 
@@ -23,7 +23,7 @@ interface CharacterPopoverProps {
 }
 
 export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
-  const { gameState } = useGameState();
+  const game = useGameContext();
 
   return (
     <Popover>
@@ -56,7 +56,7 @@ export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
             <p className="text-sm"></p>
             <div className="space-y-2">
               <h4 className="text-sm font-semibold">Affiliations:</h4>
-              {gameState.companies
+              {game.gameState.companies
                 .filter((company) =>
                   company.employees.some(
                     (employee) => employee.characterID === character.id

@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function DebugModal() {
-  const { generator, gameState } = useGameState();
+  const game = useGameContext();
 
   function clear_localstorage() {
     localStorage.clear();
@@ -27,8 +27,8 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const character = generator.character.generate_character();
-              document.getElementById("generated-character-text").innerText =
+              const character = game.generator.character.generate_character();
+              document.getElementById("generated-character-text")!.innerText =
                 JSON.stringify(character, null, 2);
             }}
           >
@@ -38,8 +38,8 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const company = generator.world.generateCompany(gameState);
-              document.getElementById("generated-company-text").innerText =
+              const company = game.generator.world.generateCompany([], game);
+              document.getElementById("generated-company-text")!.innerText =
                 JSON.stringify(company, null, 2);
             }}
           >
@@ -50,7 +50,7 @@ export default function DebugModal() {
           <Input
             className={"min-w-max"}
             disabled={true}
-            value={gameState.seed}
+            value={game.gameState.seed}
           />
         </DialogContent>
       </Dialog>

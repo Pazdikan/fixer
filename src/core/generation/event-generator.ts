@@ -1,4 +1,4 @@
-import { GameState } from "@/types/game-state";
+import { GameContextType, GameState } from "@/types/game-state";
 import { Generator } from "./generator";
 import { Event } from "../events/event";
 import { NewGigEvent } from "../events/gig/new-gig-event";
@@ -12,7 +12,7 @@ export class EventGenerator {
     this.events = [new NewGigEvent()];
   }
 
-  generate_event(gameState: GameState, generator: Generator): Event | null {
+  generate_event(game: GameContextType): Event | null {
     const rn = this.rng();
     let event = null;
 

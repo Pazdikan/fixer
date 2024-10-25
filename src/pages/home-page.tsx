@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "preact/hooks";
 import CharacterCreator from "./character-creator";
 import Sidebar from "@/components/root/side-bar";
 import TopBar from "@/components/root/top-bar";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { DatabasePage } from "./database-page";
 
 export default function GameRoot() {
@@ -10,7 +10,7 @@ export default function GameRoot() {
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const [currentPage, setCurrentPage] = useState("home");
-  const { gameState } = useGameState();
+  const { gameState } = useGameContext();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 

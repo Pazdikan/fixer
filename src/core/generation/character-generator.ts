@@ -1,9 +1,9 @@
 import {
   Character,
   CharacterBackstory,
+  GameContextType,
   Gender,
   Job,
-  UpdateGameState,
 } from "@/types/game-state";
 
 import first_names_male from "@/data/first_names_male.json";
@@ -17,7 +17,7 @@ export class CharacterGenerator {
     this.rng = rng;
   }
 
-  create_character = (object: Character, updateGameState: UpdateGameState) => {
+  create_character = (object: Character, game: GameContextType) => {
     if (
       !object.first_name ||
       !object.last_name ||
@@ -31,9 +31,11 @@ export class CharacterGenerator {
       return;
     }
 
-    object["id"] = updateGameState((prevState) => prevState).characters.length;
+    object["id"] = game.updateGameState(
+      (prevState) => prevState
+    ).characters.length;
 
-    updateGameState((prevState) => {
+    game.updateGameState((prevState) => {
       const newCharacters = [...prevState.characters, object];
 
       return {

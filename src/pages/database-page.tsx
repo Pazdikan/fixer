@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useGameState } from "@/hooks/use-game-state";
+import { useGameContext } from "@/hooks/use-game-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { CompanyHover, CompanyMiniInfo } from "@/components/game/company-hover";
 
 export function DatabasePage() {
-  const { gameState } = useGameState();
+  const { gameState } = useGameContext();
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
