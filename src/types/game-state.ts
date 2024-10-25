@@ -4,6 +4,7 @@ export interface Character {
   id: number;
   first_name: string;
   last_name: string;
+  gender: Gender;
   backstory: CharacterBackstory;
   previous_job: Job;
 }
@@ -66,3 +67,8 @@ export enum CompanyPosition {
 export type UpdateGameState = (
   update: (prevState: GameState) => Partial<GameState>
 ) => GameState;
+
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+}

@@ -1,11 +1,13 @@
 import {
   Character,
   CharacterBackstory,
+  Gender,
   Job,
   UpdateGameState,
 } from "@/types/game-state";
 
-import first_names from "@/data/first_names.json";
+import first_names_male from "@/data/first_names_male.json";
+import first_names_female from "@/data/first_names_female.json";
 import last_names from "@/data/last_names.json";
 
 export class CharacterGenerator {
@@ -45,16 +47,35 @@ export class CharacterGenerator {
   };
 
   generate_character = () => {
-    const first_name = this.generate_first_name();
+    const gender = this.generate_gender();
+    const first_name = this.generate_first_name(gender);
     const last_name = this.generate_last_name();
     const backstory = this.generate_backstory();
     const previous_job = this.generate_job();
 
-    return { first_name, last_name, backstory, previous_job } as Character;
+    return {
+      first_name,
+      last_name,
+      gender,
+      backstory,
+      previous_job,
+    } as Character;
   };
 
-  generate_first_name = () => {
-    return first_names[Math.floor(this.rng() * first_names.length)];
+  generate_gender = () => {
+    return Object.keys(Gender)[
+      Math.floor(this.rng() * Object.keys(Gender).length)
+    ] as Gender;
+  };
+
+  generate_first_name = (gender: Gender) => {
+    if (gender === Gender.MALE) {
+      return first_names_male[Math.floor(this.rng() * first_names_male.length)];
+    } else {
+      return first_names_female[
+        Math.floor(this.rng() * first_names_female.length)
+      ];
+    }
   };
 
   generate_last_name = () => {
