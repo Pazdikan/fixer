@@ -61,7 +61,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Ensure GameBrain starts correctly
   useEffect(() => {
-    GameBrain.start(gameState);
+    GameBrain.start(gameState, generator);
   }, [gameState]);
 
   return (
