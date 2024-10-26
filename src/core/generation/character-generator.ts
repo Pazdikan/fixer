@@ -21,6 +21,7 @@ export class CharacterGenerator {
     if (
       !object.first_name ||
       !object.last_name ||
+      !object.gender ||
       !object.backstory ||
       !object.previous_job
     ) {
@@ -65,13 +66,13 @@ export class CharacterGenerator {
   };
 
   generate_gender = () => {
-    return Object.keys(Gender)[
-      Math.floor(this.rng() * Object.keys(Gender).length)
+    return Object.values(Gender)[
+      Math.floor(this.rng() * Object.values(Gender).length)
     ] as Gender;
   };
 
   generate_first_name = (gender: Gender) => {
-    if (gender === Gender.MALE) {
+    if (gender == Gender.MALE) {
       return first_names_male[Math.floor(this.rng() * first_names_male.length)];
     } else {
       return first_names_female[

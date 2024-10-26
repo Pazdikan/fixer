@@ -11,15 +11,16 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useGameContext } from "@/hooks/use-game-context";
-import { CharacterBackstory, Job } from "@/types/game-state";
+import { CharacterBackstory, Gender, Job } from "@/types/game-state";
 import { useTranslation } from "react-i18next";
 
 export default function CharacterCreator() {
   const { t } = useTranslation();
-  const { gameState, updateGameState, generator } = useGameContext();
+  const game = useGameContext();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState<Gender>(Gender.MALE);
 
   const [backstory, setBackstory] = useState<CharacterBackstory | null>(null);
   const [previousJob, setPreviousJob] = useState<Job | null>(null);
@@ -45,16 +46,16 @@ export default function CharacterCreator() {
             type="text"
             id="seed"
             placeholder="Seed"
-            value={gameState.seed}
+            value={game.gameState.seed}
           />
           <Button
             className={"min-w-full"}
             onClick={() =>
-              updateGameState({
+              game.updateGameState(() => ({
                 seed: (document.getElementById("seed") as HTMLInputElement)
                   .value,
                 seed_state: null,
-              })
+              }))
             }
           >
             Set Seed
@@ -63,10 +64,13 @@ export default function CharacterCreator() {
             variant={"outline"}
             className={"min-w-full"}
             onClick={() => {
-              setFirstName(generator.character.generate_first_name());
-              setLastName(generator.character.generate_last_name());
-              setBackstory(generator.character.generate_backstory());
-              setPreviousJob(generator.character.generate_job());
+              setGender(game.generator.character.generate_gender());
+              setFirstName(
+                game.generator.character.generate_first_name(gender)
+              );
+              setLastName(game.generator.character.generate_last_name());
+              setBackstory(game.generator.character.generate_backstory());
+              setPreviousJob(game.generator.character.generate_job());
             }}
           >
             Generate all fields
@@ -76,7 +80,28 @@ export default function CharacterCreator() {
 
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">{t("personal-information")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="backstory">{t("backstory")}</Label>
+            <Select
+              value={gender ?? undefined} // Pass the selected backstory value
+              onValueChange={(value) => setGender(value as Gender)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={"Select gender"} />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(Gender).map((genderOption, index) => (
+                  <SelectItem
+                    key={index}
+                    value={Object.values(Gender)[index] as Gender}
+                  >
+                    {genderOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div>
             <Label htmlFor="firstName">{t("first-name")}</Label>
             <Input
@@ -84,7 +109,7 @@ export default function CharacterCreator() {
               id="fn"
               placeholder={t("enter-first-name")}
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.currentTarget.value)}
             />
           </div>
           <div>
@@ -93,7 +118,7 @@ export default function CharacterCreator() {
               id="ln"
               placeholder={t("enter-last-name")}
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => setLastName(e.currentTarget.value)}
             />
           </div>
         </div>
@@ -166,18 +191,19 @@ export default function CharacterCreator() {
       <Button
         className="w-full"
         onClick={() => {
-          generator.character.create_character(
+          game.generator.character.create_character(
             {
-              id: gameState.characters.length,
+              id: game.gameState.characters.length,
               first_name: firstName,
               last_name: lastName,
+              gender: gender!,
               backstory: backstory!,
               previous_job: previousJob!,
             },
-            updateGameState
+            game
           );
 
-          generator.world.populateWorld(generator, updateGameState);
+          game.generator.world.populateWorld(game);
         }}
       >
         {t("create-character")}

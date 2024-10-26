@@ -10,7 +10,7 @@ export default function GameRoot() {
   const sidebarRef = useRef<HTMLElement | null>(null);
   const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const [currentPage, setCurrentPage] = useState("home");
-  const { gameState } = useGameContext();
+  const game = useGameContext();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -33,7 +33,7 @@ export default function GameRoot() {
     };
   }, [isSidebarOpen]);
 
-  if (gameState.player_id == -1) {
+  if (game.gameState.player_id == -1) {
     setCurrentPage("character-creator");
   }
 
@@ -59,7 +59,7 @@ export default function GameRoot() {
               {currentPage === "home" && <div></div>}
               {currentPage === "database" && <DatabasePage />}
               {currentPage === "character-creator" &&
-                gameState.player_id == -1 && <CharacterCreator />}
+                game.gameState.player_id == -1 && <CharacterCreator />}
             </main>
           </div>
         </div>

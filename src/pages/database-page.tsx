@@ -26,10 +26,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
-import { CompanyHover, CompanyMiniInfo } from "@/components/game/company-hover";
+import { CompanyMiniInfo } from "@/components/game/company-hover";
 
 export function DatabasePage() {
-  const { gameState } = useGameContext();
+  const game = useGameContext();
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
@@ -39,12 +39,12 @@ export function DatabasePage() {
   const itemsPerPage = 100;
 
   const filteredCharacters = useMemo(() => {
-    return gameState.characters.filter((character) => {
+    return game.gameState.characters.filter((character) => {
       const searchLower = characterSearch.toLowerCase();
       const fullName =
         `${character.first_name} ${character.last_name}`.toLowerCase();
       const company =
-        gameState.companies
+        game.gameState.companies
           .find((c) => c.employees.some((e) => e.characterID === character.id))
           ?.name.toLowerCase() || "";
 
@@ -55,10 +55,10 @@ export function DatabasePage() {
         company.includes(searchLower)
       );
     });
-  }, [gameState.characters, gameState.companies, characterSearch]);
+  }, [game.gameState.characters, game.gameState.companies, characterSearch]);
 
   const filteredCompanies = useMemo(() => {
-    return gameState.companies.filter((company) => {
+    return game.gameState.companies.filter((company) => {
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
@@ -72,7 +72,7 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [gameState.companies, companySearch, gameState]);
+  }, [game.gameState.companies, companySearch, game.gameState]);
 
   const paginateData = (data, page) => {
     const startIndex = (page - 1) * itemsPerPage;
@@ -83,13 +83,7 @@ export function DatabasePage() {
   const charactersData = paginateData(filteredCharacters, charactersPage);
   const companiesData = paginateData(filteredCompanies, companiesPage);
 
-  const renderPagination = (
-    currentPage,
-    setPage,
-    totalItems,
-    pageInput,
-    setPageInput
-  ) => {
+  const renderPagination = (currentPage, setPage, totalItems) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const maxVisiblePages = 5;
 
@@ -104,19 +98,6 @@ export function DatabasePage() {
       { length: endPage - startPage + 1 },
       (_, i) => startPage + i
     );
-
-    const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPageInput(e.target.value);
-    };
-
-    const handlePageInputSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      const newPage = parseInt(pageInput, 10);
-      if (newPage >= 1 && newPage <= totalPages) {
-        setPage(newPage);
-        setPageInput("");
-      }
-    };
 
     return (
       <Pagination className="mt-4">
@@ -178,7 +159,7 @@ export function DatabasePage() {
             placeholder="Search characters by name, job, backstory, or company"
             value={characterSearch}
             onChange={(e) => {
-              setCharacterSearch(e.target.value);
+              setCharacterSearch(e.currentTarget.value);
               setCharactersPage(1);
             }}
           />
@@ -195,7 +176,7 @@ export function DatabasePage() {
           </TableHeader>
           <TableBody>
             {charactersData.map((character, index) => {
-              const company = gameState.companies.find((c) =>
+              const company = game.gameState.companies.find((c) =>
                 c.employees.some((e) => e.characterID === character.id)
               );
               return (
@@ -204,7 +185,7 @@ export function DatabasePage() {
                     {(charactersPage - 1) * itemsPerPage + index + 1}
                   </TableCell>
                   <TableCell>{`${character.first_name} ${character.last_name}${
-                    character.id == gameState.player_id ? " (you)" : ""
+                    character.id == game.gameState.player_id ? " (you)" : ""
                   }`}</TableCell>
                   <TableCell>{character.previous_job}</TableCell>
                   <TableCell>{character.backstory}</TableCell>
@@ -230,7 +211,7 @@ export function DatabasePage() {
             placeholder="Search companies by name or employee names"
             value={companySearch}
             onChange={(e) => {
-              setCompanySearch(e.target.value);
+              setCompanySearch(e.currentTarget.value);
               setCompaniesPage(1);
             }}
           />
@@ -255,7 +236,7 @@ export function DatabasePage() {
                     <CharacterMiniInfo
                       key={i}
                       character={
-                        getCharacterById(gameState, employee.characterID)!
+                        getCharacterById(game.gameState, employee.characterID)!
                       }
                     />
                   ))}
