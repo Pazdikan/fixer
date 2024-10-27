@@ -62,7 +62,7 @@ export function DatabasePage() {
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
-          const character = getCharacterById(gameState, e.characterID);
+          const character = getCharacterById(game.gameState, e.characterID);
           return `${character?.first_name} ${character?.last_name}`.toLowerCase();
         })
         .join(" ");

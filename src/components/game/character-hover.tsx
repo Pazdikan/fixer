@@ -17,6 +17,7 @@ import {
 } from "../ui/card";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
+import { WikiLink, WikiLinks } from "../ui/wiki-link";
 
 interface CharacterPopoverProps {
   character: Character;
@@ -51,6 +52,7 @@ export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
                 {character.previous_job} • {character.backstory}
               </CardDescription>
             </div>
+            <WikiLink wikiPage={WikiLinks.CHARACTER} />
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-sm"></p>

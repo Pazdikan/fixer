@@ -50,10 +50,14 @@ export class WorldGenerator {
   };
 
   generateCompany(unemployed: Character[], game: GameContextType) {
-    if (this.rng() > 0.9 && game.gameState.characters.length > 0) {
-      const numb = Math.floor(this.rng() * game.gameState.characters.length);
-      const owner: Character = game.gameState.characters[numb];
+    const owner = game.updateGameState((prevState) => prevState).characters[
+      Math.floor(
+        this.rng() *
+          game.updateGameState((prevState) => prevState).characters.length
+      )
+    ];
 
+    if (this.rng() > 0.9) {
       return {
         name: `${getInitial(owner)} Industries`,
         employees: [
@@ -64,10 +68,6 @@ export class WorldGenerator {
         ],
       } as Company;
     } else {
-      const owner =
-        game.gameState.characters[
-          Math.floor(this.rng() * game.gameState.characters.length)
-        ];
       let employees: Employee[] = [];
 
       for (let i = 0; i < Math.floor(this.rng() * 3); i++) {
