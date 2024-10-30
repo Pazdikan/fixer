@@ -11,7 +11,7 @@ export interface GameState {
   characters: Character[];
   world?: World;
   seed: string;
-  seed_state?: any;
+  seed_state?: string;
   companies: Company[];
 }
 

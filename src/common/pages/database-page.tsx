@@ -72,7 +72,7 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [game.gameState.companies, companySearch, game.gameState]);
+  }, [companySearch, game.gameState]);
 
   const paginateData = (data, page) => {
     const startIndex = (page - 1) * itemsPerPage;
@@ -88,7 +88,7 @@ export function DatabasePage() {
     const maxVisiblePages = 5;
 
     let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);
