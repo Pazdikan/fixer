@@ -49,7 +49,7 @@ export class WorldGenerator {
     });
   };
 
-  generateCompany(unemployed: Character[], game: GameContextType) {
+  generateCompany(unemployed: Character[], game: GameContextType): Company {
     const owner = game.updateGameState((prevState) => prevState).characters[
       Math.floor(
         this.rng() *
@@ -85,6 +85,7 @@ export class WorldGenerator {
       }
 
       return {
+        id: game.updateGameState((prevState) => prevState).companies.length,
         name: `${getFullName(owner)} ${generateCompanySuffix(this.rng)}`,
         employees: [
           {
