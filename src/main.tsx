@@ -1,10 +1,10 @@
-import { render } from "preact";
 import "./index.css";
-import "./lib/i18n.ts";
-import { GameProvider } from "./components/game/game-context.tsx";
-import GameRoot from "@/pages/home-page.tsx";
-import { useGameContext } from "./hooks/use-game-context.ts";
-import CharacterCreator from "./pages/character-creator.tsx";
+import "./common/lib/i18n.ts";
+import GameRoot from "@/common/pages/home-page.tsx";
+import { useGameContext } from "./core/context/use-game-context.ts";
+import CharacterCreator from "./common/pages/character-creator.tsx";
+import { GameProvider } from "./core/context/game-context.tsx";
+import { createRoot } from "react-dom/client";
 
 const Root = () => {
   return (
@@ -15,11 +15,14 @@ const Root = () => {
 };
 
 const RootContent = () => {
-  const { gameState } = useGameContext();
+  const game = useGameContext();
 
   return (
-    <>{gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>
+    <>{game.gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>
   );
 };
 
-render(<Root />, document.getElementById("app")!);
+const container = document.getElementById("app");
+const root = createRoot(container!);
+
+root.render(<Root />);
