@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import { useGameContext } from "@/core/context/use-game-context";
 import {
@@ -72,7 +74,7 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [companySearch, game.gameState]);
+  }, [game.gameState.companies, companySearch, game.gameState]);
 
   const paginateData = (data, page) => {
     const startIndex = (page - 1) * itemsPerPage;
@@ -88,7 +90,7 @@ export function DatabasePage() {
     const maxVisiblePages = 5;
 
     let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);

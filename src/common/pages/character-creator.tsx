@@ -37,7 +37,7 @@ export default function CharacterCreator() {
         {t("character-creator")}
       </h1>
 
-      <p className={"text-center"}>{t("create-character-notice")} </p>
+      <p class={"text-center"}>{t("create-character-notice")} </p>
 
       <div className="items-center">
         <Label htmlFor="seed">Seed</Label>
@@ -105,7 +105,7 @@ export default function CharacterCreator() {
           <div>
             <Label htmlFor="firstName">{t("first-name")}</Label>
             <Input
-              autoComplete="off"
+              autocomplete="off"
               id="fn"
               placeholder={t("enter-first-name")}
               value={firstName}

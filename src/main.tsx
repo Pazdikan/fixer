@@ -1,10 +1,10 @@
+import { render } from "preact";
 import "./index.css";
 import "./common/lib/i18n.ts";
 import GameRoot from "@/common/pages/home-page.tsx";
 import { useGameContext } from "./core/context/use-game-context.ts";
 import CharacterCreator from "./common/pages/character-creator.tsx";
 import { GameProvider } from "./core/context/game-context.tsx";
-import { createRoot } from "react-dom/client";
 
 const Root = () => {
   return (
@@ -22,7 +22,4 @@ const RootContent = () => {
   );
 };
 
-const container = document.getElementById("app");
-const root = createRoot(container!);
-
-root.render(<Root />);
+render(<Root />, document.getElementById("app")!);

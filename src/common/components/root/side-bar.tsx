@@ -1,22 +1,15 @@
-import { User } from "lucide-react";
+import { FlaskConical, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SettingsModal from "@/common/components/root/settings-modal";
 import DebugModal from "./debug-modal";
-import { RefObject } from "react";
-
-interface SidebarProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-  setCurrentPage: (page: string) => void;
-  sidebarRef: RefObject<HTMLElement>;
-}
 
 export default function Sidebar({
   isSidebarOpen,
   toggleSidebar,
   setCurrentPage,
   sidebarRef,
-}: SidebarProps) {
+  toggleButtonRef,
+}) {
   const { t } = useTranslation();
 
   return (

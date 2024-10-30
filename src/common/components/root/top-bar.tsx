@@ -1,23 +1,13 @@
 import { useGameContext } from "@/core/context/use-game-context";
 import { useTranslation } from "react-i18next";
 
-import { RefObject } from "react";
-
-interface TopBarProps {
-  toggleSidebar: () => void;
-  toggleButtonRef: RefObject<HTMLButtonElement>;
-}
-
-export default function TopBar({
-  toggleSidebar,
-  toggleButtonRef,
-}: TopBarProps) {
+export default function TopBar({ toggleSidebar, toggleButtonRef }) {
   const { t } = useTranslation();
   const game = useGameContext();
 
   return (
     <header className="bg-white shadow-md p-4 flex justify-between items-center">
-      <h1 className={""}>
+      <h1 class={""}>
         Playing as{" "}
         {game.gameState.player_id == -1
           ? ""

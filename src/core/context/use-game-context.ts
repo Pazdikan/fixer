@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext } from "preact/compat";
 import { GameContext } from "./game-context";
 
 export const useGameContext = () => {

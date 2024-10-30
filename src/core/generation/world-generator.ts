@@ -63,7 +63,7 @@ export class WorldGenerator {
         ],
       } as Company;
     } else {
-      const employees: Employee[] = [];
+      let employees: Employee[] = [];
 
       for (let i = 0; i < Math.floor(this.rng() * 3); i++) {
         if (unemployed.length > 0) {

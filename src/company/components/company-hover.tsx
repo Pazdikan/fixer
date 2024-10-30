@@ -7,7 +7,7 @@ import { useGameContext } from "@/core/context/use-game-context";
 import { getFullName } from "@/common/lib/utils";
 import { FC } from "react";
 
-import { Building2 } from "lucide-react";
+import { Badge, Building2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -15,9 +15,8 @@ import {
   CardDescription,
   CardContent,
 } from "@/common/components/ui/card";
-import { Avatar, AvatarFallback } from "@/common/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Company, CompanyPosition } from "../company.types";
-import { Badge } from "@/common/components/ui/badge";
 
 interface CompanyPopoverProps {
   company: Company;

@@ -1,9 +1,9 @@
+import { useState, useRef, useEffect } from "preact/hooks";
 import CharacterCreator from "./character-creator";
 import Sidebar from "@/common/components/root/side-bar";
 import TopBar from "@/common/components/root/top-bar";
 import { useGameContext } from "@/core/context/use-game-context";
 import { DatabasePage } from "./database-page";
-import { useState, useRef, useEffect } from "react";
 
 export default function GameRoot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -46,6 +46,7 @@ export default function GameRoot() {
             toggleSidebar={toggleSidebar}
             setCurrentPage={setCurrentPage}
             sidebarRef={sidebarRef}
+            toggleButtonRef={toggleButtonRef}
           />
 
           <div className="flex flex-col flex-1">
