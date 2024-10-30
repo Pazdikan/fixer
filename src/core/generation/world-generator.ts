@@ -1,12 +1,7 @@
-import { getFullName, getUnemployedCharacters } from "@/lib/utils";
-import {
-  Character,
-  Company,
-  CompanyPosition,
-  Employee,
-  GameContextType,
-  GameState,
-} from "@/types/game-state.ts";
+import { Character } from "@/character/character.types";
+import { getFullName, getUnemployedCharacters } from "@/common/lib/utils";
+import { Company, CompanyPosition, Employee } from "@/company/company.types";
+import { GameContextType, GameState } from "../core.types";
 
 export class WorldGenerator {
   rng: () => number;

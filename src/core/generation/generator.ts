@@ -1,7 +1,6 @@
-import { GameState } from "@/types/game-state";
-import { CharacterGenerator } from "./character-generator";
+import { CharacterGenerator } from "../../character/character-generator";
 import { WorldGenerator } from "./world-generator";
-import { EventGenerator } from "./event-generator";
+import { EventGenerator } from "../../event/event-generator";
 
 export class Generator {
   rng: () => number;
