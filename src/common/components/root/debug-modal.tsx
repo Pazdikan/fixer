@@ -1,6 +1,10 @@
 import { useGameContext } from "@/core/context/use-game-context";
-import { Dialog, DialogTrigger, DialogContent } from "@radix-ui/react-dialog";
-import { Label } from "@radix-ui/react-label";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+} from "@/common/components/ui/dialog";
+import { Label } from "@/common/components/ui/label";
 import { FlaskConical } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
