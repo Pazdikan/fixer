@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "preact/hooks";
 import CharacterCreator from "./character-creator";
-import Sidebar from "@/common/components/root/side-bar";
+import { Sidebar } from "@/common/components/root/side-bar";
 import TopBar from "@/common/components/root/top-bar";
 import { useGameContext } from "@/core/context/use-game-context";
 import { DatabasePage } from "./database-page";
+import { NetworkPage } from "./network-page";
 
 export default function GameRoot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -56,10 +57,14 @@ export default function GameRoot() {
             />
 
             <main className="flex-1 p-6 overflow-y-auto">
-              {currentPage === "home" && <div></div>}
-              {currentPage === "database" && <DatabasePage />}
               {currentPage === "character-creator" &&
                 game.gameState.player_id == -1 && <CharacterCreator />}
+
+              {currentPage === "home" && <div></div>}
+              {currentPage === "database" && <DatabasePage />}
+              {currentPage === "network" && (
+                <NetworkPage setCurrentPage={setCurrentPage} />
+              )}
             </main>
           </div>
         </div>

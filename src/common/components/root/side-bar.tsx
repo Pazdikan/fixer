@@ -1,15 +1,22 @@
-import { FlaskConical, User } from "lucide-react";
+import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SettingsModal from "@/common/components/root/settings-modal";
 import DebugModal from "./debug-modal";
 
-export default function Sidebar({
+export type SidebarProps = {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+  setCurrentPage: (page: string) => void;
+  sidebarRef: React.RefObject<HTMLElement>;
+  toggleButtonRef: React.RefObject<HTMLButtonElement>;
+};
+
+export function Sidebar({
   isSidebarOpen,
   toggleSidebar,
   setCurrentPage,
   sidebarRef,
-  toggleButtonRef,
-}) {
+}: SidebarProps) {
   const { t } = useTranslation();
 
   return (
@@ -47,6 +54,15 @@ export default function Sidebar({
                   onClick={() => setCurrentPage("database")}
                 >
                   {t("database")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="block py-2 px-4 hover:bg-gray-200 rounded"
+                  onClick={() => setCurrentPage("network")}
+                >
+                  Network
                 </a>
               </li>
             </ul>
