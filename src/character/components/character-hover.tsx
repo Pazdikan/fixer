@@ -4,7 +4,7 @@ import {
   PopoverTrigger,
 } from "@/common/components/ui/popover";
 import { useGameContext } from "@/core/context/use-game-context";
-import { getFullName } from "@/common/lib/utils";
+import { getFullName, getInitial } from "@/common/lib/utils";
 
 import { FC } from "react";
 import {
@@ -42,10 +42,7 @@ export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
         <Card className={"border-none"}>
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
-              <AvatarFallback>
-                {character.first_name[0]}
-                {character.last_name[0]}
-              </AvatarFallback>
+              <AvatarFallback>{getInitial(character)}</AvatarFallback>
             </Avatar>
             <div>
               <CardTitle>{getFullName(character)}</CardTitle>

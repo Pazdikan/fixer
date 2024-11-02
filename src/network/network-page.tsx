@@ -1,6 +1,6 @@
 import { Application } from "@/network/network-application";
 import { MessageSquareText } from "lucide-react";
-import { SidebarProps } from "@/common/components/root/side-bar";
+import { SidebarProps } from "@/common/components/root/root";
 
 const applications = [
   { icon: MessageSquareText, name: "Posts", redirect: "network-posts" },

@@ -1,5 +1,9 @@
 import { Character } from "@/character/character.types";
-import { getFullName, getUnemployedCharacters } from "@/common/lib/utils";
+import {
+  getFullName,
+  getInitial,
+  getUnemployedCharacters,
+} from "@/common/lib/utils";
 import { Company, CompanyPosition, Employee } from "@/company/company.types";
 import { GameContextType, GameState } from "../core.types";
 
@@ -92,12 +96,6 @@ export class WorldGenerator {
       };
     }
   }
-}
-
-function getInitial(character: Character) {
-  return `${character.first_name.split("")[0]}${
-    character.last_name.split("")[0]
-  }`;
 }
 
 function generateCompanySuffix(rng: () => number) {

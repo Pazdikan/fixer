@@ -34,3 +34,9 @@ export const getUnemployedCharacters = (gameState: GameState) => {
       )
   );
 };
+
+export function getInitial(character: Character) {
+  return `${character.first_name.split("")[0]}${
+    character.last_name.split("")[0]
+  }`;
+}

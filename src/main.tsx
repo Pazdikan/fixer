@@ -1,10 +1,12 @@
+import "preact/debug";
+
 import { render } from "preact";
 import "./index.css";
 import "./common/lib/i18n.ts";
-import GameRoot from "@/common/pages/home-page.tsx";
 import { useGameContext } from "./core/context/use-game-context.ts";
 import CharacterCreator from "./common/pages/character-creator.tsx";
 import { GameProvider } from "./core/context/game-context.tsx";
+import { GameRoot } from "./common/components/root/root.tsx";
 
 const Root = () => {
   return (
