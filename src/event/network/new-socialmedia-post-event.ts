@@ -3,11 +3,17 @@ import { Event } from "../event";
 import { eventEmitter } from "@/common/lib/event-emitter";
 
 export class NewSocialMediaPostEvent implements Event {
+  getID(): string {
+    return "new-social-media-post";
+  }
   getName(): string {
     return "New Social Media Post";
   }
   getDescription(): string {
     return "Someone has posted something on social media!";
+  }
+  shouldExecute(game: GameContextType): boolean {
+    return true;
   }
   execute(game: GameContextType): void {
     const character =
@@ -22,6 +28,6 @@ export class NewSocialMediaPostEvent implements Event {
       author_id: character.id,
     };
 
-    eventEmitter.emit("newPost", newPost);
+    eventEmitter.emit(this.getID(), newPost);
   }
 }

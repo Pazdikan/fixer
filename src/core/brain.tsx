@@ -24,8 +24,7 @@ export class GameBrain {
   private static tick(game: GameContextType) {
     const event = game.generator.event.generate_event(game);
 
-    if (event) {
-      console.log(event.getName());
+    if (event && event.shouldExecute(game)) {
       event.execute(game);
     }
   }

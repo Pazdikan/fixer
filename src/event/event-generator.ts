@@ -1,7 +1,7 @@
 import { GameContextType } from "@/core/core.types";
 import { Event } from "./event";
 import { NewGigEvent } from "./gig/new-gig-event";
-import { NewSocialMediaPostEvent } from "./gig/new-socialmedia-post-event";
+import { NewSocialMediaPostEvent } from "./network/new-socialmedia-post-event";
 
 export class EventGenerator {
   rng: () => number;
@@ -18,7 +18,7 @@ export class EventGenerator {
 
     if (rn < 0.01) {
       event = new NewGigEvent();
-    } else if (rn < 0.5) {
+    } else if (rn < 0.05) {
       event = new NewSocialMediaPostEvent();
     }
 

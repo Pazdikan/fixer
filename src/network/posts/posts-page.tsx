@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/compat";
 import { SocialMediaPost } from "./post";
 import { Post } from "./post.types";
 import { eventEmitter } from "@/common/lib/event-emitter";
+import { NewSocialMediaPostEvent } from "@/event/network/new-socialmedia-post-event";
 
 export function SocialMediaNetworkPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -11,10 +12,10 @@ export function SocialMediaNetworkPage() {
   };
 
   useEffect(() => {
-    eventEmitter.on("newPost", handleNewPost);
+    eventEmitter.on(new NewSocialMediaPostEvent().getID(), handleNewPost);
 
     return () => {
-      eventEmitter.off("newPost", handleNewPost);
+      eventEmitter.off(new NewSocialMediaPostEvent().getID(), handleNewPost);
     };
   });
 
