@@ -4,7 +4,8 @@ import { Sidebar } from "@/common/components/root/side-bar";
 import TopBar from "@/common/components/root/top-bar";
 import { useGameContext } from "@/core/context/use-game-context";
 import { DatabasePage } from "./database-page";
-import { NetworkPage } from "./network-page";
+import { NetworkPage } from "@/network/network-page";
+import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
 
 export default function GameRoot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -65,6 +66,7 @@ export default function GameRoot() {
               {currentPage === "network" && (
                 <NetworkPage setCurrentPage={setCurrentPage} />
               )}
+              {currentPage === "network-posts" && <SocialMediaNetworkPage />}
             </main>
           </div>
         </div>

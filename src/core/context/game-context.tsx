@@ -59,23 +59,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => clearInterval(saveInterval);
   }, [gameState]);
 
+  const game = {
+    gameState,
+    saveGameState,
+    updateGameState,
+    generator,
+  } as GameContextType;
+
   // Ensure GameBrain starts correctly
   useEffect(() => {
-    GameBrain.start(gameState, generator);
+    GameBrain.start(game);
   }, [gameState]);
 
-  return (
-    <GameContext.Provider
-      value={
-        {
-          gameState,
-          saveGameState,
-          updateGameState,
-          generator,
-        } as GameContextType
-      }
-    >
-      {children}
-    </GameContext.Provider>
-  );
+  return <GameContext.Provider value={game}>{children}</GameContext.Provider>;
 };

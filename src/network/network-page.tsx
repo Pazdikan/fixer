@@ -1,9 +1,9 @@
-import { Application } from "../components/root/network-application";
+import { Application } from "@/network/network-application";
 import { MessageSquareText } from "lucide-react";
-import { SidebarProps } from "../components/root/side-bar";
+import { SidebarProps } from "@/common/components/root/side-bar";
 
 const applications = [
-  { icon: MessageSquareText, name: "Twitter", redirect: "database" },
+  { icon: MessageSquareText, name: "Posts", redirect: "network-posts" },
 ];
 
 export function NetworkPage({ setCurrentPage }: Partial<SidebarProps>) {
@@ -17,7 +17,7 @@ export function NetworkPage({ setCurrentPage }: Partial<SidebarProps>) {
             icon={app.icon}
             name={app.name}
             onClick={() =>
-              setCurrentPage ? setCurrentPage("database") : () => {}
+              setCurrentPage ? setCurrentPage(app.redirect) : () => {}
             }
           />
         ))}
