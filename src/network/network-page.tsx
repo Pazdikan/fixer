@@ -1,12 +1,15 @@
 import { Application } from "@/network/network-application";
 import { MessageSquareText } from "lucide-react";
-import { SidebarProps } from "@/common/components/root/root";
 
 const applications = [
   { icon: MessageSquareText, name: "Posts", redirect: "network-posts" },
 ];
 
-export function NetworkPage({ setCurrentPage }: Partial<SidebarProps>) {
+export function NetworkPage({
+  setCurrentPage,
+}: {
+  setCurrentPage: (page: string) => void;
+}) {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Network Applications</h1>
@@ -16,9 +19,7 @@ export function NetworkPage({ setCurrentPage }: Partial<SidebarProps>) {
             key={index}
             icon={app.icon}
             name={app.name}
-            onClick={() =>
-              setCurrentPage ? setCurrentPage(app.redirect) : () => {}
-            }
+            onClick={() => setCurrentPage && setCurrentPage(app.redirect)}
           />
         ))}
       </div>

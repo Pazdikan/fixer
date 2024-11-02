@@ -1,18 +1,5 @@
-import { User } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import SettingsModal from "@/common/components/root/settings-modal";
-import DebugModal from "./debug-modal";
-
-export type SidebarProps = {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-  setCurrentPage: (page: string) => void;
-  sidebarRef: React.RefObject<HTMLElement>;
-  toggleButtonRef: React.RefObject<HTMLButtonElement>;
-};
-
 import * as React from "react";
-import { ChevronDown, ChevronRight, GalleryVerticalEnd } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
