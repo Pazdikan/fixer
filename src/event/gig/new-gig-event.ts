@@ -11,6 +11,9 @@ export class NewGigEvent implements Event {
   getDescription(): string {
     return "You have a new gig!";
   }
+  getChance(): number {
+    return 0.01
+  }
   shouldExecute(game: GameContextType): boolean {
     return true;
   }
