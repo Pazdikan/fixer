@@ -18,6 +18,7 @@ import { Separator } from "@/common/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarInset,
@@ -38,6 +39,7 @@ import { NetworkPage } from "@/network/network-page";
 import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
 import { getCharacterById, getFullName, getInitial } from "@/common/lib/utils";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import DebugModal from "./debug-modal";
 
 // This is sample data.
 const data = {
@@ -170,6 +172,11 @@ export function GameRoot() {
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>
+          <div className={"flex"}>
+            <DebugModal />
+          </div>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset className={"h-screen bg-sidebar"}>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
