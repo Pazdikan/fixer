@@ -12,6 +12,9 @@ export class NewSocialMediaPostEvent implements Event {
   getDescription(): string {
     return "Someone has posted something on social media!";
   }
+  getChance(): number {
+    return 0.1
+  }
   shouldExecute(game: GameContextType): boolean {
     return true;
   }

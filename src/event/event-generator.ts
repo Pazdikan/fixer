@@ -13,13 +13,15 @@ export class EventGenerator {
   }
 
   generate_event(game: GameContextType): Event | null {
-    const rn = this.rng();
+    const rn = this.rng(); // Get a random number between 0 and 1
     let event = null;
 
-    if (rn < 0.01) {
-      event = new NewGigEvent();
-    } else if (rn < 0.05) {
-      event = new NewSocialMediaPostEvent();
+    // Loop through the events and check their chances
+    for (const potentialEvent of this.events) {
+      if (rn < potentialEvent.getChance()) {
+        event = potentialEvent;
+        break; // Stop once an event is triggered
+      }
     }
 
     return event;

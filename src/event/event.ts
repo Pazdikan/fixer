@@ -4,6 +4,7 @@ export interface Event {
   getID(): string;
   getName(): string;
   getDescription(): string;
+  getChance(): number;
   shouldExecute(game: GameContextType): boolean;
   execute(game: GameContextType): void;
 }
