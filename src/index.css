@@ -89,7 +89,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+#app {
   overflow: hidden;
 }
 
