@@ -9,6 +9,8 @@ export function SocialMediaNetworkPage() {
 
   const handleNewPost = (post: Post) => {
     setPosts((prevPosts) => [...prevPosts, post]);
+
+    console.log(`Posts: ${posts.length}`)
   };
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export function SocialMediaNetworkPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Social Media Feed</h1>
       <div className="max-w-2xl mx-auto">
-        {posts.reverse().map((post) => (
+        {posts.map((post) => (
           <SocialMediaPost key={post.id} post={post} />
         ))}
       </div>
