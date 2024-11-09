@@ -1,7 +1,7 @@
 import { GameContextType } from "./core.types";
 
 export class GameBrain {
-  private static tickInterval: number = 1000 / 2; // 10 ticks per second
+  private static tickInterval: number = 500;
   private static intervalId: number | null = null;
 
   public static start(game: GameContextType) {
@@ -22,10 +22,11 @@ export class GameBrain {
   }
 
   private static tick(game: GameContextType) {
-    const event = game.generator.event.generate_event(game);
-
-    if (event && event.shouldExecute(game)) {
-      event.execute(game);
+    console.log("Tick")
+      // Generate event and check if it should be executed
+      const event = game.generator.event.generate_event(game);
+      if (event && event.shouldExecute(game)) {
+        event.execute(game);
     }
   }
 }

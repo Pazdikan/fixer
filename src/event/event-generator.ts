@@ -20,9 +20,12 @@ export class EventGenerator {
     for (const potentialEvent of this.events) {
       if (rn < potentialEvent.getChance()) {
         event = potentialEvent;
+    console.log(`Generating Event - RN: ${rn} - Event: ${event?.getName()}`)
+
         break; // Stop once an event is triggered
       }
     }
+
 
     return event;
   }
