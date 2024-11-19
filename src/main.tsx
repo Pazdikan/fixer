@@ -1,27 +1,23 @@
-import "preact/debug";
+import { createRoot } from "react-dom/client";
 
-import { render } from "preact";
 import "./index.css";
-import "./common/lib/i18n.ts";
-import { useGameContext } from "./core/context/use-game-context.ts";
-import CharacterCreator from "./common/pages/character-creator.tsx";
-import { GameProvider } from "./core/context/game-context.tsx";
-import { GameRoot } from "./common/components/root/root.tsx";
+import { useGame } from "./core/store/game-store";
 
-const Root = () => {
-  return (
-    <GameProvider>
-      <RootContent />
-    </GameProvider>
-  );
+// const RootContent = () => {
+//   useEffect(() => {
+//     game.updateGenerator(new Generator(game.rng));
+//   }, []);
+
+//   return <>{game.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>;
+// };
+
+const Test = () => {
+  const player_id = useGame((state) => state.gameState.player_id);
+  return <p>{player_id}</p>;
 };
 
-const RootContent = () => {
-  const game = useGameContext();
-
-  return (
-    <>{game.gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>
-  );
-};
-
-render(<Root />, document.getElementById("app")!);
+const container = document.getElementById("game")!;
+if (container) {
+  const root = createRoot(container);
+  root.render(<Test />);
+}

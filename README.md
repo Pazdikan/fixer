@@ -1,21 +1,50 @@
-# What's planned for the game?
+# React + TypeScript + Vite
 
-You'll play as a [fixer](<https://en.wikipedia.org/wiki/Fixer_(person)>). Starting out as an unknown, you'll use social media to find people in need of help. You'll complete your first job (code name: gig) to earn some recognition (code name: cred).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Eventually, people will start reaching out to you directly. You can also build your own team of mercenaries—individuals willing to take on risky jobs for cash. Each character in this procedurally generated world will have unique skills, traits, and personalities.
+Currently, two official plugins are available:
 
-# About development and future releases
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Once I manage to create a reasonably playable version of the game, it will be released as version 0.1.0—the very first release.
+## Expanding the ESLint configuration
 
-After the initial (0.1.0) version, I'll create a "development" branch where all new commits will go. Once everything in that branch is stable, it will be merged into the master branch and tagged with a new version number.
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-# How to contribute
+- Configure the top-level `parserOptions` property like this:
 
-Check out [CONTRIBUTING.md](./CONTRIBUTING.md)
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-All contributors will be acknowledged in the game. Thanks in advance!
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-# Why keep this repository public?
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-Why not? The game probably won't get much attention, but if someone finds it, they might want to help by playtesting or even contributing.
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
