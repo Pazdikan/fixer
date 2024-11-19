@@ -1,23 +1,23 @@
-import { createRoot } from "react-dom/client";
+import { createRoot, Root } from "react-dom/client";
 
 import "./index.css";
 import { useGame } from "./core/store/game-store";
+import CharacterCreator from "./common/pages/character-creator";
+import { GameRoot } from "./common/components/root/root";
 
-// const RootContent = () => {
-//   useEffect(() => {
-//     game.updateGenerator(new Generator(game.rng));
-//   }, []);
-
-//   return <>{game.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>;
-// };
-
-const Test = () => {
+const RootContent = () => {
   const player_id = useGame((state) => state.gameState.player_id);
-  return <p>{player_id}</p>;
+  console.log("Player ID: ", player_id);
+
+  return <>{player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>;
 };
 
+let root: Root | null = null;
 const container = document.getElementById("game")!;
+
 if (container) {
-  const root = createRoot(container);
-  root.render(<Test />);
+  if (!root) {
+    root = createRoot(container);
+  }
+  root.render(<RootContent />);
 }
