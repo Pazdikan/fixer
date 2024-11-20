@@ -9,23 +9,22 @@ Please take a moment to read through this document to help ensure a smooth contr
 If you find a bug or have an issue with the project, please open an issue. When creating a new issue:
 
 1. **Search existing issues**: Make sure the issue hasn't already been reported.
-2. **Provide clear details**: Describe the problem, steps to reproduce, and any error messages or logs.
-3. **Version and environment info**: Include relevant information like operating system, software versions, and dependencies.
+2. **Report a single issue**: Please report one issue per ticket.
+3. **Use a template**: Use the provided issue templates to report your issue.
 
 ## How to Contribute (make changes to the code)
-If you don't know how any of this works, check out the [basics for newcomers](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
-### Create an issue before working
-It doesn't matter if you're adding a new feature or fixing a bug - please create a new issue (unless you're working with existing one or you're fixing a type or little like that). 
+If you don't know how any of this works, check out the [getting started](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
+
+### Create an issue before coding
+
+It doesn't matter if you're adding a new feature or fixing a bug - please create a new issue (unless you're working on existing one or you're fixing a type or little like that).
 
 Write a comment on the issue indicating that you started working on it. This will help avoid multiple people working on the same things.
 
 ### Use conventional commits
+
 https://www.conventionalcommits.org/en/v1.0.0/
-
-## Code of Conduct
-
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Please be respectful to others and foster a welcoming environment.
 
 ## License
 
