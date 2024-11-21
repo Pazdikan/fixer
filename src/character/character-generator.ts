@@ -1,6 +1,4 @@
-import first_names_male from "@/../data/first_names_male.json";
-import first_names_female from "@/../data/first_names_female.json";
-import last_names from "@/../data/last_names.json";
+import { api } from "@/api/api";
 import { Character, CharacterBackstory, Gender, Job } from "./character.types";
 import { useGame } from "@/core/store/game-store";
 
@@ -65,16 +63,20 @@ export class CharacterGenerator {
 
   generate_first_name = (gender: Gender) => {
     if (gender == Gender.MALE) {
-      return first_names_male[Math.floor(this.rng() * first_names_male.length)];
+      return api.character.first_names_male[
+        Math.floor(this.rng() * api.character.first_names_male.length)
+      ];
     } else {
-      return first_names_female[
-        Math.floor(this.rng() * first_names_female.length)
+      return api.character.first_names_female[
+        Math.floor(this.rng() * api.character.first_names_female.length)
       ];
     }
   };
 
   generate_last_name = () => {
-    return last_names[Math.floor(this.rng() * last_names.length)];
+    return api.character.last_names[
+      Math.floor(this.rng() * api.character.last_names.length)
+    ];
   };
 
   generate_backstory = () => {

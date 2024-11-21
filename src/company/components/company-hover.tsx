@@ -3,7 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/common/components/ui/popover";
-import { getFullName } from "@/common/lib/utils";
 import { FC } from "react";
 
 import { Badge, Building2 } from "lucide-react";
@@ -17,6 +16,7 @@ import {
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Company, CompanyPosition } from "../company.types";
 import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 interface CompanyPopoverProps {
   company: Company;
@@ -64,7 +64,7 @@ export const CompanyMiniInfo: FC<CompanyPopoverProps> = ({ company }) => {
                   >
                     <span className="text-sm">
                       {character
-                        ? getFullName(character)
+                        ? api.character.getFullName(character)
                         : `Employee ${employee.characterID}`}
                     </span>
                     <Badge

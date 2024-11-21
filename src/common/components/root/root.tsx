@@ -36,10 +36,10 @@ import CharacterCreator from "@/common/pages/character-creator";
 import { DatabasePage } from "@/common/pages/database-page";
 // import { NetworkPage } from "@/network/network-page";
 // import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
-import { getCharacterById, getFullName, getInitial } from "@/common/lib/utils";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
 import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 // This is sample data.
 const data = {
@@ -96,7 +96,7 @@ export function GameRoot() {
     })
   );
 
-  const player = getCharacterById(game.gameState.player_id);
+  const player = api.character.getCharacterById(game.gameState.player_id);
 
   return (
     <SidebarProvider
@@ -114,11 +114,13 @@ export function GameRoot() {
                 <SidebarMenuButton size="lg" asChild>
                   <a href="#">
                     <Avatar>
-                      <AvatarFallback>{getInitial(player)}</AvatarFallback>
+                      <AvatarFallback>
+                        {api.character.getInitial(player)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-0.5 leading-none">
                       <span className="font-semibold">
-                        {getFullName(player)}
+                        {api.character.getFullName(player)}
                       </span>
                       <span className="">you</span>
                     </div>

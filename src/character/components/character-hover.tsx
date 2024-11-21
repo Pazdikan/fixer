@@ -3,7 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/common/components/ui/popover";
-import { getFullName, getInitial } from "@/common/lib/utils";
 
 import { FC } from "react";
 import {
@@ -19,6 +18,7 @@ import { WikiLink, WikiLinks } from "../../common/components/ui/wiki-link";
 import { Character } from "../character.types";
 import { CompanyPosition } from "@/company/company.types";
 import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 interface CharacterPopoverProps {
   character: Character;
@@ -35,17 +35,19 @@ export const CharacterMiniInfo: FC<CharacterPopoverProps> = ({ character }) => {
             "cursor-pointer underline decoration-dotted decoration-1 hover:decoration-solid w-max"
           }
         >
-          {getFullName(character)}
+          {api.character.getFullName(character)}
         </p>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-screen md:w-96">
         <Card className={"border-none"}>
           <CardHeader className="flex flex-row items-center gap-4">
             <Avatar>
-              <AvatarFallback>{getInitial(character)}</AvatarFallback>
+              <AvatarFallback>
+                {api.character.getInitial(character)}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle>{getFullName(character)}</CardTitle>
+              <CardTitle>{api.character.getFullName(character)}</CardTitle>
               <CardDescription>
                 {character.previous_job} • {character.backstory}
               </CardDescription>

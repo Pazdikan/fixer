@@ -16,7 +16,6 @@ import {
   TableRow,
 } from "@/common/components/ui/table";
 import { CharacterMiniInfo } from "@/character/components/character-hover";
-import { getCharacterById } from "@/common/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -29,6 +28,7 @@ import {
 import { Input } from "@/common/components/ui/input";
 import { CompanyMiniInfo } from "@/company/components/company-hover";
 import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 export function DatabasePage() {
   const game = useGame((state) => state);
@@ -64,7 +64,7 @@ export function DatabasePage() {
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
-          const character = getCharacterById(e.characterID);
+          const character = api.character.getCharacterById(e.characterID);
           return `${character?.first_name} ${character?.last_name}`.toLowerCase();
         })
         .join(" ");
@@ -235,7 +235,9 @@ export function DatabasePage() {
                   {company.employees.map((employee, i) => (
                     <CharacterMiniInfo
                       key={i}
-                      character={getCharacterById(employee.characterID)!}
+                      character={
+                        api.character.getCharacterById(employee.characterID)!
+                      }
                     />
                   ))}
                 </TableCell>

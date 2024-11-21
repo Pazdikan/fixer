@@ -2,6 +2,7 @@ import { GameState, initialState } from "@/core/core.types";
 import { create } from "zustand";
 import seedrandom from "seedrandom";
 import { Generator } from "@/core/generation/generator";
+import { api } from "@/api/api";
 
 interface GameStore {
   gameState: GameState;
@@ -32,11 +33,11 @@ export const useGame = create<GameStore>((set, get) => {
   const initialGameState = GameStateManager.load();
   const seed = initialGameState.seed;
   let rng = seedrandom(seed, { state: initialGameState.seed_state ?? true });
-  const generator = new Generator(rng);
+  api.generator = new Generator(rng);
 
   return {
     gameState: initialGameState,
-    generator,
+    generator: api.generator,
     // Save game state to persistent storage
     saveGameState: () => {
       const currentState = get().gameState;

@@ -8,7 +8,7 @@ import { FlaskConical } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useGame } from "@/core/store/game-store";
-import { getUnemployedCharacters } from "@/common/lib/utils";
+import { api } from "@/api/api";
 
 export default function DebugModal() {
   function clear_localstorage() {
@@ -45,7 +45,9 @@ export default function DebugModal() {
             onClick={() => {
               const company = useGame
                 .getState()
-                .generator.company.generateCompany(getUnemployedCharacters());
+                .generator.company.generateCompany(
+                  api.character.getUnemployedCharacters()
+                );
               document.getElementById("generated-company-text")!.innerText =
                 JSON.stringify(company, null, 2);
             }}

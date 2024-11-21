@@ -1,9 +1,5 @@
+import { api } from "@/api/api";
 import { Character } from "@/character/character.types";
-import {
-  getFullName,
-  getInitial,
-  getUnemployedCharacters,
-} from "@/common/lib/utils";
 import { Company, CompanyPosition, Employee } from "@/company/company.types";
 import { GameContextType, GameState } from "@/core/core.types";
 import { useGame } from "@/core/store/game-store";
@@ -24,7 +20,7 @@ export class CompanyGenerator {
       );
     }
 
-    const unemployed = getUnemployedCharacters();
+    const unemployed = api.character.getUnemployedCharacters();
 
     for (let i = 0; i < 500; i++) {
       game.generator.company.create_company(
@@ -57,7 +53,7 @@ export class CompanyGenerator {
 
     if (this.rng() > 0.9) {
       return {
-        name: `${getInitial(owner)} Industries`,
+        name: `${api.character.getInitial(owner)} Industries`,
         employees: [
           {
             characterID: owner.id,
@@ -84,7 +80,9 @@ export class CompanyGenerator {
 
       return {
         id: game.gameState.companies.length,
-        name: `${getFullName(owner)} ${generateCompanySuffix(this.rng)}`,
+        name: `${api.character.getFullName(owner)} ${generateCompanySuffix(
+          this.rng
+        )}`,
         employees: [
           {
             characterID: owner.id,
