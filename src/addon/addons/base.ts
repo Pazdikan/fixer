@@ -19,6 +19,8 @@ export const coreAddon: Addon = {
     api.character.addLastNamesToGenerator(last_names);
   },
   onDisabled: () => {
+    // Usually, here you would remove all registered stuff from onEnabled,
+    // but this is the core addon and should never be disabled.
     throw new Error(
       "Core addon has been disabled! This is unexpected. Please refresh the page."
     );

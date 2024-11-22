@@ -29,6 +29,7 @@ import {
   CollapsibleTrigger,
 } from "../components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import { AddonSelect } from "@/addon/components/addon-select";
 
 export function NewGamePage() {
   const { t } = useTranslation();
@@ -130,6 +131,8 @@ export function NewGamePage() {
               </div>
             </div>
           </div>
+
+          <AddonSelect />
 
           <Collapsible
             open={isOpen}

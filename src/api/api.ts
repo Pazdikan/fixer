@@ -1,6 +1,5 @@
 import { Generator } from "@/core/generation/generator";
 import { CharacterAPI } from "./character";
-import { useGame } from "@/core/store/game-store";
 
 export interface IAPI {
   character: CharacterAPI;

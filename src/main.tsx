@@ -8,6 +8,7 @@ import { coreAddon } from "./addon/addons/base";
 import { Toaster } from "@/common/components/ui/toaster";
 import { NewGamePage } from "./common/pages/new-game-page";
 import { useEffect } from "react";
+import { testAddon } from "./addon/addons/test";
 
 function AutoSave() {
   const saveGame = useGame((state) => state.saveGameState);
@@ -45,6 +46,7 @@ if (container) {
   }
 
   addonManager.register(coreAddon);
+  addonManager.register(testAddon);
   addonManager.getRegisteredAddons().forEach((addon) => {
     addonManager.enable(addon.id);
   });

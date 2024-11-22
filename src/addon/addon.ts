@@ -28,6 +28,11 @@ export interface Addon {
   version: string;
 
   /**
+   * The name of the author of the addon.
+   */
+  author?: string;
+
+  /**
    * A list of flags associated with the addon.
    */
   flags: Flags[];
@@ -41,6 +46,17 @@ export interface Addon {
    * A function that is called when the addon is disabled.
    */
   onDisabled?: (api: IAPI) => void;
+
+  /**
+   * A function that is called on each tick of the game loop.
+   */
+  onTick?: (api: IAPI) => void;
+
+  /**
+   * A function that is called when a game event happens.
+   */
+  onEvent?: (api: IAPI, event: any) => void;
+  // TODO: Define the event type when created
 }
 
 /**
