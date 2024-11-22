@@ -12,9 +12,10 @@ If you find a bug or have an issue with the project, please open an issue. When 
 2. **Report a single issue**: Please report one issue per ticket.
 3. **Use a template**: Use the provided issue templates to report your issue.
 
-## How to Contribute (make changes to the code)
+## How to Contribute
 
-If you don't know how any of this works, check out the [getting started](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
+> [!INFO]
+> If you don't know how any of this works, check out the [getting started](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
 ### Create an issue before coding
 
@@ -25,6 +26,8 @@ Write a comment on the issue indicating that you started working on it. This wil
 ### Use conventional commits
 
 https://www.conventionalcommits.org/en/v1.0.0/
+
+### Add your changes to changelog
 
 ## License
 
