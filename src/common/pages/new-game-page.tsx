@@ -30,12 +30,15 @@ import {
 } from "../components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { AddonSelect } from "@/addon/components/addon-select";
+import { api } from "@/api/api";
 
 export function NewGamePage() {
   const { t } = useTranslation();
   const game = useGame((state) => state);
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(true);
+
+  const [seed, setSeed] = useState(game.gameState.seed);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,26 +48,22 @@ export function NewGamePage() {
 
   const handleSetSeed = () => {
     game.updateGameState({
-      seed: (document.getElementById("seed") as HTMLInputElement).value,
+      seed: seed,
       seed_state: null,
     });
     game.saveGameState();
     toast({
       title: "Seed set",
-      description: `Game seed has been set to: ${
-        (document.getElementById("seed") as HTMLInputElement).value
-      }`,
+      description: `Game seed has been set to: ${seed}`,
     });
   };
 
   const handleGenerateAll = () => {
-    setGender(game.generator.character.generate_gender());
-    setFirstName(
-      game.generator.character.generate_first_name(gender as Gender)
-    );
-    setLastName(game.generator.character.generate_last_name());
-    setBackstory(game.generator.character.generate_backstory());
-    setPreviousJob(game.generator.character.generate_job());
+    setGender(api.generator.character.generate_gender());
+    setFirstName(api.generator.character.generate_first_name(gender as Gender));
+    setLastName(api.generator.character.generate_last_name());
+    setBackstory(api.generator.character.generate_backstory());
+    setPreviousJob(api.generator.character.generate_job());
 
     toast({
       title: "Character generated",
@@ -82,7 +81,7 @@ export function NewGamePage() {
       return;
     }
 
-    game.generator.character.create_character({
+    api.generator.character.create_character({
       id: game.gameState.characters.length,
       first_name: firstName,
       last_name: lastName,
@@ -91,7 +90,7 @@ export function NewGamePage() {
       previous_job: previousJob,
     });
 
-    game.generator.company.populateWorld();
+    api.generator.company.populateWorld();
 
     toast({
       title: "Character created",
@@ -115,7 +114,8 @@ export function NewGamePage() {
               <Input
                 id="seed"
                 placeholder="Enter game seed"
-                value={game.gameState.seed}
+                value={seed}
+                onChange={(e) => setSeed(e.target.value)}
               />
               <div className="flex space-x-2">
                 <Button className="flex-1" onClick={handleSetSeed}>
