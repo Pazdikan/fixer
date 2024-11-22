@@ -6,11 +6,18 @@ import CharacterCreator from "./common/pages/character-creator";
 import { GameRoot } from "./common/components/root/root";
 import { addonManager } from "./addon/addon";
 import { coreAddon } from "./addon/addons/base";
+import { Toaster } from "@/common/components/ui/toaster";
+import { NewGamePage } from "./common/pages/new-game-page";
 
 const RootContent = () => {
   const player_id = useGame((state) => state.gameState.player_id);
 
-  return <>{player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>;
+  return (
+    <>
+      {player_id === -1 ? <NewGamePage /> : <GameRoot />}
+      <Toaster />
+    </>
+  );
 };
 
 let root: Root | null = null;
