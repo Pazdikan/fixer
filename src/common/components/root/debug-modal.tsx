@@ -1,4 +1,3 @@
-import { useGameContext } from "@/core/context/use-game-context";
 import {
   Dialog,
   DialogTrigger,
@@ -8,10 +7,10 @@ import { Label } from "@/common/components/ui/label";
 import { FlaskConical } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 export default function DebugModal() {
-  const game = useGameContext();
-
   function clear_localstorage() {
     localStorage.clear();
     window.location.reload();
@@ -31,7 +30,9 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const character = game.generator.character.generate_character();
+              const character = useGame
+                .getState()
+                .generator.character.generate_character();
               document.getElementById("generated-character-text")!.innerText =
                 JSON.stringify(character, null, 2);
             }}
@@ -42,7 +43,11 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const company = game.generator.world.generateCompany([], game);
+              const company = useGame
+                .getState()
+                .generator.company.generateCompany(
+                  api.character.getUnemployedCharacters()
+                );
               document.getElementById("generated-company-text")!.innerText =
                 JSON.stringify(company, null, 2);
             }}
@@ -54,7 +59,7 @@ export default function DebugModal() {
           <Input
             className={"min-w-max"}
             disabled={true}
-            value={game.gameState.seed}
+            value={useGame.getState().gameState.seed}
           />
         </DialogContent>
       </Dialog>

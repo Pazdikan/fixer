@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useGameContext } from "@/core/context/use-game-context";
 import {
   Tabs,
   TabsContent,
@@ -17,7 +16,6 @@ import {
   TableRow,
 } from "@/common/components/ui/table";
 import { CharacterMiniInfo } from "@/character/components/character-hover";
-import { getCharacterById } from "@/common/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -29,9 +27,11 @@ import {
 } from "@/common/components/ui/pagination";
 import { Input } from "@/common/components/ui/input";
 import { CompanyMiniInfo } from "@/company/components/company-hover";
+import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 export function DatabasePage() {
-  const game = useGameContext();
+  const game = useGame((state) => state);
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
@@ -64,7 +64,7 @@ export function DatabasePage() {
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
-          const character = getCharacterById(game.gameState, e.characterID);
+          const character = api.character.getCharacterById(e.characterID);
           return `${character?.first_name} ${character?.last_name}`.toLowerCase();
         })
         .join(" ");
@@ -202,9 +202,7 @@ export function DatabasePage() {
         {renderPagination(
           charactersPage,
           setCharactersPage,
-          filteredCharacters.length,
-          characterPageInput,
-          setCharacterPageInput
+          filteredCharacters.length
         )}
       </TabsContent>
       <TabsContent value="companies">
@@ -238,7 +236,7 @@ export function DatabasePage() {
                     <CharacterMiniInfo
                       key={i}
                       character={
-                        getCharacterById(game.gameState, employee.characterID)!
+                        api.character.getCharacterById(employee.characterID)!
                       }
                     />
                   ))}
@@ -250,9 +248,7 @@ export function DatabasePage() {
         {renderPagination(
           companiesPage,
           setCompaniesPage,
-          filteredCompanies.length,
-          companyPageInput,
-          setCompanyPageInput
+          filteredCompanies.length
         )}
       </TabsContent>
     </Tabs>

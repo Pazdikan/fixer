@@ -1,8 +1,6 @@
-import first_names_male from "@/../data/first_names_male.json";
-import first_names_female from "@/../data/first_names_female.json";
-import last_names from "@/../data/last_names.json";
+import { api } from "@/api/api";
 import { Character, CharacterBackstory, Gender, Job } from "./character.types";
-import { GameContextType } from "@/core/core.types";
+import { useGame } from "@/core/store/game-store";
 
 export class CharacterGenerator {
   rng: () => number;
@@ -11,7 +9,7 @@ export class CharacterGenerator {
     this.rng = rng;
   }
 
-  create_character = (object: Character, game: GameContextType) => {
+  create_character = (object: Character) => {
     if (
       !object.first_name ||
       !object.last_name ||
@@ -26,20 +24,18 @@ export class CharacterGenerator {
       return;
     }
 
-    object["id"] = game.updateGameState(
-      (prevState) => prevState
-    ).characters.length;
+    const game = useGame.getState();
 
-    game.updateGameState((prevState) => {
-      const newCharacters = [...prevState.characters, object];
+    object["id"] = game.gameState.characters.length;
 
-      return {
-        characters: newCharacters,
-        player_id:
-          prevState.player_id === -1
-            ? newCharacters.length - 1
-            : prevState.player_id,
-      };
+    const newCharacters = [...game.gameState.characters, object];
+
+    useGame.getState().updateGameState({
+      characters: newCharacters,
+      player_id:
+        game.gameState.player_id === -1
+          ? newCharacters.length - 1
+          : game.gameState.player_id,
     });
   };
 
@@ -67,16 +63,20 @@ export class CharacterGenerator {
 
   generate_first_name = (gender: Gender) => {
     if (gender == Gender.MALE) {
-      return first_names_male[Math.floor(this.rng() * first_names_male.length)];
+      return api.character.first_names_male[
+        Math.floor(this.rng() * api.character.first_names_male.length)
+      ];
     } else {
-      return first_names_female[
-        Math.floor(this.rng() * first_names_female.length)
+      return api.character.first_names_female[
+        Math.floor(this.rng() * api.character.first_names_female.length)
       ];
     }
   };
 
   generate_last_name = () => {
-    return last_names[Math.floor(this.rng() * last_names.length)];
+    return api.character.last_names[
+      Math.floor(this.rng() * api.character.last_names.length)
+    ];
   };
 
   generate_backstory = () => {

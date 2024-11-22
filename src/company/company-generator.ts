@@ -1,64 +1,59 @@
+import { api } from "@/api/api";
 import { Character } from "@/character/character.types";
-import {
-  getFullName,
-  getInitial,
-  getUnemployedCharacters,
-} from "@/common/lib/utils";
 import { Company, CompanyPosition, Employee } from "@/company/company.types";
-import { GameContextType, GameState } from "../core.types";
+import { GameContextType, GameState } from "@/core/core.types";
+import { useGame } from "@/core/store/game-store";
 
-export class WorldGenerator {
+export class CompanyGenerator {
   rng: () => number;
 
   constructor(rng: () => number) {
     this.rng = rng;
   }
 
-  populateWorld(game: GameContextType) {
+  populateWorld() {
+    const game = useGame.getState();
+
     for (let i = 0; i < 5000; i++) {
       game.generator.character.create_character(
-        game.generator.character.generate_character(),
-        game
+        game.generator.character.generate_character()
       );
     }
 
-    const unemployed = getUnemployedCharacters(
-      game.updateGameState((prevState) => prevState)
-    );
+    const unemployed = api.character.getUnemployedCharacters();
 
     for (let i = 0; i < 500; i++) {
-      game.generator.world.create_company(
-        game.generator.world.generateCompany(unemployed, game),
-        game
+      game.generator.company.create_company(
+        game.generator.company.generateCompany(unemployed)
       );
     }
   }
 
-  create_company = (object: Company, game: GameContextType) => {
-    game.updateGameState((prevState: GameState) => {
-      return {
-        companies: [
-          ...prevState.companies,
-          {
-            ...object,
-            id: prevState.companies.length, // Ensure id is based on latest state
-          },
-        ],
-      };
+  create_company = (object: Company) => {
+    const game = useGame.getState();
+
+    game.updateGameState({
+      companies: [
+        ...game.gameState.companies,
+        {
+          ...object,
+          id: game.gameState.companies.length,
+        },
+      ],
     });
   };
 
-  generateCompany(unemployed: Character[], game: GameContextType): Company {
-    const owner = game.updateGameState((prevState) => prevState).characters[
-      Math.floor(
-        this.rng() *
-          game.updateGameState((prevState) => prevState).characters.length
-      )
-    ];
+  generateCompany(unemployed: Character[]): Company {
+    const game = useGame.getState();
+
+    const owner =
+      game.gameState.characters[
+        Math.floor(this.rng() * game.gameState.characters.length)
+      ];
 
     if (this.rng() > 0.9) {
       return {
-        name: `${getInitial(owner)} Industries`,
+        name: `${api.character.getInitial(owner)} Industries`,
         employees: [
           {
             characterID: owner.id,
@@ -84,8 +79,10 @@ export class WorldGenerator {
       }
 
       return {
-        id: game.updateGameState((prevState) => prevState).companies.length,
-        name: `${getFullName(owner)} ${generateCompanySuffix(this.rng)}`,
+        id: game.gameState.companies.length,
+        name: `${api.character.getFullName(owner)} ${generateCompanySuffix(
+          this.rng
+        )}`,
         employees: [
           {
             characterID: owner.id,

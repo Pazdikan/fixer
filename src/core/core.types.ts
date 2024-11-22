@@ -1,6 +1,5 @@
 import { Character } from "@/character/character.types";
 import { Company } from "@/company/company.types";
-import { Generator } from "./generation/generator";
 
 export interface World {
   name: string;

@@ -1,27 +1,55 @@
-import "preact/debug";
+import { createRoot, Root } from "react-dom/client";
 
-import { render } from "preact";
 import "./index.css";
-import "./common/lib/i18n.ts";
-import { useGameContext } from "./core/context/use-game-context.ts";
-import CharacterCreator from "./common/pages/character-creator.tsx";
-import { GameProvider } from "./core/context/game-context.tsx";
-import { GameRoot } from "./common/components/root/root.tsx";
+import { useGame } from "./core/store/game-store";
+import { GameRoot } from "./common/components/root/root";
+import { addonManager } from "./addon/addon";
+import { coreAddon } from "./addon/addons/base";
+import { Toaster } from "@/common/components/ui/toaster";
+import { NewGamePage } from "./common/pages/new-game-page";
+import { useEffect } from "react";
+import { testAddon } from "./addon/addons/test";
 
-const Root = () => {
-  return (
-    <GameProvider>
-      <RootContent />
-    </GameProvider>
-  );
-};
+function AutoSave() {
+  const saveGame = useGame((state) => state.saveGameState);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      saveGame();
+      console.log("Auto-saved game");
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [saveGame]);
+
+  return null;
+}
 
 const RootContent = () => {
-  const game = useGameContext();
+  const player_id = useGame((state) => state.gameState.player_id);
 
   return (
-    <>{game.gameState.player_id === -1 ? <CharacterCreator /> : <GameRoot />}</>
+    <>
+      {player_id === -1 ? <NewGamePage /> : <GameRoot />}
+      <Toaster />
+      <AutoSave />
+    </>
   );
 };
 
-render(<Root />, document.getElementById("app")!);
+let root: Root | null = null;
+const container = document.getElementById("game")!;
+
+if (container) {
+  if (!root) {
+    root = createRoot(container);
+  }
+
+  addonManager.register(coreAddon);
+  addonManager.register(testAddon);
+  addonManager.getRegisteredAddons().forEach((addon) => {
+    addonManager.enable(addon.id);
+  });
+
+  root.render(<RootContent />);
+}

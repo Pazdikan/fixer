@@ -1,51 +1,40 @@
-# What can I contribute?
+# Contributing to Fixer
 
-The best way to help right now (in very early development) is to play the game and either report new issues or provide additional information on [existing issues](https://github.com/Pazdikan/fixer/issues). I'm not looking for coding help at the moment, unless I've created an issue with the [help wanted](https://github.com/pazdikan/fixer/labels/help%20wanted) tag.
+Thank you for your interest in contributing to our game! We welcome contributions of all kinds, from bug fixes to feature additions. By contributing, you are helping to improve the project and make it more useful for everyone.
 
-# Commit name conventions
+Please take a moment to read through this document to help ensure a smooth contribution process.
 
-> [!WARNING]  
-> Please follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) guidelines! This helps with generating a changelog and keeping the codebase organized.  
-> Example: `feat: Add Polish translation`
+## Reporting Issues
 
-# Best code practices
+If you find a bug or have an issue with the project, please open an issue. When creating a new issue:
 
-## useGameState()
+1. **Search existing issues**: Make sure the issue hasn't already been reported.
+2. **Report a single issue**: Please report one issue per ticket.
+3. **Use a template**: Use the provided issue templates to report your issue.
 
-```typescript
-const { gameState, updateGameState } = useGameState();
-```
+## How to Contribute
 
-This hook is a custom hook that provides access to the global game state (save file).
+> [!INFO]
+> If you don't know how any of this works, check out the [getting started](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
-#### `gameState`
+### Create an issue before coding
 
-- gameState MUST only be used in user interface (UI) components
-- You MUST NOT use the gameState object directly in game logic. Check the examples below.
+It doesn't matter if you're adding a new feature or fixing a bug - please create a new issue (unless you're working on existing one or you're fixing a type or little like that).
 
-#### `updateGameState(prevState => {})`
+Write a comment on the issue indicating that you started working on it. This will help avoid multiple people working on the same things.
 
-- The callback property `prevState` can also be used in game logic to access the most up to date game state.
+### Use conventional commits
 
-#### Updating the game state
+https://www.conventionalcommits.org/en/v1.0.0/
 
-```typescript
-updateGameState((prevState) => {
-  const newCharacters = [...prevState.characters, newCharacter];
+### Add your changes to changelog
 
-  return {
-    characters: newCharacters,
-  };
-});
-```
+## License
 
-```typescript
-function generateCompany(gameState: GameState) {...}
+By contributing to this project, you agree that your contributions will be licensed under the same license as the project. See the [LICENSE](LICENSE) file for more details.
 
-// This is a "game logic" function. It must be up to date with the game state.
-// This is why you MUST use the prevState argument from updateGameState.
+## Thank You!
 
-generateCompany(
-    updateGameState((prevState) => prevState)
-);
-```
+We truly appreciate your contribution to Fixer. Your help makes this project better for everyone. If you have any questions, feel free to reach out to the project maintainers.
+
+Happy coding! 🚀

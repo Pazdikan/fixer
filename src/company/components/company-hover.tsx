@@ -3,8 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/common/components/ui/popover";
-import { useGameContext } from "@/core/context/use-game-context";
-import { getFullName } from "@/common/lib/utils";
 import { FC } from "react";
 
 import { Badge, Building2 } from "lucide-react";
@@ -17,13 +15,15 @@ import {
 } from "@/common/components/ui/card";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { Company, CompanyPosition } from "../company.types";
+import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 interface CompanyPopoverProps {
   company: Company;
 }
 
 export const CompanyMiniInfo: FC<CompanyPopoverProps> = ({ company }) => {
-  const game = useGameContext();
+  const game = useGame();
 
   const getEmployeeDetails = (characterID: number) => {
     return game.gameState.characters.find((char) => char.id === characterID);
@@ -64,7 +64,7 @@ export const CompanyMiniInfo: FC<CompanyPopoverProps> = ({ company }) => {
                   >
                     <span className="text-sm">
                       {character
-                        ? getFullName(character)
+                        ? api.character.getFullName(character)
                         : `Employee ${employee.characterID}`}
                     </span>
                     <Badge

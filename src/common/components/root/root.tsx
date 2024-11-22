@@ -32,14 +32,13 @@ import {
   SidebarTrigger,
 } from "@/common/components/ui/sidebar";
 import { useState } from "react";
-import { useGameContext } from "@/core/context/use-game-context";
-import CharacterCreator from "@/common/pages/character-creator";
 import { DatabasePage } from "@/common/pages/database-page";
-import { NetworkPage } from "@/network/network-page";
-import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
-import { getCharacterById, getFullName, getInitial } from "@/common/lib/utils";
+// import { NetworkPage } from "@/network/network-page";
+// import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
+import { useGame } from "@/core/store/game-store";
+import { api } from "@/api/api";
 
 // This is sample data.
 const data = {
@@ -65,7 +64,7 @@ const data = {
 
 export function GameRoot() {
   const [currentPage, setCurrentPage] = useState("home");
-  const game = useGameContext();
+  const game = useGame();
 
   const [openCategories, setOpenCategories] = React.useState<string[]>([]);
 
@@ -96,7 +95,7 @@ export function GameRoot() {
     })
   );
 
-  const player = getCharacterById(game.gameState, game.gameState.player_id);
+  const player = api.character.getCharacterById(game.gameState.player_id);
 
   return (
     <SidebarProvider
@@ -114,11 +113,13 @@ export function GameRoot() {
                 <SidebarMenuButton size="lg" asChild>
                   <a href="#">
                     <Avatar>
-                      <AvatarFallback>{getInitial(player)}</AvatarFallback>
+                      <AvatarFallback>
+                        {api.character.getInitial(player)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-0.5 leading-none">
                       <span className="font-semibold">
-                        {getFullName(player)}
+                        {api.character.getFullName(player)}
                       </span>
                       <span className="">you</span>
                     </div>
@@ -187,15 +188,12 @@ export function GameRoot() {
           </Breadcrumb>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
-          {currentPage === "character-creator" &&
-            game.gameState.player_id == -1 && <CharacterCreator />}
-
           {currentPage === "home" && <div></div>}
           {currentPage === "database" && <DatabasePage />}
-          {currentPage === "network" && (
+          {/* {currentPage === "network" && (
             <NetworkPage setCurrentPage={setCurrentPage} />
           )}
-          {currentPage === "network-posts" && <SocialMediaNetworkPage />}
+          {currentPage === "network-posts" && <SocialMediaNetworkPage />} */}
         </div>
       </SidebarInset>
     </SidebarProvider>
