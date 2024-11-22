@@ -32,7 +32,6 @@ import {
   SidebarTrigger,
 } from "@/common/components/ui/sidebar";
 import { useState } from "react";
-import CharacterCreator from "@/common/pages/character-creator";
 import { DatabasePage } from "@/common/pages/database-page";
 // import { NetworkPage } from "@/network/network-page";
 // import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
@@ -189,9 +188,6 @@ export function GameRoot() {
           </Breadcrumb>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
-          {currentPage === "character-creator" &&
-            game.gameState.player_id == -1 && <CharacterCreator />}
-
           {currentPage === "home" && <div></div>}
           {currentPage === "database" && <DatabasePage />}
           {/* {currentPage === "network" && (
