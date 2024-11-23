@@ -1,27 +1,45 @@
 {
   "newNotifications": "{count, plural, =0 {You have no new notifications.} one {You have 1 new notification.} other {You have {count} new notifications.}}",
-  "earlyDevelopmentNotice": "This game is in early development",
-  "gameName": "Fixer Simulator",
-  "toggleSidebar": "Toggle Sidebar",
-  "viewOnGithub": "View on GitHub",
-  "welcomeNotice": "Welcome home",
-  "home": "Home",
-  "database": "Database",
-  "debugMode": "Debug Mode",
-  "settings": "Settings",
-  "profile": "Account",
-  "character-creator": "Character Creator",
-  "create-character-notice": "Please create a character you wish to play as, in order to play the game.",
-  "personal-information": "Personal Information",
-  "first-name": "First Name",
-  "enter-first-name": "Enter first name",
-  "last-name": "Last Name",
-  "enter-last-name": "Enter last name",
-  "background": "Background",
-  "backstory": "Backstory",
-  "select-your-backstory": "Select your backstory",
-  "previous-job": "Previous Job",
-  "select-your-previous-job": "Select your previous job",
-  "personality-traits": "Personality Traits",
-  "create-character": "Create Character"
+  "addon": {
+    "list-title": "Game Addons",
+    "toggle": "Toggle addons",
+    "add": "Add addons",
+    "coming-soon": "Soon... (not really, probably after initial release)"
+  },
+  "character": {
+    "affiliations": "Affiliations",
+    "gender": "Gender",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "background": "Background",
+    "backstory": "Backstory",
+    "previous-job": "Previous job"
+  },
+  "company": {
+    "position": {
+      "owner": "Owner",
+      "employee": "Employee"
+    }
+  },
+  "debug": {
+    "menu-title": "Debug Menu",
+    "clear-localstorage": "Clear localStorage (reset all data!)",
+    "generate-character": "Generate character",
+    "generate-company": "Generate company"
+  },
+  "seed": {
+    "title": "Seed",
+    "set": "Set seed",
+    "saved-toast": "Game seed has been set to:"
+  },
+  "new-game": {
+    "title": "New Game",
+    "start": "Start new game",
+    "incomplete-character": "Incomplete character",
+    "please-fill-all-fields": "Please fill in all required fields.",
+    "settings": "Game Settings",
+    "section": {
+      "character-creator": "Your Character"
+    }
+  }
 }

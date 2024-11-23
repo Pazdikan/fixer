@@ -1,27 +1,45 @@
 {
   "newNotifications": "{count, plural, =0 {Nie masz nowych powiadomień.} one {Masz 1 nowe powiadomienie.} other {Masz {count} nowych powiadomień.}}",
-  "earlyDevelopmentNotice": "Ta gra jest na wczesnym etapie rozwoju",
-  "gameName": "Symulator Fixera",
-  "toggleSidebar": "Przełącz pasek boczny",
-  "viewOnGithub": "Zobacz na GitHubie",
-  "welcomeNotice": "Witamy w domu",
-  "home": "Strona główna",
-  "database": "Baza danych",
-  "debugMode": "Tryb debugowania",
-  "settings": "Ustawienia",
-  "profile": "Profile",
-  "background": "Przeszłość",
-  "backstory": "Historia",
-  "character-creator": "Kreator postaci",
-  "create-character": "Stwórz postać",
-  "create-character-notice": "Aby móc zagrać w grę, utwórz postać, którą chcesz grać.",
-  "enter-first-name": "Wpisz imię",
-  "enter-last-name": "Wpisz nazwisko",
-  "first-name": "Imię",
-  "last-name": "Nazwisko",
-  "personal-information": "Dane osobowe",
-  "personality-traits": "Cechy osobowości",
-  "previous-job": "Poprzednia praca",
-  "select-your-backstory": "Wybierz swoją historię",
-  "select-your-previous-job": "Wybierz swoją poprzednią pracę"
+  "addon": {
+    "add": "Dodaj dodatki",
+    "coming-soon": "Wkrótce... (niezupełnie, prawdopodobnie po pierwszym wydaniu)",
+    "list-title": "Dodatki do gier",
+    "toggle": "Przełącz dodatki"
+  },
+  "character": {
+    "affiliations": "Przynależności",
+    "background": "Tło",
+    "backstory": "Historia",
+    "first-name": "Imię",
+    "gender": "Płeć",
+    "last-name": "Nazwisko",
+    "previous-job": "Poprzednia praca"
+  },
+  "company": {
+    "position": {
+      "employee": "Pracownik",
+      "owner": "Właściciel"
+    }
+  },
+  "debug": {
+    "clear-localstorage": "Wyczyść localStorage (zresetuj wszystkie dane!)",
+    "generate-character": "Wygeneruj postać",
+    "generate-company": "Wygeneruj firmę",
+    "menu-title": "Menu debugowania"
+  },
+  "new-game": {
+    "incomplete-character": "Niekompletna postać",
+    "please-fill-all-fields": "Proszę wypełnić wszystkie wymagane pola",
+    "section": {
+      "character-creator": "Twoja postać"
+    },
+    "settings": "Ustawienia gry",
+    "start": "Rozpocznij nową grę",
+    "title": "Nowa gra"
+  },
+  "seed": {
+    "saved-toast": "Seed gry został ustawiony na:",
+    "set": "Ustaw seed",
+    "title": "Seed"
+  }
 }

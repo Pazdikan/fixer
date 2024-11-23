@@ -9,8 +9,11 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
+import { useTranslation } from "react-i18next";
 
 export default function DebugModal() {
+  const { t } = useTranslation();
+
   function clear_localstorage() {
     localStorage.clear();
     window.location.reload();
@@ -23,9 +26,9 @@ export default function DebugModal() {
           <FlaskConical />
         </DialogTrigger>
         <DialogContent>
-          <h1>Debug Menu</h1>
+          <h1>{t("debug.menu-title")}</h1>
           <Button onClick={clear_localstorage}>
-            Clear localStorage (reset all data!)
+            {t("debug.clear-localstorage")}
           </Button>
           <Button
             className={"min-w-max"}
@@ -37,7 +40,7 @@ export default function DebugModal() {
                 JSON.stringify(character, null, 2);
             }}
           >
-            Generate character
+            {t("debug.generate-character")}
           </Button>
           <p id="generated-character-text"></p>
           <Button
@@ -52,10 +55,10 @@ export default function DebugModal() {
                 JSON.stringify(company, null, 2);
             }}
           >
-            Generate company
+            {t("debug.generate-company")}
           </Button>
           <p id="generated-company-text"></p>
-          <Label htmlFor={"seed"}>Seed</Label>
+          <Label htmlFor={"seed"}>{t("seed.title")}</Label>
           <Input
             className={"min-w-max"}
             disabled={true}
