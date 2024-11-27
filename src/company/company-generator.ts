@@ -4,6 +4,7 @@ import { Company, CompanyPosition, Employee } from "@/company/company.types";
 import { GameContextType, GameState } from "@/core/core.types";
 import { useGame } from "@/core/store/game-store";
 
+// TODO: remake into api
 export class CompanyGenerator {
   rng: () => number;
 

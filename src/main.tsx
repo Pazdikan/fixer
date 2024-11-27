@@ -12,6 +12,7 @@ import { NewGamePage } from "./common/pages/new-game-page";
 import { useEffect } from "react";
 import { testAddon } from "./addon/addons/test";
 import { ThemeProvider } from "./common/components/ui/theme-provider";
+import useGlobalKeybindings from "./common/lib/mousetrap";
 
 function AutoSave() {
   const saveGame = useGame((state) => state.saveGameState);
@@ -24,6 +25,8 @@ function AutoSave() {
 
     return () => clearInterval(interval);
   }, [saveGame]);
+
+  useGlobalKeybindings()
 
   return null;
 }
