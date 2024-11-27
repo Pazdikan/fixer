@@ -1,6 +1,7 @@
 import { createRoot, Root } from "react-dom/client";
 
 import "./index.css";
+import "leaflet/dist/leaflet.css";
 import "@/common/lib/i18n";
 import { useGame } from "./core/store/game-store";
 import { GameRoot } from "./common/components/root/root";

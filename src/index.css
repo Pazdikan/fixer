@@ -248,3 +248,11 @@ html {
   font-weight: 900;
   font-style: italic;
 }
+
+.leaflet-custom-marker-icon {
+  width: 12px;
+  height: 12px;
+  background: #ff0000;
+  border-radius: 50%;
+  border: 2px solid var(--foreground);
+}

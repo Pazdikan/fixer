@@ -39,6 +39,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
+import Map from "@/map";
 
 // This is sample data.
 const data = {
@@ -56,6 +57,11 @@ const data = {
           title: "Network",
           url: "#",
           page: "network",
+        },
+        {
+          title: "Map",
+          url: "#",
+          page: "map",
         },
       ],
     },
@@ -190,6 +196,7 @@ export function GameRoot() {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
           {currentPage === "home" && <div></div>}
           {currentPage === "database" && <DatabasePage />}
+          {currentPage === "map" && <Map />}
           {/* {currentPage === "network" && (
             <NetworkPage setCurrentPage={setCurrentPage} />
           )}
