@@ -14,7 +14,7 @@ If you find a bug or have an issue with the project, please open an issue. When 
 
 ## How to Contribute
 
-> [!INFO]
+> [!TIP]
 > If you don't know how any of this works, check out the [getting started](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
 ### Create an issue before coding

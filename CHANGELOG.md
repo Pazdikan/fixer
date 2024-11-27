@@ -1,11 +1,12 @@
-> [!ERROR]
+> [!CAUTION]
 > ! **THIS IS AN EXAMPLE CHANGELOG** !
 > After the **initial release**, you should update this file with the changes you make to the project in the same pull request as your changes.
 > Read more on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-# Changelog
+> [!TIP]
+> This is for the players, not for the developers. Provide values and changes that are relevant to the players, see the example below.
 
-This is mostly for the players, not for the developers. Provide values and changes that are relevant to the players, see the example below.
+# Changelog
 
 This file is parsed and displayed in game.
 
@@ -31,7 +32,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Fixed
 
 - Fixed issue with character creation not saving to database
-
-### Removed
-
-- Removed old dead code
