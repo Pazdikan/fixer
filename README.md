@@ -1,6 +1,10 @@
+<div align="center">
 <a href="https://discord.gg/xFZj6b4Mzq">
 <img alt="Discord" src="https://img.shields.io/discord/1002178695261339688?style=for-the-badge&logo=discord&logoColor=fff&label=Chat%20On%20Discord&color=5865F2" width="100%">
-</a><i>Click the banner above to join our server</i><br><br>
+</a>
+<i>Click the banner above to join our server</i><br><br>
+</div>
+
 
 > [!NOTE]
 > This game is in active development! It's not fully playable, yet.
