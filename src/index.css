@@ -256,3 +256,7 @@ html {
   border-radius: 50%;
   border: 2px solid var(--foreground);
 }
+
+.map-is-loading {
+  z-index: -100 !important;
+}
