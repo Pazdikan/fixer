@@ -14,8 +14,11 @@ import {
   DialogTrigger,
   DialogContent,
 } from "@/common/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 export function AddonSelect() {
+  const { t } = useTranslation();
+
   const [isOpen, setIsOpen] = useState(true);
   const [enabledAddons, setEnabledAddons] = useState<Set<string>>(
     new Set(addonManager.getEnabledAddons().map((addon) => addon.id))
@@ -40,7 +43,7 @@ export function AddonSelect() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold">
-            Game Addons <AddAddonModal />
+            {t("addon.list-title")} <AddAddonModal />
           </h2>
         </div>
         <CollapsibleTrigger asChild>
@@ -50,7 +53,7 @@ export function AddonSelect() {
                 isOpen ? "transform rotate-180" : ""
               }`}
             />
-            <span className="sr-only">Toggle addons</span>
+            <span className="sr-only">{t("addon.toggle")}</span>
           </Button>
         </CollapsibleTrigger>
       </div>
@@ -81,6 +84,8 @@ export function AddonSelect() {
 }
 
 function AddAddonModal() {
+  const { t } = useTranslation();
+
   return (
     <>
       <Dialog>
@@ -90,9 +95,9 @@ function AddAddonModal() {
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <h1 className="poppins-bold">Add addons</h1>
+          <h1 className="poppins-bold">{t("addon.add")}</h1>
 
-          <p>Soon... (not really, probably after initial release)</p>
+          <p>{t("addon.coming-soon")}</p>
         </DialogContent>
       </Dialog>
     </>

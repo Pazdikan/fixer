@@ -1,6 +1,8 @@
 import { createRoot, Root } from "react-dom/client";
 
 import "./index.css";
+import "leaflet/dist/leaflet.css";
+import "@/common/lib/i18n";
 import { useGame } from "./core/store/game-store";
 import { GameRoot } from "./common/components/root/root";
 import { addonManager } from "./addon/addon";
@@ -9,6 +11,8 @@ import { Toaster } from "@/common/components/ui/toaster";
 import { NewGamePage } from "./common/pages/new-game-page";
 import { useEffect } from "react";
 import { testAddon } from "./addon/addons/test";
+import { ThemeProvider } from "./common/components/ui/theme-provider";
+import useGlobalKeybindings from "./common/lib/mousetrap";
 
 function AutoSave() {
   const saveGame = useGame((state) => state.saveGameState);
@@ -22,6 +26,8 @@ function AutoSave() {
     return () => clearInterval(interval);
   }, [saveGame]);
 
+  useGlobalKeybindings()
+
   return null;
 }
 
@@ -29,11 +35,11 @@ const RootContent = () => {
   const player_id = useGame((state) => state.gameState.player_id);
 
   return (
-    <>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       {player_id === -1 ? <NewGamePage /> : <GameRoot />}
       <Toaster />
       <AutoSave />
-    </>
+    </ThemeProvider>
   );
 };
 

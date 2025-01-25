@@ -4,6 +4,7 @@ import { Company, CompanyPosition, Employee } from "@/company/company.types";
 import { GameContextType, GameState } from "@/core/core.types";
 import { useGame } from "@/core/store/game-store";
 
+// TODO: remake into api
 export class CompanyGenerator {
   rng: () => number;
 
@@ -12,19 +13,17 @@ export class CompanyGenerator {
   }
 
   populateWorld() {
-    const game = useGame.getState();
-
     for (let i = 0; i < 5000; i++) {
-      game.generator.character.create_character(
-        game.generator.character.generate_character()
+      api.generator.character.create_character(
+        api.generator.character.generate_character()
       );
     }
 
     const unemployed = api.character.getUnemployedCharacters();
 
     for (let i = 0; i < 500; i++) {
-      game.generator.company.create_company(
-        game.generator.company.generateCompany(unemployed)
+      api.generator.company.create_company(
+        api.generator.company.generateCompany(unemployed)
       );
     }
   }

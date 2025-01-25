@@ -1,8 +1,10 @@
 import { Character } from "@/character/character.types";
+import { Building } from "@/common/components/map/new-game-map";
 import { Company } from "@/company/company.types";
 
 export interface World {
-  name: string;
+  bounding_box: number[];
+  buildings: Building[];
 }
 
 export interface GameState {
