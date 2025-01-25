@@ -31,6 +31,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import { AddonSelect } from "@/addon/components/addon-select";
 import { api } from "@/api/api";
+import { GameMap } from "../components/map/new-game-map";
 
 export function NewGamePage() {
   const { t } = useTranslation();
@@ -250,6 +251,8 @@ export function NewGamePage() {
               </div>
             </CollapsibleContent>
           </Collapsible>
+
+          <GameMap isNewGameCreator={true} />
 
           <Button className="w-full" onClick={handleCreateCharacter}>
             {t("new-game.start")}
