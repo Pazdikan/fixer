@@ -35,8 +35,7 @@ interface ProcessingStatus {
 
 const CHOOSING_NEW_GAME_LOCATION = false;
 const bbox = [
-  35.11653865167174, -106.56888484954835, 35.160477068693496,
-  -106.4984178543091,
+  35.1162096879365, -106.55105352401735, 35.13074776162283, -106.515691280365,
 ];
 const CONNECT_BUILDINGS = true;
 const BATCH_SIZE = 100;
@@ -70,7 +69,7 @@ function SearchControl() {
 
       if (data && data.length > 0) {
         const { lat, lon } = data[0];
-        map.flyTo([parseFloat(lat), parseFloat(lon)], 13, {
+        map.flyTo([parseFloat(lat), parseFloat(lon)], 18, {
           duration: 2,
         });
       }
