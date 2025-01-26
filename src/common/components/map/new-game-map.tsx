@@ -41,7 +41,7 @@ interface ProcessingStatus {
 
 const CONNECT_BUILDINGS = false;
 const BATCH_SIZE = 100;
-const WAYS_LIMIT = 100000;
+const WAYS_LIMIT = 200000;
 
 function SaveGameplayAreaButton({
   buildings,
