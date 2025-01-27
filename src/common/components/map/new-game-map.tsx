@@ -52,30 +52,56 @@ function SaveGameplayAreaButton({
 }) {
   const map = useMap();
   const updateGameState = useGame((state) => state.updateGameState);
+  const { toast } = useToast();
 
   return (
-    <Button
-      style={{ position: "absolute", top: "10px", left: "50px", zIndex: 1000 }}
-      onClick={() => {
-        const bounds = map.getBounds();
+    buildings.length > 0 && (
+      <Button
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "50px",
+          zIndex: 1000,
+        }}
+        onClick={() => {
+          if (buildings.length === 0) {
+            toast({
+              title: "No buildings selected",
+              description: "Please select a gameplay area with buildings.",
+              variant: "destructive",
+            });
+            return;
+          }
 
-        updateGameState({
-          world: {
-            bounding_box: [
-              bounds.getSouth(),
-              bounds.getWest(),
-              bounds.getNorth(),
-              bounds.getEast(),
-            ],
-            buildings: buildings,
-          },
-        });
+          if (buildings.length < 500) {
+            toast({
+              title: "Too few buildings",
+              description: "Please select a larger gameplay area.",
+              variant: "destructive",
+            });
+            return;
+          }
 
-        setIsSaved(true);
-      }}
-    >
-      Save gameplay araa
-    </Button>
+          const bounds = map.getBounds();
+
+          updateGameState({
+            world: {
+              bounding_box: [
+                bounds.getSouth(),
+                bounds.getWest(),
+                bounds.getNorth(),
+                bounds.getEast(),
+              ],
+              buildings: buildings,
+            },
+          });
+
+          setIsSaved(true);
+        }}
+      >
+        Save gameplay araa
+      </Button>
+    )
   );
 }
 
@@ -157,7 +183,7 @@ const DrawControl: React.FC<{
           showArea: false,
         },
       },
-      edit: { featureGroup: new L.FeatureGroup() },
+      // edit: { featureGroup: new L.FeatureGroup() },
     });
 
     const drawnItems = new L.FeatureGroup();
@@ -172,7 +198,6 @@ const DrawControl: React.FC<{
         bounds.getNorth(),
         bounds.getEast(),
       ];
-      console.log(selectedBounds);
 
       onBoundsSelected(selectedBounds);
 
