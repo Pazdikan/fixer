@@ -21,6 +21,7 @@ import { SearchIcon } from "lucide-react";
 import { PremadeLocationsDropdown } from "./premade-locations";
 import { useToast } from "@/hooks/use-toast";
 import { useGame } from "@/core/store/game-store";
+import { GameState } from "@/core/core.types";
 
 export interface Building {
   lat: number;
@@ -51,8 +52,9 @@ function SaveGameplayAreaButton({
   setIsSaved: (value: boolean) => void;
 }) {
   const map = useMap();
-  const updateGameState = useGame((state) => state.updateGameState);
   const { toast } = useToast();
+  const gameState = useGame((state) => state.gameState);
+  const updateGameState = useGame().updateGameState;
 
   return (
     buildings.length > 0 && (
@@ -86,6 +88,7 @@ function SaveGameplayAreaButton({
 
           updateGameState({
             world: {
+              ...gameState.world,
               bounding_box: [
                 bounds.getSouth(),
                 bounds.getWest(),
@@ -225,6 +228,7 @@ export const GameMap: React.FC = ({
   isNewGameCreator: boolean;
 }) => {
   const gameState = useGame((state) => state.gameState);
+  const updateGameState = useGame().updateGameState;
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [selectedBounds, setSelectedBounds] = useState<number[] | null>(
     gameState.world?.bounding_box ?? null
@@ -527,6 +531,7 @@ export const GameMap: React.FC = ({
             <SaveGameplayAreaButton
               buildings={buildings}
               setIsSaved={setIsSaved}
+              updateGameState={updateGameState}
             />
             <DrawControl onBoundsSelected={handleBoundsSelected} />
           </>
@@ -556,9 +561,28 @@ export const GameMap: React.FC = ({
                   })}
                 >
                   <Popup>
-                    {!building.street && !building.housenumber
-                      ? "Unknown street"
-                      : `${building.street} ${building.housenumber}`}
+                    <div className="flex flex-col gap-2">
+                      <p className="font-bold text-lg text-center">
+                        {!building.street && !building.housenumber
+                          ? "Unknown street"
+                          : `${building.street} ${building.housenumber}`}
+                      </p>
+
+                      {isNewGameCreator && !gameState.world?.player_base_id && (
+                        <Button
+                          onClick={() => {
+                            updateGameState({
+                              world: {
+                                ...gameState.world,
+                                player_base_id: building.id,
+                              },
+                            });
+                          }}
+                        >
+                          Choose As Your Base
+                        </Button>
+                      )}
+                    </div>
                   </Popup>
                 </Marker>
               ))}

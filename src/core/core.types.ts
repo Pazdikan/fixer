@@ -5,6 +5,7 @@ import { Company } from "@/company/company.types";
 export interface World {
   bounding_box: number[];
   buildings: Building[];
+  player_base_id?: string;
 }
 
 export interface GameState {
