@@ -22,6 +22,10 @@ class GameStateManager {
   }
 
   public static save(state: GameState): void {
+    if (state.player_id == -1) {
+      return;
+    }
+
     localStorage.setItem(this.storageKey, JSON.stringify(state));
   }
 }
@@ -80,7 +84,6 @@ export const useGame = create<GameStore>((set, get) => {
           api.generator = new Generator(newRng);
         }
 
-        console.log("Game state updated:", newState);
         return newState;
       });
     },
