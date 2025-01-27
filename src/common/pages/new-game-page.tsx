@@ -77,6 +77,37 @@ export function NewGamePage() {
       return;
     }
 
+    console.log({
+      gameExists: !!game,
+      gameState: game?.gameState,
+      world: game?.gameState?.world,
+      buildings: game?.gameState?.world?.buildings,
+      buildingsLength: game?.gameState?.world?.buildings?.length,
+    });
+
+    if (
+      !game.gameState.world?.buildings ||
+      game.gameState.world?.buildings.length === 0
+    ) {
+      toast({
+        title: "No buildings",
+        description:
+          'Please select an area you want to play in, then click "Save gameplay araa".',
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!game.gameState.world?.player_base_id) {
+      toast({
+        title: "No player base",
+        description:
+          'Please select a building to be your player base, then click "Save player base".',
+        variant: "destructive",
+      });
+      return;
+    }
+
     api.generator.character.create_character({
       id: game.gameState.characters.length,
       first_name: firstName,
