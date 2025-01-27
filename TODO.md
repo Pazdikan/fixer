@@ -35,3 +35,17 @@ This will be similar to the game shadows of doubt.
 ## Map
 
 - Add companies to map
+- Building type based on size (house/for company HQ)
+- Building type (police, medical, etc) based on real world data (amenity, already implemented in processing, just need to highlight on map)
+
+## Characters
+
+### Families
+
+- Implement an algorithm to generate families, same household and shit yk
+
+### Teams
+
+- Add basic teams system / recruit people
+
+## KNOWN ISSUES TO FIX
