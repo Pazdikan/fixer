@@ -34,6 +34,4 @@ This will be similar to the game shadows of doubt.
 
 ## Map
 
-- Add map on new game page, selecting gameplay area and starting base location
-- Fetched building data should be stored in local storage to avoid redownloading it on every page refresh
-- Add starting base and companies to map
+- Add companies to map
