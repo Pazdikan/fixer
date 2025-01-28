@@ -1,5 +1,5 @@
 import { Character } from "@/character/character.types";
-import { Building } from "@/common/components/map/new-game-map";
+import { Building } from "@/common/components/map/game-map";
 import { Company } from "@/company/company.types";
 
 export interface World {

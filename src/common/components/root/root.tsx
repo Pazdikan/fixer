@@ -39,7 +39,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
-import { GameMap, Map } from "../map/new-game-map";
+import { GameMap, Map } from "../map/game-map";
 
 // This is sample data.
 const data = {
