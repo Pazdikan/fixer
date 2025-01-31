@@ -275,11 +275,12 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
               >
                 <Popup>
                   <div className="flex flex-col gap-2">
-                    <p className="font-bold text-lg text-center">
+                    <p className="font-semibold text-lg">
                       {!building.street && !building.housenumber
                         ? "Unknown address"
                         : `${building.street} ${building.housenumber}`}
                     </p>
+                    <p className="">Type: {building.amenity || "House"} </p>
                     {isNewGameCreator && !gameState.world?.player_base_id && (
                       <Button
                         onClick={() =>

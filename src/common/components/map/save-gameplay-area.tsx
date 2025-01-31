@@ -1,20 +1,36 @@
 import { useMap } from "react-leaflet";
-import { Building } from "./game-map";
 import { useToast } from "@/hooks/use-toast";
 import { useGame } from "@/core/store/game-store";
 import { Button } from "../ui/button";
+import { Building } from "./game-map";
+import { useState } from "react";
 
 export function SaveGameplayAreaButton({
   buildings,
-  setIsSaved,
 }: {
   buildings: Building[];
-  setIsSaved: (value: boolean) => void;
 }) {
   const map = useMap();
   const { toast } = useToast();
   const gameState = useGame((state) => state.gameState);
   const updateGameState = useGame().updateGameState;
+  const [isSaved, setIsSaved] = useState(false);
+
+  if (isSaved) {
+    return (
+      <Button
+        disabled
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "50px",
+          zIndex: 1000,
+        }}
+      >
+        Gameplay area saved!
+      </Button>
+    );
+  }
 
   return (
     buildings.length > 0 && (

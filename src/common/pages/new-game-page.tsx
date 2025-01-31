@@ -60,8 +60,9 @@ export function NewGamePage() {
   };
 
   const handleGenerateAll = () => {
-    setGender(api.generator.character.generate_gender());
-    setFirstName(api.generator.character.generate_first_name(gender as Gender));
+    const newGender = api.generator.character.generate_gender(); // Get new gender first
+    setGender(newGender); // Update state
+    setFirstName(api.generator.character.generate_first_name(newGender)); // Use newGender directly
     setLastName(api.generator.character.generate_last_name());
     setBackstory(api.generator.character.generate_backstory());
     setPreviousJob(api.generator.character.generate_job());
@@ -76,14 +77,6 @@ export function NewGamePage() {
       });
       return;
     }
-
-    console.log({
-      gameExists: !!game,
-      gameState: game?.gameState,
-      world: game?.gameState?.world,
-      buildings: game?.gameState?.world?.buildings,
-      buildingsLength: game?.gameState?.world?.buildings?.length,
-    });
 
     if (
       !game.gameState.world?.buildings ||
