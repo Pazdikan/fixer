@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import axios from "axios";
@@ -15,13 +15,13 @@ import {
   Dialog,
 } from "@/common/components/ui/dialog";
 import { Label } from "@/common/components/ui/label";
-import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
-import { SearchIcon } from "lucide-react";
 import { PremadeLocationsDropdown } from "./premade-locations";
 import { useToast } from "@/hooks/use-toast";
 import { useGame } from "@/core/store/game-store";
-import { GameState } from "@/core/core.types";
+import { DrawControl } from "./map-draw-control";
+import { SaveGameplayAreaButton } from "./save-gameplay-area";
+import { SearchControl } from "./map-search-control";
 
 export interface Building {
   lat: number;
@@ -33,7 +33,7 @@ export interface Building {
   amenity?: string;
 }
 
-interface ProcessingStatus {
+export interface ProcessingStatus {
   processed: number;
   total: number;
   stage: string;
@@ -44,184 +44,6 @@ const CONNECT_BUILDINGS = false;
 const BATCH_SIZE = 100;
 const WAYS_LIMIT = 200000;
 
-function SaveGameplayAreaButton({
-  buildings,
-  setIsSaved,
-}: {
-  buildings: Building[];
-  setIsSaved: (value: boolean) => void;
-}) {
-  const map = useMap();
-  const { toast } = useToast();
-  const gameState = useGame((state) => state.gameState);
-  const updateGameState = useGame().updateGameState;
-
-  return (
-    buildings.length > 0 && (
-      <Button
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "50px",
-          zIndex: 1000,
-        }}
-        onClick={() => {
-          if (buildings.length === 0) {
-            toast({
-              title: "No buildings selected",
-              description: "Please select a gameplay area with buildings.",
-              variant: "destructive",
-            });
-            return;
-          }
-
-          if (buildings.length < 500) {
-            toast({
-              title: "Too few buildings",
-              description: "Please select a larger gameplay area.",
-              variant: "destructive",
-            });
-            return;
-          }
-
-          const bounds = map.getBounds();
-
-          updateGameState({
-            world: {
-              ...gameState.world,
-              bounding_box: [
-                bounds.getSouth(),
-                bounds.getWest(),
-                bounds.getNorth(),
-                bounds.getEast(),
-              ],
-              buildings: buildings,
-            },
-          });
-
-          setIsSaved(true);
-        }}
-      >
-        Save gameplay araa
-      </Button>
-    )
-  );
-}
-
-function SearchControl() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const map = useMap();
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchQuery
-        )}`
-      );
-      const data = await response.json();
-
-      if (data && data.length > 0) {
-        const { lat, lon } = data[0];
-        map.flyTo([parseFloat(lat), parseFloat(lon)], 18, {
-          duration: 2,
-        });
-      }
-    } catch (error) {
-      console.error("Search failed:", error);
-    }
-  };
-
-  return (
-    <form
-      onSubmit={handleSearch}
-      className="flex"
-      style={{
-        position: "absolute",
-        top: "10px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 1000,
-        padding: "5px",
-        borderRadius: "4px",
-        gap: "8px",
-      }}
-    >
-      <Input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Find location..."
-      ></Input>
-      <Button type="submit">
-        <SearchIcon size={16} />
-      </Button>
-    </form>
-  );
-}
-
-const DrawControl: React.FC<{
-  onBoundsSelected: (bounds: number[]) => void;
-}> = ({ onBoundsSelected }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    const drawControl = new L.Control.Draw({
-      draw: {
-        polygon: false,
-        polyline: false,
-        circle: false,
-        circlemarker: false,
-        marker: false,
-        rectangle: {
-          shapeOptions: {
-            color: "#0000FF",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.2,
-          },
-          metric: true,
-          showArea: false,
-        },
-      },
-      // edit: { featureGroup: new L.FeatureGroup() },
-    });
-
-    const drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
-    map.addControl(drawControl);
-
-    const handleCreated = (e: any) => {
-      const bounds = e.layer.getBounds();
-      const selectedBounds = [
-        bounds.getSouth(),
-        bounds.getWest(),
-        bounds.getNorth(),
-        bounds.getEast(),
-      ];
-
-      onBoundsSelected(selectedBounds);
-
-      drawnItems.clearLayers();
-      drawnItems.addLayer(e.layer);
-    };
-
-    map.on(L.Draw.Event.CREATED, handleCreated);
-    map.on(L.Draw.Event.DRAWSTART, () => drawnItems.clearLayers());
-
-    return () => {
-      map.removeControl(drawControl);
-      map.removeLayer(drawnItems);
-      map.off(L.Draw.Event.CREATED, handleCreated);
-      map.off(L.Draw.Event.DRAWSTART);
-    };
-  }, [map, onBoundsSelected]);
-
-  return null;
-};
-
 export const GameMap: React.FC = ({
   isNewGameCreator = false,
 }: {
@@ -231,7 +53,7 @@ export const GameMap: React.FC = ({
   const updateGameState = useGame().updateGameState;
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [selectedBounds, setSelectedBounds] = useState<number[] | null>(
-    gameState.world?.bounding_box ?? null
+    gameState.world?.bounding_box ?? null,
   );
   const [status, setStatus] = useState<ProcessingStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -262,7 +84,7 @@ export const GameMap: React.FC = ({
       .filter(Boolean)
       .map((node) => [node.lon, node.lat]);
     const centroid = turf.centroid(
-      turf.featureCollection(coordinates.map((coord) => turf.point(coord)))
+      turf.featureCollection(coordinates.map((coord) => turf.point(coord))),
     );
     return {
       lat: centroid.geometry.coordinates[1],
@@ -327,7 +149,7 @@ export const GameMap: React.FC = ({
                     connectedBuildings.add(connectedId);
                     processed.add(connectedId);
                     connectedWay.nodes.forEach((n: number) =>
-                      nodesToCheck.add(n)
+                      nodesToCheck.add(n),
                     );
                   }
                 }
@@ -337,14 +159,14 @@ export const GameMap: React.FC = ({
             const nodes = Array.from(connectedBuildings)
               .map((id) =>
                 buildingData.find(
-                  (e) => e.type === "way" && e.id.toString() === id
-                )
+                  (e) => e.type === "way" && e.id.toString() === id,
+                ),
               )
               .filter(Boolean)
               .flatMap((way) =>
                 way.nodes.map((nId) =>
-                  buildingData.find((e) => e.type === "node" && e.id === nId)
-                )
+                  buildingData.find((e) => e.type === "node" && e.id === nId),
+                ),
               );
 
             result.push({
@@ -369,7 +191,7 @@ export const GameMap: React.FC = ({
         requestAnimationFrame(() => processBatch(0));
       });
     },
-    [calculateCentroid]
+    [calculateCentroid],
   );
 
   useEffect(() => {
@@ -388,12 +210,12 @@ export const GameMap: React.FC = ({
         setStartTime(Date.now());
 
         const overpassQuery = `[out:json];(way["building"](${selectedBounds.join(
-          ","
+          ",",
         )}););(._;>;);out body;`;
         const response = await axios.get(
           `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-            overpassQuery
-          )}`
+            overpassQuery,
+          )}`,
         );
 
         const buildingData: any[] = response.data.elements;
@@ -419,7 +241,7 @@ export const GameMap: React.FC = ({
           } else {
             const startTime = Date.now();
             const ways = buildingData.filter(
-              (element) => element.type === "way"
+              (element) => element.type === "way",
             );
             const buildingsList: Building[] = [];
             const batchSize = 100;
@@ -446,8 +268,8 @@ export const GameMap: React.FC = ({
               const batchBuildings = batch.map((way) => ({
                 ...calculateCentroid(
                   way.nodes.map((id) =>
-                    buildingData.find((e) => e.type === "node" && e.id === id)
-                  )
+                    buildingData.find((e) => e.type === "node" && e.id === id),
+                  ),
                 ),
                 id: way.id.toString(),
                 housenumber: way.tags?.["addr:housenumber"] ?? null,
@@ -531,7 +353,6 @@ export const GameMap: React.FC = ({
             <SaveGameplayAreaButton
               buildings={buildings}
               setIsSaved={setIsSaved}
-              updateGameState={updateGameState}
             />
             <DrawControl onBoundsSelected={handleBoundsSelected} />
           </>
