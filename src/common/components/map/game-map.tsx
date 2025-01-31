@@ -29,7 +29,6 @@ export interface Building {
   id: string;
   street?: string;
   housenumber?: string;
-  connectedIds?: string[];
   amenity?: string;
 }
 
@@ -40,28 +39,22 @@ export interface ProcessingStatus {
   eta?: string;
 }
 
-const CONNECT_BUILDINGS = false;
 const BATCH_SIZE = 100;
-const WAYS_LIMIT = 200000;
+const ELEMENTS_LIMIT = 200000;
 
-export const GameMap: React.FC = ({
+export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   isNewGameCreator = false,
-}: {
-  isNewGameCreator: boolean;
 }) => {
   const gameState = useGame((state) => state.gameState);
   const updateGameState = useGame().updateGameState;
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [selectedBounds, setSelectedBounds] = useState<number[] | null>(
-    gameState.world?.bounding_box ?? null,
+    gameState.world?.bounding_box ?? null
   );
   const [status, setStatus] = useState<ProcessingStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [_, setStartTime] = useState<number | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
   const { toast } = useToast();
 
-  // Handle initial buildings setup
   useEffect(() => {
     if (!isNewGameCreator && gameState.world?.buildings) {
       setBuildings(gameState.world.buildings);
@@ -73,126 +66,20 @@ export const GameMap: React.FC = ({
     gameState.world?.bounding_box,
   ]);
 
-  // Handle bounds selection
   const handleBoundsSelected = useCallback((bounds: number[]) => {
     setSelectedBounds(bounds);
     setBuildings([]);
   }, []);
 
-  const calculateCentroid = useCallback((nodes) => {
-    const coordinates = nodes
-      .filter(Boolean)
-      .map((node) => [node.lon, node.lat]);
+  const calculateCentroid = useCallback((coordinates: number[][]) => {
     const centroid = turf.centroid(
-      turf.featureCollection(coordinates.map((coord) => turf.point(coord))),
+      turf.featureCollection(coordinates.map((coord) => turf.point(coord)))
     );
     return {
       lat: centroid.geometry.coordinates[1],
       lon: centroid.geometry.coordinates[0],
     };
   }, []);
-
-  const processBuildings = useCallback(
-    async (buildingData: any[]) => {
-      return new Promise<Building[]>((resolve) => {
-        const ways = buildingData.filter((element) => element.type === "way");
-        const nodeToWay = new Map<number, any>();
-        const processed = new Set<string>();
-        const result: Building[] = [];
-        let processedCount = 0;
-        const startTime = Date.now();
-
-        ways.forEach((way) => {
-          way.nodes.forEach((nodeId: number) => {
-            if (!nodeToWay.has(nodeId)) {
-              nodeToWay.set(nodeId, new Set([way]));
-            } else {
-              nodeToWay.get(nodeId)?.add(way);
-            }
-          });
-        });
-
-        const processBatch = (startIdx: number) => {
-          const elapsedTime = Date.now() - startTime;
-          const progressPercent = processedCount / ways.length;
-          const estimatedTotalTime =
-            progressPercent > 0 ? elapsedTime / progressPercent : 0;
-          const remainingTime = estimatedTotalTime - elapsedTime;
-          const minutes = Math.floor(remainingTime / 60000);
-          const seconds = Math.floor((remainingTime % 60000) / 1000);
-          const etaString = `${minutes}m ${seconds}s remaining`;
-
-          setStatus({
-            processed: processedCount,
-            total: ways.length,
-            stage: "Processing buildings",
-            eta: etaString,
-          });
-
-          const endIdx = Math.min(startIdx + BATCH_SIZE, ways.length);
-
-          for (let i = startIdx; i < endIdx; i++) {
-            const way = ways[i];
-            const buildingId = way.id.toString();
-
-            if (processed.has(buildingId)) continue;
-
-            const connectedBuildings = new Set([buildingId]);
-            const nodesToCheck = new Set(way.nodes);
-
-            for (const nodeId of nodesToCheck) {
-              const connectedWays = nodeToWay.get(nodeId);
-              if (connectedWays) {
-                for (const connectedWay of connectedWays) {
-                  const connectedId = connectedWay.id.toString();
-                  if (!connectedBuildings.has(connectedId)) {
-                    connectedBuildings.add(connectedId);
-                    processed.add(connectedId);
-                    connectedWay.nodes.forEach((n: number) =>
-                      nodesToCheck.add(n),
-                    );
-                  }
-                }
-              }
-            }
-
-            const nodes = Array.from(connectedBuildings)
-              .map((id) =>
-                buildingData.find(
-                  (e) => e.type === "way" && e.id.toString() === id,
-                ),
-              )
-              .filter(Boolean)
-              .flatMap((way) =>
-                way.nodes.map((nId) =>
-                  buildingData.find((e) => e.type === "node" && e.id === nId),
-                ),
-              );
-
-            result.push({
-              ...calculateCentroid(nodes),
-              id: buildingId,
-              connectedIds: Array.from(connectedBuildings),
-              housenumber: way.tags?.["addr:housenumber"] ?? null,
-              street: way.tags?.["addr:street"] ?? null,
-            });
-
-            processedCount++;
-          }
-
-          if (endIdx < ways.length) {
-            requestAnimationFrame(() => processBatch(endIdx));
-          } else {
-            setStatus(null);
-            resolve(result);
-          }
-        };
-
-        requestAnimationFrame(() => processBatch(0));
-      });
-    },
-    [calculateCentroid],
-  );
 
   useEffect(() => {
     const fetchBuildings = async () => {
@@ -206,97 +93,110 @@ export const GameMap: React.FC = ({
           stage: "Fetching data",
           eta: "Calculating...",
         });
-        setBuildings([]); // Clear existing buildings
-        setStartTime(Date.now());
+        setBuildings([]);
+        const startTime = Date.now();
 
-        const overpassQuery = `[out:json];(way["building"](${selectedBounds.join(
-          ",",
-        )}););(._;>;);out body;`;
+        const overpassQuery = `[out:json][timeout:25];(nwr["addr:housenumber"](${selectedBounds.join(
+          ","
+        )}););out geom;`;
         const response = await axios.get(
           `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-            overpassQuery,
-          )}`,
+            overpassQuery
+          )}`
         );
 
-        const buildingData: any[] = response.data.elements;
+        const buildingData = response.data.elements;
 
-        console.log("Building data:", buildingData.length);
-
-        if (buildingData.length > WAYS_LIMIT) {
+        if (buildingData.length > ELEMENTS_LIMIT) {
           setSelectedBounds(null);
           setStatus(null);
           setIsLoading(false);
           toast({
-            title: "Too many buildings",
-            description: `The selected area contains too many buildings. Please select a smaller area.`,
+            title: "Too many elements",
+            description: `The selected area contains too many addresses. Please select a smaller area.`,
             variant: "destructive",
           });
           return;
         }
 
-        if (buildingData.length > 0) {
-          if (CONNECT_BUILDINGS) {
-            const processed = await processBuildings(buildingData);
-            setBuildings(processed);
-          } else {
-            const startTime = Date.now();
-            const ways = buildingData.filter(
-              (element) => element.type === "way",
-            );
-            const buildingsList: Building[] = [];
-            const batchSize = 100;
+        const nodes = buildingData.filter((e) => e.type === "node");
+        const ways = buildingData.filter((e) => e.type === "way");
+        const totalElements = nodes.length + ways.length;
+        const buildingsList: Building[] = [];
 
-            for (let i = 0; i < ways.length; i += batchSize) {
-              const batch = ways.slice(i, i + batchSize);
+        // Process nodes
+        const nodeBuildings = nodes.map((node) => ({
+          lat: node.lat,
+          lon: node.lon,
+          id: `node-${node.id}`,
+          housenumber: node.tags?.["addr:housenumber"],
+          street: node.tags?.["addr:street"],
+          amenity: node.tags?.amenity,
+        }));
+        buildingsList.push(...nodeBuildings);
 
-              const elapsedTime = Date.now() - startTime;
-              const progressPercent = i / ways.length;
-              const estimatedTotalTime =
-                progressPercent > 0 ? elapsedTime / progressPercent : 0;
-              const remainingTime = estimatedTotalTime - elapsedTime;
-              const minutes = Math.floor(remainingTime / 60000);
-              const seconds = Math.floor((remainingTime % 60000) / 1000);
-              const etaString = `${minutes}m ${seconds}s remaining`;
+        setStatus({
+          processed: nodes.length,
+          total: totalElements,
+          stage: "Processing elements",
+          eta: "Calculating...",
+        });
 
-              setStatus({
-                processed: i,
-                total: ways.length,
-                stage: "Processing buildings",
-                eta: etaString,
-              });
+        // Process ways in batches
+        for (let i = 0; i < ways.length; i += BATCH_SIZE) {
+          const batch = ways.slice(i, i + BATCH_SIZE);
+          const wayBuildings = batch.map((way) => {
+            const coordinates = way.geometry.map((p: any) => [p.lon, p.lat]);
+            const centroid = calculateCentroid(coordinates);
+            return {
+              ...centroid,
+              id: `way-${way.id}`,
+              housenumber: way.tags?.["addr:housenumber"],
+              street: way.tags?.["addr:street"],
+              amenity: way.tags?.amenity,
+            };
+          });
+          buildingsList.push(...wayBuildings);
 
-              const batchBuildings = batch.map((way) => ({
-                ...calculateCentroid(
-                  way.nodes.map((id) =>
-                    buildingData.find((e) => e.type === "node" && e.id === id),
-                  ),
-                ),
-                id: way.id.toString(),
-                housenumber: way.tags?.["addr:housenumber"] ?? null,
-                street: way.tags?.["addr:street"] ?? null,
-                amenity: way.tags?.amenity ?? null,
-              }));
+          const processedCount = nodes.length + i + batch.length;
+          const elapsedTime = Date.now() - startTime;
+          const progressPercent = processedCount / totalElements;
+          const estimatedTotalTime =
+            progressPercent > 0 ? elapsedTime / progressPercent : 0;
+          const remainingTime = estimatedTotalTime - elapsedTime;
+          const etaString = `${Math.floor(remainingTime / 60000)}m ${Math.floor(
+            (remainingTime % 60000) / 1000
+          )}s remaining`;
 
-              buildingsList.push(...batchBuildings);
+          setStatus({
+            processed: processedCount,
+            total: totalElements,
+            stage: "Processing elements",
+            eta: etaString,
+          });
 
-              // Allow UI to update
-              await new Promise((resolve) => setTimeout(resolve, 0));
-            }
-
-            const amenityCount = buildingsList.reduce((acc, building) => {
-              if (building.amenity) {
-                acc[building.amenity] = (acc[building.amenity] || 0) + 1;
-              }
-              return acc;
-            }, {});
-
-            console.log("Amenity counts:", amenityCount);
-
-            setBuildings(buildingsList);
-          }
+          await new Promise((resolve) => setTimeout(resolve, 0));
         }
+
+        const amenityCount = buildingsList.reduce(
+          (acc: Record<string, number>, building) => {
+            if (building.amenity) {
+              acc[building.amenity] = (acc[building.amenity] || 0) + 1;
+            }
+            return acc;
+          },
+          {}
+        );
+
+        console.log("Amenity counts:", amenityCount);
+        setBuildings(buildingsList);
       } catch (error) {
         console.error("Error fetching buildings:", error);
+        toast({
+          title: "Error fetching data",
+          description: "Failed to retrieve map data. Please try again.",
+          variant: "destructive",
+        });
       } finally {
         setStatus(null);
         setIsLoading(false);
@@ -304,20 +204,18 @@ export const GameMap: React.FC = ({
     };
 
     fetchBuildings();
-  }, [isNewGameCreator, selectedBounds]);
-
-  console.log("BBOX:", selectedBounds);
+  }, [isNewGameCreator, selectedBounds, calculateCentroid, toast]);
 
   return (
     <>
       {status && (
         <div style={{ zIndex: 1000 }}>
-          <Dialog defaultOpen={true} open={true}>
+          <Dialog defaultOpen open>
             <DialogContent>
               <DialogTitle>{status.stage}</DialogTitle>
               <Progress value={(status.processed / status.total) * 100} />
               <Label>
-                {status.processed} / {status.total} - Eta: {status.eta}
+                {status.processed} / {status.total} - ETA: {status.eta}
               </Label>
             </DialogContent>
           </Dialog>
@@ -325,7 +223,7 @@ export const GameMap: React.FC = ({
       )}
       <MapContainer
         center={
-          selectedBounds != null
+          selectedBounds
             ? [
                 (selectedBounds[0] + selectedBounds[2]) / 2,
                 (selectedBounds[1] + selectedBounds[3]) / 2,
@@ -337,23 +235,20 @@ export const GameMap: React.FC = ({
         maxZoom={18}
         style={{
           height: isNewGameCreator ? "500px" : "100%",
-          width: isNewGameCreator ? "100%" : "100%",
+          width: "100%",
           margin: "0 auto",
           zIndex: status ? -1 : 1,
           borderRadius: "12px",
           backgroundColor: "#000",
         }}
       >
-        {isNewGameCreator && !isSaved && (
+        {isNewGameCreator && (
           <>
             <PremadeLocationsDropdown
               handleBoundsSelected={handleBoundsSelected}
             />
             <SearchControl />
-            <SaveGameplayAreaButton
-              buildings={buildings}
-              setIsSaved={setIsSaved}
-            />
+            <SaveGameplayAreaButton buildings={buildings} />
             <DrawControl onBoundsSelected={handleBoundsSelected} />
           </>
         )}
@@ -363,50 +258,46 @@ export const GameMap: React.FC = ({
         />
         {!isLoading && (
           <MarkerClusterGroup
-            zoomToBoundsOnClick={true}
+            zoomToBoundsOnClick
             spiderfyOnMaxZoom={false}
             disableClusteringAtZoom={18}
-            removeOutsideVisibleBounds={true}
+            removeOutsideVisibleBounds
             animate={false}
-            animateAddingMarkers={false}
           >
-            {buildings
-              .filter((b) => !b.amenity)
-              .map((building) => (
-                <Marker
-                  key={building.id}
-                  position={[building.lat, building.lon]}
-                  icon={L.divIcon({
-                    iconSize: [12, 12],
-                    className: "leaflet-custom-marker-icon",
-                  })}
-                >
-                  <Popup>
-                    <div className="flex flex-col gap-2">
-                      <p className="font-bold text-lg text-center">
-                        {!building.street && !building.housenumber
-                          ? "Unknown street"
-                          : `${building.street} ${building.housenumber}`}
-                      </p>
-
-                      {isNewGameCreator && !gameState.world?.player_base_id && (
-                        <Button
-                          onClick={() => {
-                            updateGameState({
-                              world: {
-                                ...gameState.world,
-                                player_base_id: building.id,
-                              },
-                            });
-                          }}
-                        >
-                          Choose As Your Base
-                        </Button>
-                      )}
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
+            {buildings.map((building) => (
+              <Marker
+                key={building.id}
+                position={[building.lat, building.lon]}
+                icon={L.divIcon({
+                  iconSize: [12, 12],
+                  className: "leaflet-custom-marker-icon",
+                })}
+              >
+                <Popup>
+                  <div className="flex flex-col gap-2">
+                    <p className="font-bold text-lg text-center">
+                      {!building.street && !building.housenumber
+                        ? "Unknown address"
+                        : `${building.street} ${building.housenumber}`}
+                    </p>
+                    {isNewGameCreator && !gameState.world?.player_base_id && (
+                      <Button
+                        onClick={() =>
+                          updateGameState({
+                            world: {
+                              ...gameState.world,
+                              player_base_id: building.id,
+                            },
+                          })
+                        }
+                      >
+                        Choose As Your Base
+                      </Button>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
           </MarkerClusterGroup>
         )}
       </MapContainer>
