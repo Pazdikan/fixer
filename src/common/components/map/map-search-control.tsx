@@ -4,6 +4,12 @@ import { useMap } from "react-leaflet";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
+/**
+ * A search control component for map that enables location search functionality.
+ * Uses OpenStreetMap's Nominatim service for geocoding and provides smooth map navigation to found locations.
+ *
+ * @returns A form component with search input and submit button, positioned absolutely on the map.
+ */
 export function SearchControl() {
   const [searchQuery, setSearchQuery] = useState("");
   const map = useMap();
@@ -14,8 +20,8 @@ export function SearchControl() {
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchQuery,
-        )}`,
+          searchQuery
+        )}`
       );
       const data = await response.json();
 

@@ -26,12 +26,16 @@ function AutoSave() {
     return () => clearInterval(interval);
   }, [saveGame]);
 
-  useGlobalKeybindings()
-
   return null;
 }
 
+/**
+ * Root component that manages game state and provides theme context.
+ * Renders either NewGamePage or GameRoot, depends on game save existance.
+ */
 const RootContent = () => {
+  useGlobalKeybindings();
+
   const player_id = useGame((state) => state.gameState.player_id);
 
   return (
