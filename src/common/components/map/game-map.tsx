@@ -29,6 +29,7 @@ export interface Building {
   id: string;
   street?: string;
   housenumber?: string;
+  city?: string;
   amenity?: string;
 }
 
@@ -131,6 +132,7 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
           id: `node-${node.id}`,
           housenumber: node.tags?.["addr:housenumber"],
           street: node.tags?.["addr:street"],
+          city: node.tags?.["addr:city"],
           amenity: node.tags?.amenity,
         }));
         buildingsList.push(...nodeBuildings);
@@ -278,7 +280,9 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
                     <p className="font-semibold text-lg">
                       {!building.street && !building.housenumber
                         ? "Unknown address"
-                        : `${building.street} ${building.housenumber}`}
+                        : `${building.street} ${building.housenumber}${
+                            building.city ? `, ${building.city}` : ""
+                          }`}
                     </p>
                     <p className="">Type: {building.amenity || "House"} </p>
                     {isNewGameCreator && !gameState.world?.player_base_id && (
