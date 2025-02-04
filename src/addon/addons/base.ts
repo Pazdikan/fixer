@@ -24,6 +24,20 @@ export const coreAddon: Addon = {
       name: "Roleplayer",
       description: "Create your own character.",
     });
+
+    api.achievement.register({
+      id: "hid",
+      name: "Hidden test",
+      description: "This achievement is hidden.",
+      hidden: true,
+    });
+
+    api.achievement.register({
+      id: "recruit_people",
+      name: "Rectruiter",
+      description: "Recruit 10 people to your team.",
+      target: 10,
+    });
   },
   onDisabled: () => {
     // Usually, here you would remove all registered stuff from onEnabled,

@@ -15,7 +15,13 @@ export interface GameState {
   seed: string;
   seed_state?: any;
   companies: Company[];
-  unlockedAchievements: Record<string, number>;
+  unlockedAchievements: Record<
+    string,
+    {
+      unlockedAt?: number;
+      progress?: number;
+    }
+  >;
 }
 
 export const initialState: GameState = {

@@ -5,9 +5,11 @@ export interface Achievement {
   icon?: string;
   hidden?: boolean;
   unlockedAt?: number;
+  target?: number;
 }
 
 export interface UnlockResult {
   wasUnlocked: boolean;
   achievement: Achievement;
+  progress?: number;
 }
