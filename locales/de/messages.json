@@ -28,6 +28,8 @@
     "generate-company": "Unternehmen generieren"
   },
   "seed": {
+    "title": "Seed",
+    "set": "Seed setzen",
     "saved-toast": "Der Spielstartwert wurde wie folgt eingestellt:"
   },
   "new-game": {
