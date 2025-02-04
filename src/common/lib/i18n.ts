@@ -6,6 +6,7 @@ import { i18nextPlugin } from "translation-check";
 
 import translation_en_messages from "../../../locales/en/messages.json";
 import translation_pl_messages from "../../../locales/pl/messages.json";
+import translation_de_messages from "../../../locales/de/messages.json";
 
 i18n
   .use(ICU)
@@ -22,6 +23,9 @@ i18n
       },
       pl: {
         translation: translation_pl_messages,
+      },
+      de: {
+        translation: translation_de_messages,
       },
     },
   });
