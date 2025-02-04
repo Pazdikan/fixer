@@ -43,7 +43,7 @@ export const SingleAchievement = ({
                   100
                 }
                 className="h-2"
-                indicatorColor={isUnlocked ? "bg-green-500" : "bg-primary"}
+                indicatorColor={isUnlocked ? "bg-green-500" : "bg-zinc-700"}
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>

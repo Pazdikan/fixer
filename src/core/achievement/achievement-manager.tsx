@@ -1,10 +1,21 @@
-// src/core/achievements/achievements-manager.ts
 import { useGame } from "../store/game-store";
 import { toast } from "@/hooks/use-toast";
 import { Achievement, UnlockResult } from "./achievement.types";
+import { SingleAchievement } from "./components/achievement-display";
 
 export class AchievementsManager {
   private achievements: Map<string, Achievement> = new Map();
+
+  private unlock_toast(achievement: Achievement): void {
+    toast({
+      title: "Achievement Unlocked!",
+      description: (
+        <div className="mt-4 w-full">
+          <SingleAchievement achievement={achievement} />
+        </div>
+      ),
+    });
+  }
 
   register(achievement: Achievement): void {
     if (this.achievements.has(achievement.id)) {
@@ -38,10 +49,7 @@ export class AchievementsManager {
       },
     });
 
-    toast({
-      title: "Achievement Unlocked!",
-      description: `${achievement.name}\n${achievement.description}`,
-    });
+    this.unlock_toast(achievement);
 
     return {
       wasUnlocked: true,
@@ -79,10 +87,8 @@ export class AchievementsManager {
     });
 
     if (isUnlocked) {
-      toast({
-        title: "Achievement Unlocked!",
-        description: `${achievement.name}\n${achievement.description}`,
-      });
+      this.unlock_toast(achievement);
+
       return {
         wasUnlocked: true,
         achievement: { ...achievement, unlockedAt: now },
