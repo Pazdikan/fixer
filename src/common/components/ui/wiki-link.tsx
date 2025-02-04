@@ -10,7 +10,7 @@ import {
 } from "@/common/components/ui/tooltip";
 import { ExternalLink } from "lucide-react";
 
-const WIKI_URL = "https://fixer.miraheze.org/wiki/";
+const WIKI_URL = "https://pazdikan.github.io/fixer-wiki/";
 
 interface WikiLinkProps {
   wikiPage: WikiLinks;
