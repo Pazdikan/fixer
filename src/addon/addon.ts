@@ -172,7 +172,7 @@ export class AddonManager implements IAddonManager {
     return Array.from(this.addons.values());
   }
 
-  registerFromURL(url: string) {
+  registerFromURL(_url: string) {
     throw new Error("Method not implemented.");
 
     // the idea is to fetch the built javascript for the addon and enable it.

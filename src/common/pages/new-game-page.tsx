@@ -111,6 +111,8 @@ export function NewGamePage() {
     });
 
     api.generator.company.populateWorld();
+
+    api.achievement.unlock("create_character");
   };
 
   return (

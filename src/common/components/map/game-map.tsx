@@ -41,7 +41,7 @@ export interface ProcessingStatus {
 }
 
 const BATCH_SIZE = 100;
-const ELEMENTS_LIMIT = 200000;
+const ELEMENTS_LIMIT = 30000;
 
 export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   isNewGameCreator = false,
@@ -148,7 +148,9 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
         for (let i = 0; i < ways.length; i += BATCH_SIZE) {
           const batch = ways.slice(i, i + BATCH_SIZE);
           const wayBuildings = batch.map((way) => {
-            const coordinates = way.geometry.map((p: any) => [p.lon, p.lat]);
+            const coordinates = way.geometry.map(
+              (p: { lon: number; lat: number }) => [p.lon, p.lat]
+            );
             const centroid = calculateCentroid(coordinates);
             return {
               ...centroid,

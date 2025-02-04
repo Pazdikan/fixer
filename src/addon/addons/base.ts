@@ -17,6 +17,13 @@ export const coreAddon: Addon = {
     api.character.addFirstNamesToGenerator(first_names_male, Gender.MALE);
     api.character.addFirstNamesToGenerator(first_names_female, Gender.FEMALE);
     api.character.addLastNamesToGenerator(last_names);
+
+    // Register achievements
+    api.achievement.register({
+      id: "create_character",
+      name: "Roleplayer",
+      description: "Create your own character.",
+    });
   },
   onDisabled: () => {
     // Usually, here you would remove all registered stuff from onEnabled,
