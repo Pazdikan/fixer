@@ -49,7 +49,6 @@ export const SingleAchievement = ({
                 <span>
                   {currentProgress}/{achievement.target}
                 </span>
-                {isUnlocked && <span className="text-green-500">Achieved</span>}
               </div>
             </div>
           )}
