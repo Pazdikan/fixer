@@ -1,0 +1,43 @@
+{
+  "newNotifications": "{count, plural, =0 {Sie haben keine neuen Benachrichtigungen.} one {Sie haben 1 neue Benachrichtigung.} other {Sie haben {count} neue Benachrichtigungen.}}",
+  "addon": {
+    "list-title": "Spiel-Add-ons",
+    "toggle": "Add-Ons umschalten",
+    "add": "Add-ons hinzufügen",
+    "coming-soon": "Bald ... (nicht wirklich, wahrscheinlich nach der Erstveröffentlichung)"
+  },
+  "character": {
+    "affiliations": "Mitgliedschaften",
+    "gender": "Geschlecht",
+    "first-name": "Vorname",
+    "last-name": "Nachname",
+    "background": "Hintergrund",
+    "backstory": "Hintergrundgeschichte",
+    "previous-job": "Vorheriger Job"
+  },
+  "company": {
+    "position": {
+      "owner": "Eigentümer",
+      "employee": "Mitarbeiter"
+    }
+  },
+  "debug": {
+    "menu-title": "Debug-Menü",
+    "clear-localstorage": "LocalStorage löschen (alle Daten zurücksetzen!)",
+    "generate-character": "Charakter generieren",
+    "generate-company": "Unternehmen generieren"
+  },
+  "seed": {
+    "saved-toast": "Der Spielstartwert wurde wie folgt eingestellt:"
+  },
+  "new-game": {
+    "title": "Neues Spiel",
+    "start": "Neues Spiel starten",
+    "incomplete-character": "Unvollständiger Charakter",
+    "please-fill-all-fields": "Bitte füllen Sie alle erforderlichen Felder aus.",
+    "settings": "Spieleinstellungen",
+    "section": {
+      "character-creator": "Dein Charakter"
+    }
+  }
+}
