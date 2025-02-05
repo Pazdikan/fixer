@@ -35,4 +35,5 @@ class API implements IAPI {
 
 export const api = new API();
 
+// Expose API to browser console
 window.api = api;

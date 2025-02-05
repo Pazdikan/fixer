@@ -4,6 +4,7 @@ import first_names_male from "@/../data/first_names_male.json";
 import first_names_female from "@/../data/first_names_female.json";
 import last_names from "@/../data/last_names.json";
 import { Gender } from "@/character/character.types";
+import { IAPI } from "@/api/api";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -18,26 +19,7 @@ export const coreAddon: Addon = {
     api.character.addFirstNamesToGenerator(first_names_female, Gender.FEMALE);
     api.character.addLastNamesToGenerator(last_names);
 
-    // Register achievements
-    api.achievement.register({
-      id: "create_character",
-      name: "Roleplayer",
-      description: "Create your own character.",
-    });
-
-    api.achievement.register({
-      id: "hid",
-      name: "Hidden test",
-      description: "This achievement is hidden.",
-      hidden: true,
-    });
-
-    api.achievement.register({
-      id: "recruit_people",
-      name: "Rectruiter",
-      description: "Recruit 10 people to your team.",
-      target: 10,
-    });
+    register_achievements(api);
   },
   onDisabled: () => {
     // Usually, here you would remove all registered stuff from onEnabled,
@@ -47,3 +29,18 @@ export const coreAddon: Addon = {
     );
   },
 };
+
+function register_achievements(api: IAPI) {
+  api.achievement.register({
+    id: "create_character",
+    name: "Roleplayer",
+    description: "Create your own character.",
+  });
+
+  api.achievement.register({
+    id: "recruit_people",
+    name: "Rectruiter",
+    description: "Recruit 10 people to your team.",
+    target: 10,
+  });
+}

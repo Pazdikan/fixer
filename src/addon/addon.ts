@@ -63,11 +63,13 @@ export interface Addon {
  * Enum representing addon flags used to specify addon behavior.
  * @enum {number}
  * @property {number} CORE - Indicates that addon is a core addon. This makes the addon required and cannot be disabled.
+ * @property {number} OFFICIAL_DLC - Indicates that addon is an official DLC. Read more at https://pazdikan.github.io/fixer-wiki/DLC
  * @property {number} ALLOW_DISABLE_IN_GAME - Indicates that addon can be disabled during gameplay.
  * @property {number} REQUIRES_NEW_SAVE - Indicates that addon requires a new save to take effect.
  */
 export enum Flags {
   CORE,
+  OFFICIAL_DLC,
   ALLOW_DISABLE_IN_GAME,
   REQUIRES_NEW_SAVE,
 }
