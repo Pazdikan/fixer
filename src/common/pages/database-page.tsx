@@ -38,7 +38,7 @@ export function DatabasePage() {
   const [companySearch, setCompanySearch] = useState("");
   const [characterPageInput, setCharacterPageInput] = useState("");
   const [companyPageInput, setCompanyPageInput] = useState("");
-  const itemsPerPage = 100;
+  const itemsPerPage = 50;
 
   const filteredCharacters = useMemo(() => {
     return game.gameState.characters.filter((character) => {
@@ -166,7 +166,7 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {charactersData.map((character, index) => {
             const company = game.gameState.companies.find((c) =>
               c.employees.some((e) => e.characterID === character.id)
@@ -211,7 +211,7 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {companiesData.map((company, index) => (
             <Card key={company.id}>
               <CardHeader>
