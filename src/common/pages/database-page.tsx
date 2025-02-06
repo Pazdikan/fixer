@@ -28,6 +28,7 @@ import { Input } from "@/common/components/ui/input";
 import { CompanyMiniInfo } from "@/company/components/company-hover";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
+import { CharacterMenu } from "@/character/components/character-menu";
 
 export function DatabasePage() {
   const game = useGame((state) => state);
@@ -173,9 +174,14 @@ export function DatabasePage() {
             return (
               <Card key={character.id}>
                 <CardHeader>
-                  <CardTitle>{`${character.first_name} ${character.last_name}${
-                    character.id == game.gameState.player_id ? " (you)" : ""
-                  }`}</CardTitle>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>{`${character.first_name} ${
+                      character.last_name
+                    }${
+                      character.id == game.gameState.player_id ? " (you)" : ""
+                    }`}</CardTitle>
+                    <CharacterMenu character={character} />
+                  </div>
                   <CardDescription>{character.previous_job}</CardDescription>
                 </CardHeader>
                 <CardContent>
