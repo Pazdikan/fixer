@@ -1,6 +1,7 @@
 import { Character, Gender } from "@/character/character.types";
 import { Company } from "@/company/company.types";
 import { useGame } from "@/core/store/game-store";
+import { api } from "./api";
 
 export interface ICharacterAPI {
   first_names_male: string[];
@@ -124,5 +125,12 @@ export class CharacterAPI implements ICharacterAPI {
 
   getFullName(character: Character) {
     return `${character.first_name} ${character.last_name}`;
+  }
+
+  willAcceptReqruitment(character: Character) {
+    const RNG = api.generator.rng();
+
+    // in the future, this will be based by various factors lol
+    return RNG < 0.5;
   }
 }

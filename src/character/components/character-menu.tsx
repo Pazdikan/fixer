@@ -10,6 +10,7 @@ import {
 import { EllipsisVertical } from "lucide-react";
 import { Character } from "../character.types";
 import { api } from "@/api/api";
+import { toast } from "@/hooks/use-toast";
 
 export const CharacterMenu = ({ character }: { character: Character }) => {
   return (
@@ -24,7 +25,23 @@ export const CharacterMenu = ({ character }: { character: Character }) => {
           {api.character.getFullName(character)}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Recruit</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            if (api.character.willAcceptReqruitment(character)) {
+              toast({
+                title: "Character has accepted your offer!",
+                description: "Character has been recruited to your team.",
+              });
+            } else {
+              toast({
+                title: "Character has rejected your offer!",
+                description: "Character has not been recruited to your team.",
+              });
+            }
+          }}
+        >
+          Recruit
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
