@@ -4,10 +4,9 @@
 
 - Import network from preact version
 - Create an event system
-- Remake keybinds into api with console (shadcn component) commands and keybinds
+- Remake keybinds into api with console (shadcn component) commands and keybinds (?)
 - Remake company generator into api (create company, etc.)
-- Fix "api.generator.\*" causing 'api.generator' is possibly 'null' error
-- Implement dexie.js as an alternative to local storage
+- Implement dexie.js as an alternative to local storage (?)
 
 ## "Known Things"
 

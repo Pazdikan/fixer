@@ -32,6 +32,8 @@ export const CharacterMenu = ({ character }: { character: Character }) => {
                 title: "Character has accepted your offer!",
                 description: "Character has been recruited to your team.",
               });
+
+              api.achievement.incrementProgress("recruit_people", 1);
             } else {
               toast({
                 title: "Character has rejected your offer!",
