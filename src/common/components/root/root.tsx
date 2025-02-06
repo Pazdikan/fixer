@@ -39,7 +39,8 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
-import { GameMap, Map } from "../map/new-game-map";
+import { GameMap, Map } from "../map/game-map";
+import { AchievementsPage } from "@/common/pages/achievements-page";
 
 // This is sample data.
 const data = {
@@ -62,6 +63,11 @@ const data = {
           title: "Map",
           url: "#",
           page: "map",
+        },
+        {
+          title: "Achievements",
+          url: "#",
+          page: "achievements",
         },
       ],
     },
@@ -197,6 +203,7 @@ export function GameRoot() {
           {currentPage === "home" && <div></div>}
           {currentPage === "database" && <DatabasePage />}
           {currentPage === "map" && <GameMap />}
+          {currentPage === "achievements" && <AchievementsPage />}
           {/* {currentPage === "network" && (
             <NetworkPage setCurrentPage={setCurrentPage} />
           )}

@@ -8,9 +8,15 @@ export interface Character {
 }
 
 export enum CharacterBackstory {
-  STREET_KID = "street_kid",
-  NOMAD = "nomad",
-  CORPO = "corpo",
+  ORPHAN = "orphan",
+  RICH = "rich",
+  POOR = "poor",
+  MIDDLE_CLASS = "middle_class",
+  NOBLE = "noble",
+  CRIMINAL = "criminal",
+  SOLDIER = "soldier",
+  MERCENARY = "mercenary",
+  CELEBRITY = "celebrity",
 }
 
 export enum Job {

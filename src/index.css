@@ -260,3 +260,22 @@ html {
 .map-is-loading {
   z-index: -100 !important;
 }
+
+.leaflet-control-attribution {
+  background-color: transparent !important;
+  opacity: 0.5;
+}
+
+.leaflet-control-attribution a {
+  color: white !important;
+}
+
+.leaflet-attribution-flag {
+  display: none !important;
+  opacity: 0;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-remove,
+.leaflet-draw-toolbar .leaflet-draw-edit-edit {
+  display: none;
+}

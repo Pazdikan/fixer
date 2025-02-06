@@ -5,13 +5,12 @@
 <i>Click the banner above to join our server</i><br><br>
 </div>
 
-
 > [!NOTE]
 > This game is in active development! It's not fully playable, yet.
 
 - Links
 
-  - [Wiki](https://fixer.miraheze.org/wiki/)
+  - [Wiki](https://pazdikan.github.io/fixer-wiki/)
   - [Contributing](./CONTRIBUTING.md)
   - [Changelog](./CHANGELOG.md)
   - [Credits](./CREDITS.md)

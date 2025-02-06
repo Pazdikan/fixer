@@ -1,10 +1,11 @@
 import { Character } from "@/character/character.types";
-import { Building } from "@/common/components/map/new-game-map";
+import { Building } from "@/common/components/map/game-map";
 import { Company } from "@/company/company.types";
 
 export interface World {
   bounding_box: number[];
   buildings: Building[];
+  player_base_id?: string;
 }
 
 export interface GameState {
@@ -14,6 +15,13 @@ export interface GameState {
   seed: string;
   seed_state?: any;
   companies: Company[];
+  unlockedAchievements: Record<
+    string,
+    {
+      unlockedAt?: number;
+      progress?: number;
+    }
+  >;
 }
 
 export const initialState: GameState = {

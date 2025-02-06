@@ -31,7 +31,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import { AddonSelect } from "@/addon/components/addon-select";
 import { api } from "@/api/api";
-import { GameMap } from "../components/map/new-game-map";
+import { GameMap } from "../components/map/game-map";
 
 export function NewGamePage() {
   const { t } = useTranslation();
@@ -60,8 +60,9 @@ export function NewGamePage() {
   };
 
   const handleGenerateAll = () => {
-    setGender(api.generator.character.generate_gender());
-    setFirstName(api.generator.character.generate_first_name(gender as Gender));
+    const newGender = api.generator.character.generate_gender(); // Get new gender first
+    setGender(newGender); // Update state
+    setFirstName(api.generator.character.generate_first_name(newGender)); // Use newGender directly
     setLastName(api.generator.character.generate_last_name());
     setBackstory(api.generator.character.generate_backstory());
     setPreviousJob(api.generator.character.generate_job());
@@ -77,6 +78,29 @@ export function NewGamePage() {
       return;
     }
 
+    if (
+      !game.gameState.world?.buildings ||
+      game.gameState.world?.buildings.length === 0
+    ) {
+      toast({
+        title: "No buildings",
+        description:
+          'Please select an area you want to play in, then click "Save gameplay araa".',
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!game.gameState.world?.player_base_id) {
+      toast({
+        title: "No player base",
+        description:
+          'Please select a building to be your player base, then click "Save player base".',
+        variant: "destructive",
+      });
+      return;
+    }
+
     api.generator.character.create_character({
       id: game.gameState.characters.length,
       first_name: firstName,
@@ -87,6 +111,8 @@ export function NewGamePage() {
     });
 
     api.generator.company.populateWorld();
+
+    api.achievement.unlock("create_character");
   };
 
   return (

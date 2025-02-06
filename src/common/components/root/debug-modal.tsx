@@ -11,10 +11,13 @@ import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
 import { useTranslation } from "react-i18next";
 
+/**
+ * Debug modal component providing developer tools and game state inspection.
+ */
 export default function DebugModal() {
   const { t } = useTranslation();
 
-  function clear_localstorage() {
+  function clearLocalStorage() {
     localStorage.clear();
     window.location.reload();
   }
@@ -27,7 +30,7 @@ export default function DebugModal() {
         </DialogTrigger>
         <DialogContent>
           <h1>{t("debug.menu-title")}</h1>
-          <Button onClick={clear_localstorage}>
+          <Button onClick={clearLocalStorage}>
             {t("debug.clear-localstorage")}
           </Button>
           <Button

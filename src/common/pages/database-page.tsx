@@ -8,13 +8,12 @@ import {
   TabsTrigger,
 } from "@/common/components/ui/tabs";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/common/components/ui/table";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/common/components/ui/card";
 import { CharacterMiniInfo } from "@/character/components/character-hover";
 import {
   Pagination,
@@ -29,6 +28,7 @@ import { Input } from "@/common/components/ui/input";
 import { CompanyMiniInfo } from "@/company/components/company-hover";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
+import { CharacterMenu } from "@/character/components/character-menu";
 
 export function DatabasePage() {
   const game = useGame((state) => state);
@@ -38,7 +38,7 @@ export function DatabasePage() {
   const [companySearch, setCompanySearch] = useState("");
   const [characterPageInput, setCharacterPageInput] = useState("");
   const [companyPageInput, setCompanyPageInput] = useState("");
-  const itemsPerPage = 100;
+  const itemsPerPage = 50;
 
   const filteredCharacters = useMemo(() => {
     return game.gameState.characters.filter((character) => {
@@ -166,39 +166,34 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Job</TableHead>
-              <TableHead>Backstory</TableHead>
-              <TableHead>Company</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {charactersData.map((character, index) => {
-              const company = game.gameState.companies.find((c) =>
-                c.employees.some((e) => e.characterID === character.id)
-              );
-              return (
-                <TableRow key={character.id}>
-                  <TableCell>
-                    {(charactersPage - 1) * itemsPerPage + index + 1}
-                  </TableCell>
-                  <TableCell>{`${character.first_name} ${character.last_name}${
-                    character.id == game.gameState.player_id ? " (you)" : ""
-                  }`}</TableCell>
-                  <TableCell>{character.previous_job}</TableCell>
-                  <TableCell>{character.backstory}</TableCell>
-                  <TableCell>
+        <div className="grid grid-cols-2 gap-4">
+          {charactersData.map((character, index) => {
+            const company = game.gameState.companies.find((c) =>
+              c.employees.some((e) => e.characterID === character.id)
+            );
+            return (
+              <Card key={character.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>{`${character.first_name} ${
+                      character.last_name
+                    }${
+                      character.id == game.gameState.player_id ? " (you)" : ""
+                    }`}</CardTitle>
+                    <CharacterMenu character={character} />
+                  </div>
+                  <CardDescription>{character.previous_job}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>{character.backstory}</p>
+                  <div className="mt-2">
                     {company ? <CompanyMiniInfo company={company} /> : "N/A"}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
         {renderPagination(
           charactersPage,
           setCharactersPage,
@@ -216,22 +211,14 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Employees</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {companiesData.map((company, index) => (
-              <TableRow key={company.id}>
-                <TableCell>
-                  {(companiesPage - 1) * itemsPerPage + index + 1}
-                </TableCell>
-                <TableCell>{company.name}</TableCell>
-                <TableCell>
+        <div className="grid grid-cols-2 gap-4">
+          {companiesData.map((company, index) => (
+            <Card key={company.id}>
+              <CardHeader>
+                <CardTitle>{company.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
                   {company.employees.map((employee, i) => (
                     <CharacterMiniInfo
                       key={i}
@@ -240,11 +227,11 @@ export function DatabasePage() {
                       }
                     />
                   ))}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
         {renderPagination(
           companiesPage,
           setCompaniesPage,

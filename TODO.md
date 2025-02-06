@@ -34,6 +34,18 @@ This will be similar to the game shadows of doubt.
 
 ## Map
 
-- Add map on new game page, selecting gameplay area and starting base location
-- Fetched building data should be stored in local storage to avoid redownloading it on every page refresh
-- Add starting base and companies to map
+- Add companies to map
+- Building type based on size (house/for company HQ)
+- Building type (police, medical, etc) based on real world data (amenity, already implemented in processing, just need to highlight on map)
+
+## Characters
+
+### Families
+
+- Implement an algorithm to generate families, same household and shit yk
+
+### Teams
+
+- Add basic teams system / recruit people
+
+## KNOWN ISSUES TO FIX
