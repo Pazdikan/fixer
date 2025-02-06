@@ -36,9 +36,7 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const character = useGame
-                .getState()
-                .generator.character.generate_character();
+              const character = api.generator.character.generate_character();
               document.getElementById("generated-character-text")!.innerText =
                 JSON.stringify(character, null, 2);
             }}
@@ -49,11 +47,9 @@ export default function DebugModal() {
           <Button
             className={"min-w-max"}
             onClick={() => {
-              const company = useGame
-                .getState()
-                .generator.company.generateCompany(
-                  api.character.getUnemployedCharacters()
-                );
+              const company = api.generator.company.generateCompany(
+                api.character.getUnemployedCharacters()
+              );
               document.getElementById("generated-company-text")!.innerText =
                 JSON.stringify(company, null, 2);
             }}
