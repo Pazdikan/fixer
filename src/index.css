@@ -249,7 +249,7 @@ html {
   font-style: italic;
 }
 
-.leaflet-custom-marker-icon {
+.leaflet-marker {
   width: 12px;
   height: 12px;
   background: #ff0000;
