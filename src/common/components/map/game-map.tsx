@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import axios from "axios";
@@ -22,6 +22,8 @@ import { useGame } from "@/core/store/game-store";
 import { DrawControl } from "./map-draw-control";
 import { SaveGameplayAreaButton } from "./save-gameplay-area";
 import { SearchControl } from "./map-search-control";
+import { discoverField, isFieldKnown } from "@/common/lib/utils";
+import { Card, CardContent } from "../ui/card";
 
 export interface Building {
   lat: number;
@@ -43,6 +45,55 @@ export interface ProcessingStatus {
 const BATCH_SIZE = 100;
 const ELEMENTS_LIMIT = 30000;
 
+const BuildingMarker = ({ building, setSelectedBuilding }) => {
+  return (
+    <Marker
+      key={building.id}
+      position={[building.lat, building.lon]}
+      icon={L.divIcon({
+        iconSize: [12, 12],
+        className: "leaflet-marker",
+      })}
+      eventHandlers={{
+        click: () => setSelectedBuilding(building),
+      }}
+    />
+  );
+};
+
+const PopupReplacement = ({ building, closePopup }) => {
+  const map = useMap();
+  if (!building) return null;
+
+  // Convert lat/lon to pixel coordinates
+  const point = map.latLngToContainerPoint([building.lat, building.lon]);
+
+  return (
+    <div
+      className="absolute z-[2000]"
+      style={{
+        left: point.x,
+        top: point.y,
+        transform: "translate(-50%, -100%)",
+      }}
+    >
+      <Card className="w-[250px] shadow-lg">
+        <CardContent className="p-4 flex flex-col gap-2">
+          <p className="font-semibold text-lg">
+            {!building.street && !building.housenumber
+              ? "Unknown address"
+              : `${building.street} ${building.housenumber}${
+                  building.city ? `, ${building.city}` : ""
+                }`}
+          </p>
+          <p>Type: {building.amenity || "House"}</p>
+          <Button onClick={closePopup}>Close</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   isNewGameCreator = false,
 }) => {
@@ -55,6 +106,7 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   const [status, setStatus] = useState<ProcessingStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [selectedBuilding, setSelectedBuilding] = useState(null);
 
   useEffect(() => {
     if (!isNewGameCreator && gameState.world?.buildings) {
@@ -268,45 +320,27 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
             removeOutsideVisibleBounds
             animate={false}
           >
-            {buildings.map((building) => (
-              <Marker
-                key={building.id}
-                position={[building.lat, building.lon]}
-                icon={L.divIcon({
-                  iconSize: [12, 12],
-                  className: "leaflet-custom-marker-icon",
-                })}
-              >
-                <Popup>
-                  <div className="flex flex-col gap-2">
-                    <p className="font-semibold text-lg">
-                      {!building.street && !building.housenumber
-                        ? "Unknown address"
-                        : `${building.street} ${building.housenumber}${
-                            building.city ? `, ${building.city}` : ""
-                          }`}
-                    </p>
-                    <p className="">Type: {building.amenity || "House"} </p>
-                    {isNewGameCreator && !gameState.world?.player_base_id && (
-                      <Button
-                        onClick={() =>
-                          updateGameState({
-                            world: {
-                              ...gameState.world,
-                              player_base_id: building.id,
-                            },
-                          })
-                        }
-                      >
-                        Choose As Your Base
-                      </Button>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+            {buildings
+              .filter((b) => {
+                if (isNewGameCreator) return true;
+
+                if (isFieldKnown("world", `buildings.${b.id}`, "exists")) {
+                  return true;
+                }
+              })
+              .map((building) => (
+                <BuildingMarker
+                  key={building.id}
+                  building={building}
+                  setSelectedBuilding={setSelectedBuilding}
+                />
+              ))}
           </MarkerClusterGroup>
         )}
+        <PopupReplacement
+          building={selectedBuilding}
+          closePopup={() => setSelectedBuilding(null)}
+        />
       </MapContainer>
     </>
   );
