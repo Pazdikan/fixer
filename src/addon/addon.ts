@@ -46,17 +46,6 @@ export interface Addon {
    * A function that is called when the addon is disabled.
    */
   onDisabled?: (api: IAPI) => void;
-
-  /**
-   * A function that is called on each tick of the game loop.
-   */
-  onTick?: (api: IAPI) => void;
-
-  /**
-   * A function that is called when a game event happens.
-   */
-  onEvent?: (api: IAPI, event: any) => void;
-  // TODO: Define the event type when created
 }
 
 /**
@@ -174,8 +163,10 @@ export class AddonManager implements IAddonManager {
     return Array.from(this.addons.values());
   }
 
-  registerFromURL(_url: string) {
+  registerFromURL(url: string) {
     throw new Error("Method not implemented.");
+
+    return url;
 
     // the idea is to fetch the built javascript for the addon and enable it.
     // The built js would be something like the base addon - the implemented Addon.

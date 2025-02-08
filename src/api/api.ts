@@ -2,16 +2,19 @@ import { Generator } from "@/core/generation/generator";
 import { CharacterAPI } from "./character";
 import { AchievementsManager } from "@/core/achievement/achievement-manager";
 import seedrandom from "seedrandom";
+import { EventManager } from "@/core/event/event-manager";
 
 export interface IAPI {
   character: CharacterAPI;
   generator: Generator;
   achievement: AchievementsManager;
+  event: EventManager;
 }
 
 class API implements IAPI {
   character = new CharacterAPI();
   achievement = new AchievementsManager();
+  event = new EventManager();
   private _generator: Generator | null = null;
 
   public get generator() {

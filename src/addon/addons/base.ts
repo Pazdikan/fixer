@@ -20,6 +20,10 @@ export const coreAddon: Addon = {
     api.character.addLastNamesToGenerator(last_names);
 
     register_achievements(api);
+
+    api.event.on("tick", () => {
+      console.log("Core addon ticked!");
+    });
   },
   onDisabled: () => {
     // Usually, here you would remove all registered stuff from onEnabled,
