@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { testAddon } from "./addon/addons/test";
 import { ThemeProvider } from "./common/components/ui/theme-provider";
 import useGlobalKeybindings from "./common/lib/mousetrap";
+import { api } from "./api/api";
 
 function AutoSave() {
   const saveGame = useGame((state) => state.saveGameState);
@@ -25,6 +26,24 @@ function AutoSave() {
 
     return () => clearInterval(interval);
   }, [saveGame]);
+
+  return null;
+}
+
+function GameBrain() {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (useGame.getState().gameState.player_id == -1) {
+        return;
+      }
+
+      api.event.trigger({
+        type: "tick",
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return null;
 }
@@ -43,6 +62,7 @@ const RootContent = () => {
       {player_id === -1 ? <NewGamePage /> : <GameRoot />}
       <Toaster />
       <AutoSave />
+      <GameBrain />
     </ThemeProvider>
   );
 };
