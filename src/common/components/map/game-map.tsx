@@ -61,8 +61,9 @@ const BuildingMarker = ({ building, setSelectedBuilding }) => {
   );
 };
 
-const PopupReplacement = ({ building, closePopup }) => {
+const PopupReplacement = ({ building, closePopup, isNewGameCreator }) => {
   const map = useMap();
+  const { gameState, updateGameState } = useGame();
   if (!building) return null;
 
   // Convert lat/lon to pixel coordinates
@@ -87,6 +88,20 @@ const PopupReplacement = ({ building, closePopup }) => {
                 }`}
           </p>
           <p>Type: {building.amenity || "House"}</p>
+          {isNewGameCreator && !gameState.world?.player_base_id && (
+            <Button
+              onClick={() =>
+                updateGameState({
+                  world: {
+                    ...gameState.world,
+                    player_base_id: building.id,
+                  },
+                })
+              }
+            >
+              Choose As Your Base
+            </Button>
+          )}
           <Button onClick={closePopup}>Close</Button>
         </CardContent>
       </Card>
@@ -340,6 +355,7 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
         <PopupReplacement
           building={selectedBuilding}
           closePopup={() => setSelectedBuilding(null)}
+          isNewGameCreator={isNewGameCreator}
         />
       </MapContainer>
     </>
