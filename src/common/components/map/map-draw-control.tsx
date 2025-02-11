@@ -33,9 +33,9 @@ export const DrawControl: React.FC<{
     map.addLayer(drawnItems);
     map.addControl(drawControl);
 
-    const handleCreated = (e: any) => {
-      const bounds = e.layer.getBounds();
-      const selectedBounds = [
+    const handleCreated = (e: { layer: L.Rectangle }): void => {
+      const bounds: L.LatLngBounds = e.layer.getBounds();
+      const selectedBounds: number[] = [
         bounds.getSouth(),
         bounds.getWest(),
         bounds.getNorth(),

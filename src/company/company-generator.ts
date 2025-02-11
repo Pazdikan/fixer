@@ -61,7 +61,7 @@ export class CompanyGenerator {
         ],
       } as Company;
     } else {
-      let employees: Employee[] = [];
+      const employees: Employee[] = [];
 
       for (let i = 0; i < Math.floor(this.rng() * 3); i++) {
         if (unemployed.length > 0) {

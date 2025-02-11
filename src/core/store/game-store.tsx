@@ -30,7 +30,11 @@ class GameStateManager {
   }
 }
 
-const saveSeed = (set: any, get: any, seed: string) => {
+const saveSeed = (
+  set: (fn: (state: GameStore) => Partial<GameStore>) => void,
+  get: () => GameStore,
+  seed: string
+): void => {
   const rng = seedrandom(seed, { state: true });
   set((state: GameStore) => ({
     gameState: {
