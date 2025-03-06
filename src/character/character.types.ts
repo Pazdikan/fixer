@@ -1,4 +1,5 @@
 export interface Character {
+  tags: string[];
   id: number;
   first_name: string;
   last_name: string;

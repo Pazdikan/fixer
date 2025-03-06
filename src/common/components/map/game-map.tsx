@@ -22,10 +22,12 @@ import { useGame } from "@/core/store/game-store";
 import { DrawControl } from "./map-draw-control";
 import { SaveGameplayAreaButton } from "./save-gameplay-area";
 import { SearchControl } from "./map-search-control";
-import { discoverField, isFieldKnown } from "@/common/lib/utils";
 import { Card, CardContent } from "../ui/card";
+import { XIcon } from "lucide-react";
+import { api } from "@/api/api";
 
 export interface Building {
+  tags?: string[];
   lat: number;
   lon: number;
   id: string;
@@ -78,7 +80,15 @@ const PopupReplacement = ({ building, closePopup, isNewGameCreator }) => {
         transform: "translate(-50%, -100%)",
       }}
     >
-      <Card className="w-[250px] shadow-lg">
+      <Card className="w-[300px] shadow-lg">
+        <Button
+          variant={"ghost"}
+          onClick={closePopup}
+          className="right-0 float-right w-8 h-8 p-0 m-2"
+        >
+          <XIcon size={16} className="text-white" />
+        </Button>
+
         <CardContent className="p-4 flex flex-col gap-2">
           <p className="font-semibold text-lg">
             {!building.street && !building.housenumber
@@ -90,19 +100,26 @@ const PopupReplacement = ({ building, closePopup, isNewGameCreator }) => {
           <p>Type: {building.amenity || "House"}</p>
           {isNewGameCreator && !gameState.world?.player_base_id && (
             <Button
-              onClick={() =>
+              onClick={() => {
+                const updatedBuilding = api.util.addTag(
+                  building,
+                  "known:location"
+                );
+
                 updateGameState({
                   world: {
                     ...gameState.world,
                     player_base_id: building.id,
+                    buildings: gameState.world.buildings.map((b) =>
+                      b.id === building.id ? updatedBuilding : b
+                    ),
                   },
-                })
-              }
+                });
+              }}
             >
               Choose As Your Base
             </Button>
           )}
-          <Button onClick={closePopup}>Close</Button>
         </CardContent>
       </Card>
     </div>
@@ -113,7 +130,6 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   isNewGameCreator = false,
 }) => {
   const gameState = useGame((state) => state.gameState);
-  const updateGameState = useGame().updateGameState;
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [selectedBounds, setSelectedBounds] = useState<number[] | null>(
     gameState.world?.bounding_box ?? null
@@ -339,9 +355,7 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
               .filter((b) => {
                 if (isNewGameCreator) return true;
 
-                if (isFieldKnown("world", `buildings.${b.id}`, "exists")) {
-                  return true;
-                }
+                return api.util.hasTag(b, "known:location");
               })
               .map((building) => (
                 <BuildingMarker
