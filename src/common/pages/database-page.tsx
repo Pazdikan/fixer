@@ -185,9 +185,15 @@ export function DatabasePage() {
                   <CardDescription>{character.previous_job}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p>{character.backstory}</p>
                   <div className="mt-2">
                     {company ? <CompanyMiniInfo company={company} /> : "N/A"}
+                  </div>
+                  <div className="mt-2">
+                    {character.traits?.map((trait, i) => (
+                      <div key={i} className="text-sm">
+                        {trait.description}
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>

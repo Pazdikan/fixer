@@ -8,12 +8,6 @@ export interface World {
   player_base_id?: string;
 }
 
-export interface KnownFields {
-  characters: Record<string, string[]>;
-  companies: Record<string, string[]>;
-  world: Record<string, string[]>;
-}
-
 export interface GameState {
   player_id: number;
   characters: Character[];
@@ -28,7 +22,6 @@ export interface GameState {
       progress?: number;
     }
   >;
-  knownFields?: KnownFields;
 }
 
 export const initialState: GameState = {
@@ -37,11 +30,6 @@ export const initialState: GameState = {
   seed: Date.now().toString(),
   companies: [],
   unlockedAchievements: {},
-  knownFields: {
-    characters: {},
-    companies: {},
-    world: {},
-  },
 };
 
 export interface GameContextType {
