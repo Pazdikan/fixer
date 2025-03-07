@@ -6,6 +6,7 @@ export interface Character {
   gender: Gender;
   backstory: CharacterBackstory;
   previous_job: Job;
+  traits: Trait[];
 }
 
 export enum CharacterBackstory {
@@ -29,4 +30,14 @@ export enum Job {
 export enum Gender {
   MALE = "male",
   FEMALE = "female",
+}
+
+export type TraitLevel = "slightly" | "moderately" | "very";
+export type TraitType = "personality" | "behavior";
+export interface Trait {
+  name: string;
+  type: TraitType;
+  description: string;
+  level?: TraitLevel;
+  isNegative?: boolean;
 }
