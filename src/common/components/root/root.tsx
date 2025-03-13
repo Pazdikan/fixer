@@ -78,7 +78,7 @@ export function GameRoot() {
   const [currentPage, setCurrentPage] = useState("home");
   const game = useGame();
 
-  const gameBuildVersion = import.meta.env.GAME_BUILD_VERSION;
+  const gameBuildVersion = import.meta.env.VITE_GAME_BUILD_VERSION;
 
   const [openCategories, setOpenCategories] = React.useState<string[]>([]);
 
