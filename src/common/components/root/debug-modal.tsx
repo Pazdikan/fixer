@@ -176,14 +176,26 @@ export default function DebugModal() {
                         onChange={(value) => {
                           updateGameState({
                             debug: {
-                              ...gameState.debug,
                               revealMap: value,
                             },
                           });
                         }}
                       />
 
-                      {/* You can add more debug options here */}
+                      <DebugOption
+                        title="Reveal Characters"
+                        description={
+                          'Reveal all characters, ignoring "is-known" tag.'
+                        }
+                        checked={gameState.debug.revealCharacters}
+                        onChange={(value) => {
+                          updateGameState({
+                            debug: {
+                              revealCharacters: value,
+                            },
+                          });
+                        }}
+                      />
                     </div>
                   </CardContent>
                 </Card>

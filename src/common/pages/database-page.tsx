@@ -31,7 +31,8 @@ import { api } from "@/api/api";
 import { CharacterMenu } from "@/character/components/character-menu";
 
 export function DatabasePage() {
-  const game = useGame((state) => state);
+  const { gameState, updateGameState } = useGame.getState();
+  const debugRevealCharacters = gameState.debug.revealCharacters;
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
@@ -41,12 +42,19 @@ export function DatabasePage() {
   const itemsPerPage = 50;
 
   const filteredCharacters = useMemo(() => {
-    return game.gameState.characters.filter((character) => {
+    return gameState.characters.filter((character) => {
+      if (
+        !api.util.hasTag(character, "known:character") &&
+        debugRevealCharacters != true
+      ) {
+        return;
+      }
+
       const searchLower = characterSearch.toLowerCase();
       const fullName =
         `${character.first_name} ${character.last_name}`.toLowerCase();
       const company =
-        game.gameState.companies
+        gameState.companies
           .find((c) => c.employees.some((e) => e.characterID === character.id))
           ?.name.toLowerCase() || "";
 
@@ -57,10 +65,15 @@ export function DatabasePage() {
         company.includes(searchLower)
       );
     });
-  }, [game.gameState.characters, game.gameState.companies, characterSearch]);
+  }, [
+    gameState.characters,
+    gameState.companies,
+    characterSearch,
+    debugRevealCharacters,
+  ]);
 
   const filteredCompanies = useMemo(() => {
-    return game.gameState.companies.filter((company) => {
+    return gameState.companies.filter((company) => {
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
@@ -74,7 +87,7 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [game.gameState.companies, companySearch, game.gameState]);
+  }, [gameState.companies, companySearch, gameState]);
 
   const paginateData = (data, page) => {
     const startIndex = (page - 1) * itemsPerPage;
@@ -168,9 +181,10 @@ export function DatabasePage() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {charactersData.map((character, index) => {
-            const company = game.gameState.companies.find((c) =>
+            const company = gameState.companies.find((c) =>
               c.employees.some((e) => e.characterID === character.id)
             );
+
             return (
               <Card key={character.id}>
                 <CardHeader>
@@ -178,7 +192,7 @@ export function DatabasePage() {
                     <CardTitle>{`${character.first_name} ${
                       character.last_name
                     }${
-                      character.id == game.gameState.player_id ? " (you)" : ""
+                      character.id == gameState.player_id ? " (you)" : ""
                     }`}</CardTitle>
                     <CharacterMenu character={character} />
                   </div>

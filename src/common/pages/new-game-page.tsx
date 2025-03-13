@@ -125,6 +125,8 @@ export function NewGamePage() {
       gender: gender,
       backstory: backstory,
       previous_job: previousJob,
+      traits: [],
+      tags: ["known:character"],
     });
 
     api.generator.company.populateWorld();
