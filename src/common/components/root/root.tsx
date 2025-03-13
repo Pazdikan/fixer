@@ -78,6 +78,8 @@ export function GameRoot() {
   const [currentPage, setCurrentPage] = useState("home");
   const game = useGame();
 
+  const gameBuildVersion = import.meta.env.GAME_BUILD_VERSION;
+
   const [openCategories, setOpenCategories] = React.useState<string[]>([]);
 
   const toggleCategory = (title: string) => {
@@ -186,7 +188,10 @@ export function GameRoot() {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <div className={"flex"}>
+          <div className="flex justify-between items-center">
+            {gameBuildVersion && (
+              <span className="text-sm text-gray-400">{gameBuildVersion}</span>
+            )}
             <DebugModal />
           </div>
         </SidebarFooter>

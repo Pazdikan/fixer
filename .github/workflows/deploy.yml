@@ -22,6 +22,8 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Build project
+        env:
+          GAME_BUILD_VERSION: v${{ steps.version.outputs.version }}+build.${{ github.run_number }}
         run: |
           if [ "${{ github.ref }}" = "refs/heads/stable" ]; then
             npm run build          # Production build for stable
@@ -54,3 +56,38 @@ jobs:
           publish_dir: ./dist
           destination_dir: ${{ github.ref == 'refs/heads/stable' && '' || 'beta' }}
           keep_files: ${{ github.ref == 'refs/heads/stable' && true || false }}
+
+  release:
+    name: Create Release
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get version from package.json
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.version }}+build.${{ github.run_number }}
+          release_name: Release v${{ steps.version.outputs.version }} (Build ${{ github.run_number }})
+          draft: false
+          prerelease: ${{ github.ref == 'refs/heads/dev' }}
+          generate_release_notes: true
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist
+          asset_name: build-files
+          asset_content_type: application/zip
