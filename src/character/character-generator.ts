@@ -57,7 +57,7 @@ export class CharacterGenerator {
     const traits_to_generate = Math.floor(api.generator.rng() * 5) + 1;
 
     for (let i = 0; i < traits_to_generate; i++) {
-      const trait = this.generate_trait();
+      const trait = this.generate_trait(traits);
 
       if (traits.some((t) => t.name === trait.name)) {
         i--;
@@ -77,13 +77,18 @@ export class CharacterGenerator {
     } as Character;
   };
 
-  generate_trait = (): Trait => {
+  generate_trait = (characterTraits: Trait[]): Trait => {
     const personalityTraits = {
       introverted: ["introverted", "extroverted"],
       conscientiousness: ["conscientious", "unconscientious"],
       openness: ["open-minded", "closed-minded"],
       agreeableness: ["agreeable", "disagreeable"],
       neuroticism: ["calm", "anxious"],
+      adventurousness: ["adventurous", "cautious"],
+      assertiveness: ["assertive", "submissive"],
+      empathy: ["empathetic", "unempathetic"],
+      curiosity: ["curious", "indifferent"],
+      optimism: ["optimistic", "pessimistic"],
     };
 
     function getRandomLevel(): TraitLevel {
@@ -91,10 +96,36 @@ export class CharacterGenerator {
       return levels[Math.floor(Math.random() * levels.length)];
     }
 
-    const categories = Object.keys(
-      personalityTraits
-    ) as (keyof typeof personalityTraits)[];
-    const category = categories[Math.floor(Math.random() * categories.length)];
+    // Get all trait names already assigned to the character
+    const assignedTraitNames = characterTraits.map((trait) => trait.name);
+
+    // Filter out categories where either the positive or negative trait is already assigned
+    const availableCategories = (
+      Object.keys(personalityTraits) as (keyof typeof personalityTraits)[]
+    ).filter((category) => {
+      const [positive, negative] = personalityTraits[category];
+      return (
+        !assignedTraitNames.includes(positive) &&
+        !assignedTraitNames.includes(negative)
+      );
+    });
+
+    // If no categories are left, return a default trait (or handle it as you see fit)
+    if (availableCategories.length === 0) {
+      return {
+        name: "neutral",
+        type: "personality",
+        description: "Is neutral",
+        level: "slightly",
+        isNegative: false,
+      };
+    }
+
+    // Randomly select a category from the available ones
+    const category =
+      availableCategories[
+        Math.floor(Math.random() * availableCategories.length)
+      ];
     const [positive, negative] = personalityTraits[category];
     const isNegative = Math.random() > 0.5;
     const level = getRandomLevel();
