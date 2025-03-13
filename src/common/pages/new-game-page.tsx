@@ -32,10 +32,14 @@ import { ChevronDown } from "lucide-react";
 import { AddonSelect } from "@/addon/components/addon-select";
 import { api } from "@/api/api";
 import { GameMap } from "../components/map/game-map";
+import debugBuildings from "@/common/components/map/debug-world.json";
 
 export function NewGamePage() {
+  const debug = true;
+
   const { t } = useTranslation();
   const game = useGame((state) => state);
+  const updateGameState = useGame((state) => state.updateGameState);
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -66,6 +70,19 @@ export function NewGamePage() {
     setLastName(api.generator.character.generate_last_name());
     setBackstory(api.generator.character.generate_backstory());
     setPreviousJob(api.generator.character.generate_job());
+
+    if (debug) {
+      updateGameState({
+        world: {
+          buildings: debugBuildings,
+          player_base_id: "way-174392753",
+          bounding_box: [
+            35.100318965433445, -106.60197257995605, 35.13542244271511,
+            -106.40962600708009,
+          ],
+        },
+      });
+    }
   };
 
   const handleCreateCharacter = () => {

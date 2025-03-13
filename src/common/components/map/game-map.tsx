@@ -25,6 +25,7 @@ import { SearchControl } from "./map-search-control";
 import { Card, CardContent } from "../ui/card";
 import { XIcon } from "lucide-react";
 import { api } from "@/api/api";
+import buildingss from "./debug-world.json";
 
 export interface Building {
   tags?: string[];
