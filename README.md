@@ -31,9 +31,10 @@ With the hard earned money, you build your own team of mercenaries - individuals
 
 ## About development and future releases
 
-Once I manage to create a reasonably playable version of the game, it will be released as v1.0.0 - the first release.
+How to contribute: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-After the initial v1.0.0 version, I'll create a "development" branch where all new commits will go. Once everything in that branch is stable, it will be merged into the master branch and tagged with a new version number.
+- `dev` branch - Users (you too!) can open pull requests from their forks to this branch. Every merge, a new beta build is released on https://pazdikan.github.io/fixer/beta
+- `stable` branch - Pazdikan will merge the `dev` branch to the `stable` branch. Every merge, a new stable build is released on https://pazdikan.github.io/fixer
 
 ---
 
