@@ -9,6 +9,7 @@ export interface World {
 }
 
 export interface GameState {
+  debug: DebugState;
   player_id: number;
   characters: Character[];
   world?: World;
@@ -24,7 +25,18 @@ export interface GameState {
   >;
 }
 
+export interface DebugState {
+  isDebugEnabled: boolean;
+  revealMap: boolean;
+  revealCharacters: boolean;
+}
+
 export const initialState: GameState = {
+  debug: {
+    isDebugEnabled: false,
+    revealMap: false,
+    revealCharacters: false,
+  },
   player_id: -1,
   characters: [],
   seed: Date.now().toString(),
