@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - stable
+      - dev
 
 jobs:
   build:
@@ -21,25 +22,29 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Build project
-        run: npm run build
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/stable" ]; then
+            npm run build          # Production build for stable
+          else
+            npm run build:dev      # Dev build for dev branch
+          fi
 
-      - name: Upload production-ready build files
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: production-files
+          name: build-files
           path: ./dist
 
   deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/stable'
 
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: production-files
+          name: build-files
           path: ./dist
 
       - name: Deploy to GitHub Pages
@@ -47,3 +52,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          destination_dir: ${{ github.ref == 'refs/heads/stable' && '' || 'beta' }}
+          keep_files: ${{ github.ref == 'refs/heads/stable' && true || false }}
