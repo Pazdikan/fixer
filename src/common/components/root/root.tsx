@@ -41,6 +41,7 @@ import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
 import { GameMap, Map } from "../map/game-map";
 import { AchievementsPage } from "@/common/pages/achievements-page";
+import ChangelogComponent from "./changelog";
 
 // This is sample data.
 const data = {
@@ -77,8 +78,6 @@ const data = {
 export function GameRoot() {
   const [currentPage, setCurrentPage] = useState("home");
   const game = useGame();
-
-  const gameBuildVersion = import.meta.env.VITE_GAME_BUILD_VERSION;
 
   const [openCategories, setOpenCategories] = React.useState<string[]>([]);
 
@@ -189,9 +188,7 @@ export function GameRoot() {
         </SidebarContent>
         <SidebarFooter>
           <div className="flex justify-between items-center">
-            {gameBuildVersion && (
-              <span className="text-sm text-gray-400">{gameBuildVersion}</span>
-            )}
+            <ChangelogComponent />
             <DebugModal />
           </div>
         </SidebarFooter>

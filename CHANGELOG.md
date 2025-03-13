@@ -1,10 +1,9 @@
-> [!CAUTION]
-> ! **THIS IS AN EXAMPLE CHANGELOG** !
-> After the **initial release**, you should update this file with the changes you make to the project in the same pull request as your changes.
-> Read more on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+<!-- IMPORTANT NOTICE FOR THE DEVELOPERS! -->
+<!-- This is a changelog for the players, not a commit history. Provide values and changes in a "player readable" format. -->
+<!-- Example: The "New gig event" has 0.5% chance of happening (was 5%) -->
 
-> [!TIP]
-> This is for the players, not for the developers. Provide values and changes that are relevant to the players, see the example below.
+<!-- Developer should update this file in the same pull request as your code changes. -->
+<!-- Example final commit in the pull request: "docs: Update CHANGELOG.md" -->
 
 # Changelog
 
