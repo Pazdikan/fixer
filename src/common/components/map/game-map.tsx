@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
@@ -25,7 +25,6 @@ import { SearchControl } from "./map-search-control";
 import { Card, CardContent } from "../ui/card";
 import { XIcon } from "lucide-react";
 import { api } from "@/api/api";
-import buildingss from "./debug-world.json";
 
 export interface Building {
   tags?: string[];
@@ -131,7 +130,9 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   isNewGameCreator = false,
 }) => {
   const gameState = useGame((state) => state.gameState);
+  const debugRevealMap = gameState.debug.revealMap;
   const [buildings, setBuildings] = useState<Building[]>([]);
+  const [knownBuildings, setKnownBuildings] = useState<Building[]>([]);
   const [selectedBounds, setSelectedBounds] = useState<number[] | null>(
     gameState.world?.bounding_box ?? null
   );
@@ -139,6 +140,7 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [selectedBuilding, setSelectedBuilding] = useState(null);
+  const [mapKey, setMapKey] = useState(0);
 
   useEffect(() => {
     if (!isNewGameCreator && gameState.world?.buildings) {
@@ -294,6 +296,15 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
     fetchBuildings();
   }, [isNewGameCreator, selectedBounds, calculateCentroid, toast]);
 
+  const filteredBuildings = useMemo(() => {
+    return buildings.filter(
+      (b) =>
+        isNewGameCreator ||
+        debugRevealMap ||
+        api.util.hasTag(b, "known:location")
+    );
+  }, [buildings, isNewGameCreator, debugRevealMap]);
+
   return (
     <>
       {status && (
@@ -352,19 +363,13 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
             removeOutsideVisibleBounds
             animate={false}
           >
-            {buildings
-              .filter((b) => {
-                if (isNewGameCreator) return true;
-
-                return api.util.hasTag(b, "known:location");
-              })
-              .map((building) => (
-                <BuildingMarker
-                  key={building.id}
-                  building={building}
-                  setSelectedBuilding={setSelectedBuilding}
-                />
-              ))}
+            {filteredBuildings.map((building) => (
+              <BuildingMarker
+                key={building.id}
+                building={building}
+                setSelectedBuilding={setSelectedBuilding}
+              />
+            ))}
           </MarkerClusterGroup>
         )}
         <PopupReplacement
