@@ -3,6 +3,7 @@ import { create } from "zustand";
 import seedrandom from "seedrandom";
 import { Generator } from "@/core/generation/generator";
 import { api } from "@/api/api";
+import { debounce, merge, throttle } from "lodash";
 
 interface GameStore {
   gameState: GameState;
@@ -52,6 +53,7 @@ const saveSeed = (
 export const useGame = create<GameStore>((set, get) => {
   // Initialize game state
   const initialGameState = GameStateManager.load();
+  console.log("Seed saved!");
 
   const seed = initialGameState.seed;
   let rng = seedrandom(seed, { state: true });
@@ -62,6 +64,11 @@ export const useGame = create<GameStore>((set, get) => {
 
   api.generator = new Generator(rng);
 
+  const throttledSave = throttle(() => {
+    const currentState = get().gameState;
+    GameStateManager.save(currentState);
+  }, 2000);
+
   return {
     gameState: initialGameState,
     // Save game state to persistent storage
@@ -71,26 +78,37 @@ export const useGame = create<GameStore>((set, get) => {
       GameStateManager.save(currentState);
       console.log("Game saved!");
     },
+
     // Update the game state
     updateGameState: (updates) => {
       set((state) => {
-        const newState = {
-          gameState: {
+        let nextState: GameState;
+
+        // If update touches nested stuff (characters/companies), deep merge
+        if (updates.characters || updates.companies) {
+          nextState = merge({}, state.gameState, updates);
+        } else {
+          // For simple top-level updates, shallow copy
+          nextState = {
             ...state.gameState,
             ...updates,
-          },
-        };
+          };
+        }
 
-        // Re-initialize RNG if seed is updated
+        // Handle RNG seed if updated
         if (updates.seed) {
           const newRng = seedrandom(updates.seed, { state: true });
-          newState.gameState.seed_state = newRng.state();
+          nextState.seed_state = newRng.state();
           api.generator = new Generator(newRng);
         }
 
-        return newState;
+        // Save latest game state (don't pass big objects into throttle)
+        throttledSave();
+
+        return { gameState: nextState };
       });
     },
+
     saveSeed: (seed: string) => saveSeed(set, get, seed),
   };
 });

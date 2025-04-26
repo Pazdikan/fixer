@@ -278,7 +278,6 @@ export const GameMap: React.FC<{ isNewGameCreator?: boolean }> = ({
           {}
         );
 
-        console.log("Amenity counts:", amenityCount);
         setBuildings(buildingsList);
       } catch (error) {
         console.error("Error fetching buildings:", error);

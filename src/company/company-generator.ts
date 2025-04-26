@@ -13,19 +13,32 @@ export class CompanyGenerator {
   }
 
   populateWorld() {
+    const generatedCharacters = [];
+    const generatedCompanies = [];
+
     for (let i = 0; i < 5000; i++) {
-      api.generator.character.create_character(
-        api.generator.character.generate_character()
-      );
+      generatedCharacters.push(api.generator.character.generate_character());
     }
 
     const unemployed = api.character.getUnemployedCharacters();
 
     for (let i = 0; i < 500; i++) {
-      api.generator.company.create_company(
+      generatedCompanies.push(
         api.generator.company.generateCompany(unemployed)
       );
     }
+
+    // Now update the game state in a single batch
+    useGame.getState().updateGameState({
+      characters: [
+        ...useGame.getState().gameState.characters,
+        ...generatedCharacters,
+      ],
+      companies: [
+        ...useGame.getState().gameState.companies,
+        ...generatedCompanies,
+      ],
+    });
   }
 
   create_company = (object: Company) => {

@@ -33,7 +33,6 @@ const ChangelogComponent: React.FC = () => {
         const response = await axios.get(
           "https://raw.githubusercontent.com/Pazdikan/fixer/refs/heads/dev/CHANGELOG.md"
         );
-        console.log(response.data);
 
         const parsedChangelog = parseChangelog(response.data);
         setChangelog(parsedChangelog);
