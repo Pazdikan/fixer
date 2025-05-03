@@ -236,6 +236,7 @@ export function DatabasePage() {
             <Card key={company.id}>
               <CardHeader>
                 <CardTitle>{company.name}</CardTitle>
+                <CardDescription>{company.type}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">

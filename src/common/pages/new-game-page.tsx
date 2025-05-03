@@ -85,7 +85,7 @@ export function NewGamePage() {
     }
   };
 
-  const handleCreateCharacter = () => {
+  const handleCreateCharacter = async () => {
     if (!gender || !backstory || !previousJob) {
       toast({
         title: t("new-game.incomplete-character"),
@@ -129,7 +129,7 @@ export function NewGamePage() {
       tags: ["known:character"],
     });
 
-    api.generator.company.populateWorld();
+    await api.generator.company.populateWorld();
 
     api.achievement.unlock("create_character");
   };

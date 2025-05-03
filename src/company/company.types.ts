@@ -1,5 +1,6 @@
 export interface Company {
   tags: string[];
+  type: string;
   id: number;
   name: string;
   employees: Employee[];
