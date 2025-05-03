@@ -4,6 +4,7 @@ import seedrandom from "seedrandom";
 import { Generator } from "@/core/generation/generator";
 import { api } from "@/api/api";
 import { debounce, merge, throttle } from "lodash";
+import { set as idbSet, get as idbGet } from "idb-keyval";
 
 interface GameStore {
   gameState: GameState;
@@ -14,20 +15,19 @@ interface GameStore {
 class GameStateManager {
   private static storageKey = "gameState";
 
-  public static load(): GameState {
-    const savedState = localStorage.getItem(this.storageKey);
+  public static async load(): Promise<GameState> {
+    const savedState = await idbGet(this.storageKey);
     if (savedState) {
-      return JSON.parse(savedState) as GameState;
+      return savedState as GameState;
     }
     return initialState;
   }
 
-  public static save(state: GameState): void {
+  public static async save(state: GameState): Promise<void> {
     if (state.player_id == -1) {
       return;
     }
-
-    localStorage.setItem(this.storageKey, JSON.stringify(state));
+    await idbSet(this.storageKey, state);
   }
 }
 
@@ -52,8 +52,12 @@ const saveSeed = (
 // Create the store
 export const useGame = create<GameStore>((set, get) => {
   // Initialize game state
-  const initialGameState = GameStateManager.load();
-  console.log("Seed saved!");
+  let initialGameState = initialState;
+  GameStateManager.load().then((loadedState) => {
+    initialGameState = loadedState;
+    set({ gameState: initialGameState });
+  });
+  console.log("Game state loaded!");
 
   const seed = initialGameState.seed;
   let rng = seedrandom(seed, { state: true });
@@ -64,51 +68,50 @@ export const useGame = create<GameStore>((set, get) => {
 
   api.generator = new Generator(rng);
 
-  const throttledSave = throttle(() => {
+  const throttledSave = throttle(async () => {
     const currentState = get().gameState;
-    GameStateManager.save(currentState);
+    await GameStateManager.save(currentState);
   }, 2000);
 
   return {
     gameState: initialGameState,
-    // Save game state to persistent storage
-    saveGameState: () => {
+    saveGameState: async () => {
       const currentState = get().gameState;
-
-      GameStateManager.save(currentState);
+      await GameStateManager.save(currentState);
       console.log("Game saved!");
     },
-
-    // Update the game state
     updateGameState: (updates) => {
       set((state) => {
         let nextState: GameState;
-
-        // If update touches nested stuff (characters/companies), deep merge
         if (updates.characters || updates.companies) {
           nextState = merge({}, state.gameState, updates);
         } else {
-          // For simple top-level updates, shallow copy
           nextState = {
             ...state.gameState,
             ...updates,
           };
         }
-
-        // Handle RNG seed if updated
         if (updates.seed) {
           const newRng = seedrandom(updates.seed, { state: true });
           nextState.seed_state = newRng.state();
           api.generator = new Generator(newRng);
         }
-
-        // Save latest game state (don't pass big objects into throttle)
         throttledSave();
-
         return { gameState: nextState };
       });
     },
-
-    saveSeed: (seed: string) => saveSeed(set, get, seed),
+    saveSeed: async (seed: string) => {
+      const rng = seedrandom(seed, { state: true });
+      set((state: GameStore) => ({
+        gameState: {
+          ...state.gameState,
+          seed: seed,
+          seed_state: rng.state(),
+        },
+      }));
+      const currentState = get().gameState;
+      await GameStateManager.save(currentState);
+      console.log("Seed saved!");
+    },
   };
 });

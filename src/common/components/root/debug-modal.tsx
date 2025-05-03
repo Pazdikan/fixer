@@ -29,6 +29,7 @@ import {
 } from "@/common/components/ui/card";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
 import { Badge } from "@/common/components/ui/badge";
+import { clear as idbClear } from "idb-keyval";
 
 /**
  * Debug modal component providing developer tools and game state inspection.
@@ -41,9 +42,10 @@ export default function DebugModal() {
   );
   const [generatedCompany, setGeneratedCompany] = useState<string | null>(null);
 
-  function clearLocalStorage() {
-    localStorage.clear();
-    window.location.reload();
+  function clearGameSave() {
+    idbClear().then(() => {
+      window.location.reload();
+    });
   }
 
   function generateCharacter() {
@@ -105,7 +107,7 @@ export default function DebugModal() {
                     <div className="pt-2">
                       <Button
                         variant="destructive"
-                        onClick={clearLocalStorage}
+                        onClick={clearGameSave}
                         className="w-full"
                       >
                         {t("debug.clear-localstorage")}
