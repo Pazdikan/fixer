@@ -12,11 +12,48 @@ import { Character } from "../character.types";
 import { api } from "@/api/api";
 import { toast } from "@/hooks/use-toast";
 
+type MenuOption = {
+  id: string;
+  label: string;
+  condition?: (character: Character) => boolean;
+  disabled?: (character: Character) => boolean;
+  onClick: (character: Character) => void;
+  separatorBefore?: boolean;
+};
+
 export const CharacterMenu = ({ character }: { character: Character }) => {
+  const menuOptions: MenuOption[] = [
+    {
+      id: "recruit",
+      label: "Recruit",
+      condition: (char) => !api.character.isPlayer(char),
+      disabled: (char) => false,
+      onClick: (char) => {
+        if (api.character.willAcceptReqruitment(char)) {
+          toast({
+            title: "Character has accepted your offer!",
+            description: "Character has been recruited to your team.",
+          });
+          api.achievement.incrementProgress("recruit_people", 1);
+        } else {
+          toast({
+            title: "Character has rejected your offer!",
+            description: "Character has not been recruited to your team.",
+          });
+        }
+      },
+      separatorBefore: true,
+    },
+  ];
+
+  const visibleOptions = menuOptions.filter(
+    (option) => !option.condition || option.condition(character)
+  );
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button variant={"ghost"} size={"icon"}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
           <EllipsisVertical size={24} />
         </Button>
       </DropdownMenuTrigger>
@@ -24,26 +61,18 @@ export const CharacterMenu = ({ character }: { character: Character }) => {
         <DropdownMenuLabel>
           {api.character.getFullName(character)}
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            if (api.character.willAcceptReqruitment(character)) {
-              toast({
-                title: "Character has accepted your offer!",
-                description: "Character has been recruited to your team.",
-              });
 
-              api.achievement.incrementProgress("recruit_people", 1);
-            } else {
-              toast({
-                title: "Character has rejected your offer!",
-                description: "Character has not been recruited to your team.",
-              });
-            }
-          }}
-        >
-          Recruit
-        </DropdownMenuItem>
+        {visibleOptions.map((option) => (
+          <div key={option.id}>
+            {option.separatorBefore && <DropdownMenuSeparator />}
+            <DropdownMenuItem
+              disabled={option.disabled?.(character)}
+              onClick={() => option.onClick(character)}
+            >
+              {option.label}
+            </DropdownMenuItem>
+          </div>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

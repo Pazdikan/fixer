@@ -133,4 +133,10 @@ export class CharacterAPI implements ICharacterAPI {
     // in the future, this will be based by various factors lol
     return RNG < 0.5;
   }
+
+  isPlayer(character: Character) {
+    const game = useGame.getState();
+
+    return character.id === game.gameState.player_id;
+  }
 }
