@@ -82,20 +82,14 @@ export const useGame = create<GameStore>((set, get) => {
     },
     updateGameState: (updates) => {
       set((state) => {
-        let nextState: GameState;
-        if (updates.characters || updates.companies) {
-          nextState = merge({}, state.gameState, updates);
-        } else {
-          nextState = {
-            ...state.gameState,
-            ...updates,
-          };
-        }
+        const nextState = merge({}, state.gameState, updates);
+
         if (updates.seed) {
           const newRng = seedrandom(updates.seed, { state: true });
           nextState.seed_state = newRng.state();
           api.generator = new Generator(newRng);
         }
+
         throttledSave();
         return { gameState: nextState };
       });
