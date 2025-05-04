@@ -43,6 +43,7 @@ import { GameMap, Map } from "../map/game-map";
 import { AchievementsPage } from "@/common/pages/achievements-page";
 import ChangelogComponent from "./changelog";
 import { GameClock } from "@/core/clock";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // This is sample data.
 const data = {
@@ -202,10 +203,17 @@ export function GameRoot() {
             <BreadcrumbList>{breadcrumbItems}</BreadcrumbList>
           </Breadcrumb>
 
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <GameClock />
-          </div>
+          {/* Desktop: center GameClock */}
+          {!useIsMobile() && (
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <GameClock />
+            </div>
+          )}
+
+          {/* Mobile: push GameClock to the right */}
+          {useIsMobile() && <div className="ml-auto"><GameClock /></div>}
         </header>
+
 
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0 overflow-y-auto">
           {currentPage === "home" && <div></div>}

@@ -187,7 +187,7 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {charactersData.map((character, index) => {
             const company = gameState.companies.find((c) =>
               c.employees.some((e) => e.characterID === character.id)
@@ -239,7 +239,7 @@ export function DatabasePage() {
             }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {companiesData.map((company, index) => (
             <Card key={company.id}>
               <CardHeader>

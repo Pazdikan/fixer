@@ -3,11 +3,19 @@ import { useState, useRef, useEffect } from "react";
 import { useGame } from "./store/game-store";
 import { Button } from "@/common/components/ui/button";
 import { Pause, Play } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/common/components/ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function GameClock() {
   const [gameTime, setGameTime] = useState(Date.now());
   const [speed, setSpeed] = useState(1);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     clearInterval(intervalRef.current as NodeJS.Timeout);
@@ -48,24 +56,64 @@ export function GameClock() {
     return `${year}-${month}-${day} ${hrs}:${mins < 10 ? "0" + mins : mins}`;
   };
 
+  const SpeedButton = ({ speedValue, children }: { speedValue: number; children: React.ReactNode }) => (
+    <Button
+      variant={speed === speedValue ? "default" : "outline"}
+      onClick={() => handleSpeedChange(speedValue)}
+      className="relative flex justify-center items-center w-12"
+    >
+      {children}
+    </Button>
+  );
+
+  if (isMobile) {
+    return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="text-sm font-bold p-0 h-auto">
+              {formatTime()}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleSpeedChange(0)}>
+              <Pause className="h-4 w-4 mr-2" /> Pause
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSpeedChange(1)}>
+              <Play className="h-4 w-4 mr-2" /> Play
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSpeedChange(2)}>
+              <div className="flex mr-6 gap-1">
+              <Play className="h-4 w-4 absolute left-0 transform translate-x-1/2" />
+        <Play className="h-4 w-4 absolute left-2 transform translate-x-1/2" />
+      
+              </div>
+              2x
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSpeedChange(3)}>
+              <div className="flex mr-6 gap-1">
+              
+        <Play className="h-4 w-4 absolute left-0 transform translate-x-1/3" />
+        <Play className="h-4 w-4 absolute left-2 transform translate-x-1/3" />
+        <Play className="h-4 w-4 absolute left-4 transform translate-x-1/3" />
+      
+              </div>
+              3x
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+    );
+  }
+
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm font-bold">{formatTime()}</span>
-
-      <Button
-        variant={speed === 0 ? "default" : "outline"}
-        onClick={() => handleSpeedChange(0)}
-        className="w-12"
-      >
+      <SpeedButton speedValue={0}>
         <Pause className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={speed === 1 ? "default" : "outline"}
-        onClick={() => handleSpeedChange(1)}
-        className="w-12"
-      >
+      </SpeedButton>
+      <SpeedButton speedValue={1}>
         <Play className="h-4 w-4" />
-      </Button>
+      </SpeedButton>
+      <SpeedButton speedValue={2}>
       <Button
         variant={speed === 2 ? "default" : "outline"}
         onClick={() => handleSpeedChange(2)}
@@ -74,15 +122,14 @@ export function GameClock() {
         <Play className="h-4 w-4 absolute left-0 transform translate-x-1/2" />
         <Play className="h-4 w-4 absolute left-2 transform translate-x-1/2" />
       </Button>
-      <Button
-        variant={speed === 3 ? "default" : "outline"}
-        onClick={() => handleSpeedChange(3)}
-        className="relative flex justify-center items-center w-12"
-      >
+      </SpeedButton>
+      <SpeedButton speedValue={3}>
+      
         <Play className="h-4 w-4 absolute left-0 transform translate-x-1/3" />
         <Play className="h-4 w-4 absolute left-2 transform translate-x-1/3" />
         <Play className="h-4 w-4 absolute left-4 transform translate-x-1/3" />
-      </Button>
+      
+      </SpeedButton>
     </div>
   );
 }
