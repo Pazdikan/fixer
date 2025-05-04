@@ -29,6 +29,7 @@ export interface DebugState {
   isDebugEnabled: boolean;
   revealMap: boolean;
   revealCharacters: boolean;
+  revealCompanies: boolean;
 }
 
 export const initialState: GameState = {

@@ -33,6 +33,7 @@ import { CharacterMenu } from "@/character/components/character-menu";
 export function DatabasePage() {
   const { gameState, updateGameState } = useGame.getState();
   const debugRevealCharacters = gameState.debug.revealCharacters;
+  const debugRevealCompanies = gameState.debug.revealCompanies;
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
@@ -74,6 +75,13 @@ export function DatabasePage() {
 
   const filteredCompanies = useMemo(() => {
     return gameState.companies.filter((company) => {
+      if (
+        !api.util.hasTag(company, "known:company") &&
+        debugRevealCompanies != true
+      ) {
+        return;
+      }
+
       const searchLower = companySearch.toLowerCase();
       const employeeNames = company.employees
         .map((e) => {
@@ -87,7 +95,7 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [gameState.companies, companySearch, gameState]);
+  }, [gameState.companies, companySearch, gameState, debugRevealCompanies]);
 
   const paginateData = (data, page) => {
     const startIndex = (page - 1) * itemsPerPage;

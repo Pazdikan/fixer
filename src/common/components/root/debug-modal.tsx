@@ -198,6 +198,21 @@ export default function DebugModal() {
                           });
                         }}
                       />
+
+                      <DebugOption
+                        title="Reveal Companies"
+                        description={
+                          'Reveal all companies, ignoring "is-known" tag.'
+                        }
+                        checked={gameState.debug.revealCompanies}
+                        onChange={(value) => {
+                          updateGameState({
+                            debug: {
+                              revealCompanies: value,
+                            },
+                          });
+                        }}
+                      />
                     </div>
                   </CardContent>
                 </Card>
