@@ -1,5 +1,9 @@
 # ToDo
 
+## PRIORITY
+- rapidly toggling between debug options doesn't apply changes / overwrites previous actions.
+possible fix - go back to doing things like updateGameState((prev) => {...prev, debug: {...}}) (possibly wont change shit just an idea)
+
 ## General
 
 - Import network from preact version
