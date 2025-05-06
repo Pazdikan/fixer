@@ -44,6 +44,8 @@ import { AchievementsPage } from "@/common/pages/achievements-page";
 import ChangelogComponent from "./changelog";
 import { GameClock } from "@/core/clock";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { NetworkPage } from "@/network/network-page";
+import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
 
 // This is sample data.
 const data = {
@@ -220,10 +222,10 @@ export function GameRoot() {
           {currentPage === "database" && <DatabasePage />}
           {currentPage === "map" && <GameMap />}
           {currentPage === "achievements" && <AchievementsPage />}
-          {/* {currentPage === "network" && (
+          {currentPage === "network" && (
             <NetworkPage setCurrentPage={setCurrentPage} />
           )}
-          {currentPage === "network-posts" && <SocialMediaNetworkPage />} */}
+          {currentPage === "network-posts" && <SocialMediaNetworkPage />}
         </div>
       </SidebarInset>
     </SidebarProvider>

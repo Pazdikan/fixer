@@ -1,8 +1,9 @@
 import { HireEvent } from "./events/hire";
+import { NetworkPostEvent } from "./events/network-post";
 import { NewGameEvent } from "./events/new-game";
 import { TickEvent } from "./events/tick";
 
-type GameEvent = TickEvent | NewGameEvent | HireEvent;
+type GameEvent = TickEvent | NewGameEvent | HireEvent | NetworkPostEvent;
 
 export class EventManager {
   private listeners: {

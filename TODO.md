@@ -1,15 +1,11 @@
 # ToDo
 
 ## PRIORITY
-- rapidly toggling between debug options doesn't apply changes / overwrites previous actions.
-possible fix - go back to doing things like updateGameState((prev) => {...prev, debug: {...}}) (possibly wont change shit just an idea)
 
 ## General
 
-- Import network from preact version
 - Remake keybinds into api with console (shadcn component) commands and keybinds (?)
-- Remake company generator into api (create company, etc.)
-- Implement dexie.js as an alternative to local storage (?)
+- Remake company generator into api (create company, etc.)3w
 
 ## Map
 
@@ -26,5 +22,3 @@ possible fix - go back to doing things like updateGameState((prev) => {...prev, 
 ### Teams
 
 - Add basic teams system / recruit people
-
-## KNOWN ISSUES TO FIX
