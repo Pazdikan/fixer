@@ -7,6 +7,7 @@ import { Gender } from "@/character/character.types";
 import { api, IAPI } from "@/api/api";
 import { Post } from "@/network/posts/post.types";
 import { useGame } from "@/core/store/game-store";
+import { getRandomMessage } from "@/network/posts/content";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -66,9 +67,9 @@ function triggerRandomEvent() {
       type: "networkPost",
       post: {
         author_id: api.character.pickRandom().id,
-        content: "test",
+        content: getRandomMessage().content,
         id: `${new Date().getMilliseconds() * api.generator.rng()}`,
-        timestamp: `${formatTime(date)}`,
+        timestamp: `${api.util.formatTime(date)}`,
       } as Post,
     });
 
@@ -79,13 +80,3 @@ function triggerRandomEvent() {
     // gig
   }
 }
-
-const formatTime = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  const hrs = date.getHours();
-  const mins = date.getMinutes();
-
-  return `${year}-${month}-${day} ${hrs}:${mins < 10 ? "0" + mins : mins}`;
-};

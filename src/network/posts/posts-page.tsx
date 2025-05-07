@@ -8,11 +8,9 @@ export function SocialMediaNetworkPage() {
 
   const handleNewPost = (post: Post) => {
     setPosts([...posts, post]);
-
-    console.log(`Posts: ${posts.length}`)
   };
 
-  api.event.on("networkPost", (event) => handleNewPost(event.post))
+  api.event.on("networkPost", (event) => handleNewPost(event.post));
 
   return (
     <div className="container mx-auto px-4 py-8">

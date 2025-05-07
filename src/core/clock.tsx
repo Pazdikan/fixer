@@ -55,19 +55,6 @@ export function GameClock() {
     setSpeed(newSpeed);
   };
 
-  const formatTime = () => {
-    const date = new Date();
-    date.setTime(gameTime);
-
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hrs = date.getHours();
-    const mins = date.getMinutes();
-
-    return `${year}-${month}-${day} ${hrs}:${mins < 10 ? "0" + mins : mins}`;
-  };
-
   const SpeedButton = ({
     speedValue,
     children,
@@ -89,7 +76,7 @@ export function GameClock() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="text-sm font-bold p-0 h-auto">
-            {formatTime()}
+            {api.util.formatTime(gameTime)}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -121,7 +108,7 @@ export function GameClock() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-bold">{formatTime()}</span>
+      <span className="text-sm font-bold">{api.util.formatTime(gameTime)}</span>
       <SpeedButton speedValue={0}>
         <Pause className="h-4 w-4" />
       </SpeedButton>

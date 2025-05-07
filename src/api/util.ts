@@ -22,4 +22,16 @@ export class Utils {
       tags: obj.tags?.filter((t) => t !== tag) ?? [],
     };
   }
+
+  formatTime = (time: number) => {
+    const date = new Date(time);
+
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hrs = date.getHours();
+    const mins = date.getMinutes();
+
+    return `${year}-${month}-${day} ${hrs}:${mins < 10 ? "0" + mins : mins}`;
+  };
 }
