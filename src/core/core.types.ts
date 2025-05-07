@@ -6,6 +6,7 @@ export interface World {
   bounding_box: number[];
   buildings: Building[];
   player_base_id?: string;
+  time: number;
 }
 
 export interface GameState {
@@ -37,12 +38,16 @@ export const initialState: GameState = {
     isDebugEnabled: false,
     revealMap: false,
     revealCharacters: false,
+    revealCompanies: false,
   },
   player_id: -1,
   characters: [],
   seed: Date.now().toString(),
   companies: [],
   unlockedAchievements: {},
+  world: {
+    time: Date.now(),
+  },
 };
 
 export interface GameContextType {

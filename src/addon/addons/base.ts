@@ -6,7 +6,7 @@ import last_names from "@/../data/last_names.json";
 import { Gender } from "@/character/character.types";
 import { api, IAPI } from "@/api/api";
 import { Post } from "@/network/posts/post.types";
-import { BaseEvent } from "@/core/event/event";
+import { useGame } from "@/core/store/game-store";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -26,7 +26,7 @@ export const coreAddon: Addon = {
     api.event.on("tick", () => {
       console.log("Core addon ticked!");
 
-      triggerRandomEvent()
+      triggerRandomEvent();
     });
   },
   onDisabled: () => {
@@ -54,20 +54,23 @@ function register_achievements(api: IAPI) {
 }
 
 function triggerRandomEvent() {
-  if (api.generator.rng() < 0.2) return; // prevents triggering an event every trick 
+  if (api.generator.rng() < 0.2) return; // prevents triggering an event every trick
 
-  const chance = api.generator.rng()
+  const chance = api.generator.rng();
 
   if (chance < 0.1) {
+    const date = new Date();
+    date.setTime(useGame.getState().gameState.world.time);
+
     api.event.trigger({
       type: "networkPost",
       post: {
-        author_id: 10,
+        author_id: api.character.pickRandom().id,
         content: "test",
         id: `${new Date().getMilliseconds() * api.generator.rng()}`,
-        timestamp: `${new Date().getMilliseconds()}`,
-      } as Post
-    })
+        timestamp: `${formatTime(date)}`,
+      } as Post,
+    });
 
     return;
   }
@@ -77,3 +80,12 @@ function triggerRandomEvent() {
   }
 }
 
+const formatTime = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hrs = date.getHours();
+  const mins = date.getMinutes();
+
+  return `${year}-${month}-${day} ${hrs}:${mins < 10 ? "0" + mins : mins}`;
+};
