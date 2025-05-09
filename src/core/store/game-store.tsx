@@ -3,7 +3,7 @@ import { create } from "zustand";
 import seedrandom from "seedrandom";
 import { Generator } from "@/core/generation/generator";
 import { api } from "@/api/api";
-import { debounce, merge, throttle } from "lodash";
+import { merge, throttle } from "lodash";
 import { set as idbSet, get as idbGet } from "idb-keyval";
 
 interface GameStore {

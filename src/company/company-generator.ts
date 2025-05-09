@@ -1,7 +1,6 @@
 import { api } from "@/api/api";
 import { Character } from "@/character/character.types";
 import { Company, CompanyPosition, Employee } from "@/company/company.types";
-import { GameContextType, GameState } from "@/core/core.types";
 import { useGame } from "@/core/store/game-store";
 
 type CompanyType =
@@ -100,6 +99,7 @@ export class CompanyGenerator {
         employees.push({
           characterID: employee.id,
           position: CompanyPosition.EMPLOYEE,
+          tags: [],
         });
         unemployed.splice(numb, 1);
       }
@@ -113,9 +113,11 @@ export class CompanyGenerator {
         {
           characterID: owner.id,
           position: CompanyPosition.OWNER,
+          tags: [],
         },
         ...employees,
       ],
+      tags: [],
     };
   }
 

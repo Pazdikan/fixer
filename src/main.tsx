@@ -9,26 +9,9 @@ import { addonManager } from "./addon/addon";
 import { coreAddon } from "./addon/addons/base";
 import { Toaster } from "@/common/components/ui/toaster";
 import { NewGamePage } from "./common/pages/new-game-page";
-import { useEffect, useRef, useState } from "react";
 import { testAddon } from "./addon/addons/test";
 import { ThemeProvider } from "./common/components/ui/theme-provider";
 import useGlobalKeybindings from "./common/lib/mousetrap";
-import { api } from "./api/api";
-
-function AutoSave() {
-  // const saveGame = useGame((state) => state.saveGameState);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     saveGame();
-  //     console.log("Auto-saved game");
-  //   }, 10000);
-
-  //   return () => clearInterval(interval);
-  // }, [saveGame]);
-
-  return null;
-}
 
 /**
  * Root component that manages game state and provides theme context.
@@ -43,7 +26,6 @@ const RootContent = () => {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       {player_id === -1 ? <NewGamePage /> : <GameRoot />}
       <Toaster />
-      <AutoSave />
     </ThemeProvider>
   );
 };

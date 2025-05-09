@@ -31,15 +31,13 @@ import { api } from "@/api/api";
 import { CharacterMenu } from "@/character/components/character-menu";
 
 export function DatabasePage() {
-  const { gameState, updateGameState } = useGame.getState();
+  const { gameState } = useGame.getState();
   const debugRevealCharacters = gameState.debug.revealCharacters;
   const debugRevealCompanies = gameState.debug.revealCompanies;
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
   const [companySearch, setCompanySearch] = useState("");
-  const [characterPageInput, setCharacterPageInput] = useState("");
-  const [companyPageInput, setCompanyPageInput] = useState("");
   const itemsPerPage = 50;
 
   const filteredCharacters = useMemo(() => {

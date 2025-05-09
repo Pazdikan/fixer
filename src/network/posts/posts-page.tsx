@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SocialMediaPost } from "./post";
 import { Post } from "./post.types";
 import { api } from "@/api/api";
