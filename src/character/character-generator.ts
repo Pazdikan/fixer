@@ -9,7 +9,59 @@ import {
 } from "./character.types";
 import { useGame } from "@/core/store/game-store";
 
-export class CharacterGenerator {
+interface ICharacterGenerator {
+  /**
+   * Creates a character and adds it to the game state.
+   * Validates required fields before creation.
+   * @param object - The character object to create.
+   */
+  create_character(object: Character): void;
+
+  /**
+   * Generates a new character with random attributes and traits.
+   * @returns The generated character object.
+   */
+  generate_character(): Character;
+
+  /**
+   * Generates a random personality trait not already assigned to the character.
+   * @param characterTraits - The traits already assigned to the character.
+   * @returns The generated trait.
+   */
+  generate_trait(characterTraits: Trait[]): Trait;
+
+  /**
+   * Generates a random gender.
+   * @returns The generated gender.
+   */
+  generate_gender(): Gender;
+
+  /**
+   * Generates a random first name based on the provided gender.
+   * @param gender - The gender to generate a first name for.
+   * @returns The generated first name.
+   */
+  generate_first_name(gender: Gender): string;
+
+  /**
+   * Generates a random last name.
+   * @returns The generated last name.
+   */
+  generate_last_name(): string;
+
+  /**
+   * Generates a random backstory.
+   * @returns The generated backstory.
+   */
+  generate_backstory(): CharacterBackstory;
+
+  /**
+   * Generates a random previous job.
+   * @returns The generated job.
+   */
+  generate_job(): Job;
+}
+export class CharacterGenerator implements ICharacterGenerator {
   rng: () => number;
 
   constructor(rng: () => number) {

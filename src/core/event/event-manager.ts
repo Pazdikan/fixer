@@ -5,7 +5,25 @@ import { TickEvent } from "./events/tick";
 
 type GameEvent = TickEvent | NewGameEvent | HireEvent | NetworkPostEvent;
 
-export class EventManager {
+interface IEventManager {
+  /**
+   * Registers a callback to be invoked when a specific event type is triggered.
+   * @param eventType - The type of event to listen for.
+   * @param callback - The function to call when the event is triggered.
+   */
+  on<K extends GameEvent["type"]>(
+    eventType: K,
+    callback: (event: Extract<GameEvent, { type: K }>) => void
+  ): void;
+
+  /**
+   * Triggers an event, invoking all registered listeners for the event's type.
+   * @param event - The event object to trigger.
+   */
+  trigger(event: GameEvent): void;
+}
+
+export class EventManager implements IEventManager {
   private listeners: {
     [K in GameEvent["type"]]?: Array<
       (event: Extract<GameEvent, { type: K }>) => void

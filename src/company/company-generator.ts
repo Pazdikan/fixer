@@ -11,7 +11,27 @@ type CompanyType =
   | "food"
   | "law";
 
-export class CompanyGenerator {
+interface ICompanyGenerator {
+  /**
+   * Populates the game world with characters and companies.
+   */
+  populateWorld(): void;
+
+  /**
+   * Creates a new company and adds it to the game state.
+   * @param object - The company object to create.
+   */
+  create_company(object: Company): void;
+
+  /**
+   * Generates a new company using a list of unemployed characters.
+   * @param unemployed - The list of unemployed characters to assign as employees.
+   * @returns The generated company.
+   */
+  generateCompany(unemployed: Character[]): Company;
+}
+
+export class CompanyGenerator implements ICompanyGenerator {
   rng: () => number;
 
   constructor(rng: () => number) {
