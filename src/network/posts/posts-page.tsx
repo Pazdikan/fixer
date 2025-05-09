@@ -7,7 +7,7 @@ export function SocialMediaNetworkPage() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   const handleNewPost = (post: Post) => {
-    setPosts([...posts, post]);
+    setPosts([post, ...posts]);
   };
 
   api.event.on("networkPost", (event) => handleNewPost(event.post));
