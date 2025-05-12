@@ -95,7 +95,7 @@ function AddAddonModal() {
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <h1 className="poppins-bold">{t("addon.add")}</h1>
+          <h1 className="bold">{t("addon.add")}</h1>
 
           <p>{t("addon.coming-soon")}</p>
         </DialogContent>
