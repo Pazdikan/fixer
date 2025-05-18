@@ -46,6 +46,7 @@ import { GameClock } from "@/core/clock";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NetworkPage } from "@/network/network-page";
 import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
+import { Chat } from "./chat";
 
 // This is sample data.
 const data = {
@@ -58,6 +59,11 @@ const data = {
           title: "Database",
           url: "#",
           page: "database",
+        },
+        {
+          title: "Chat",
+          url: "#",
+          page: "chat",
         },
         {
           title: "Network",
@@ -226,6 +232,7 @@ export function GameRoot() {
             <NetworkPage setCurrentPage={setCurrentPage} />
           )}
           {currentPage === "network-posts" && <SocialMediaNetworkPage />}
+          {currentPage === "chat" && <Chat />}
         </div>
       </SidebarInset>
     </SidebarProvider>

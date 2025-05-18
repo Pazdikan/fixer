@@ -11,6 +11,7 @@ import { EllipsisVertical } from "lucide-react";
 import { Character } from "../character.types";
 import { api } from "@/api/api";
 import { toast } from "@/hooks/use-toast";
+import { useGame } from "@/core/store/game-store";
 
 type MenuOption = {
   id: string;
@@ -35,6 +36,13 @@ export const CharacterMenu = ({ character }: { character: Character }) => {
             description: "Character has been recruited to your team.",
           });
           api.achievement.incrementProgress("recruit_people", 1);
+
+          const updatedCharacter = api.util.addTag(char, "chat")
+          useGame.getState().updateGameState({
+            characters: useGame.getState().gameState.characters.map((c) =>
+              c.id === updatedCharacter.id ? updatedCharacter : c
+            ),
+          })
         } else {
           toast({
             title: "Character has rejected your offer!",
