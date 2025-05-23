@@ -60,15 +60,18 @@ function triggerRandomEvent() {
   const chance = api.generator.rng();
 
   if (chance < 0.1) {
+    let randomPost = getRandomMessage();
+
     api.event.trigger({
       type: "networkPost",
       post: {
         author_id: api.character.pickRandom().id,
-        content: getRandomMessage().content,
+        content: randomPost.content,
         id: `${new Date().getMilliseconds() * api.generator.rng()}`,
         timestamp: `${api.util.formatTime(
           useGame.getState().gameState.world.time
         )}`,
+        type: randomPost.type,
       } as Post,
     });
 

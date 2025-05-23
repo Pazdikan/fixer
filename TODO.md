@@ -2,6 +2,8 @@
 
 ## PRIORITY
 
+- map refreshes every tick
+
 ## General
 
 - Remake keybinds into api with console (shadcn component) commands and keybinds (?)
