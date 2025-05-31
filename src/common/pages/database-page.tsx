@@ -29,6 +29,9 @@ import { CompanyMiniInfo } from "@/company/components/company-hover";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
 import { CharacterMenu } from "@/character/components/character-menu";
+import { Badge } from "@/common/components/ui/badge";
+import { Family } from "@/character/character.types";
+import { Users } from "lucide-react";
 
 export function DatabasePage() {
   const { gameState } = useGame.getState();
@@ -36,8 +39,10 @@ export function DatabasePage() {
   const debugRevealCompanies = gameState.debug.revealCompanies;
   const [charactersPage, setCharactersPage] = useState(1);
   const [companiesPage, setCompaniesPage] = useState(1);
+  const [familiesPage, setFamiliesPage] = useState(1);
   const [characterSearch, setCharacterSearch] = useState("");
   const [companySearch, setCompanySearch] = useState("");
+  const [familySearch, setFamilySearch] = useState("");
   const itemsPerPage = 50;
 
   const filteredCharacters = useMemo(() => {
@@ -57,11 +62,26 @@ export function DatabasePage() {
           .find((c) => c.employees.some((e) => e.characterID === character.id))
           ?.name.toLowerCase() || "";
 
+      // Add family information to search
+      const familyMembers = [
+        ...(character.parent_ids || []),
+        ...(character.child_ids || []),
+        ...(character.sibling_ids || []),
+      ];
+      const hasFamilyMatch = familyMembers.some((id) => {
+        const member = api.character.getCharacterById(id);
+        if (!member) return false;
+        return `${member.first_name} ${member.last_name}`.toLowerCase().includes(
+          searchLower
+        );
+      });
+
       return (
         fullName.includes(searchLower) ||
         character.previous_job.toLowerCase().includes(searchLower) ||
         character.backstory.toLowerCase().includes(searchLower) ||
-        company.includes(searchLower)
+        company.includes(searchLower) ||
+        hasFamilyMatch
       );
     });
   }, [
@@ -93,39 +113,78 @@ export function DatabasePage() {
         employeeNames.includes(searchLower)
       );
     });
-  }, [gameState.companies, companySearch, gameState, debugRevealCompanies]);
+  }, [gameState.companies, companySearch, debugRevealCompanies]);
 
-  const paginateData = (data, page) => {
-    const startIndex = (page - 1) * itemsPerPage;
+  // Add family filtering
+  const filteredFamilies = useMemo(() => {
+    if (!gameState.families) return [];
+
+    return gameState.families.filter((family) => {
+      const searchLower = familySearch.toLowerCase();
+
+      // Search by family name
+      if (family.name.toLowerCase().includes(searchLower)) return true;
+
+      // Search by family member names
+      const familyMembers = [...family.parent_ids, ...family.child_ids];
+      const memberNameMatch = familyMembers.some((id) => {
+        const member = api.character.getCharacterById(id);
+        if (!member) return false;
+        return `${member.first_name} ${member.last_name}`.toLowerCase().includes(
+          searchLower
+        );
+      });
+
+      return memberNameMatch;
+    });
+  }, [gameState.families, familySearch]);
+
+  // Process data for display with pagination
+  const charactersData = useMemo(() => {
+    const startIndex = (charactersPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return data.slice(startIndex, endIndex);
-  };
+    return filteredCharacters.slice(startIndex, endIndex);
+  }, [filteredCharacters, charactersPage]);
 
-  const charactersData = paginateData(filteredCharacters, charactersPage);
-  const companiesData = paginateData(filteredCompanies, companiesPage);
+  const companiesData = useMemo(() => {
+    const startIndex = (companiesPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredCompanies.slice(startIndex, endIndex);
+  }, [filteredCompanies, companiesPage]);
 
-  const renderPagination = (currentPage, setPage, totalItems) => {
+  // Add family data processing
+  const familiesData = useMemo(() => {
+    const startIndex = (familiesPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredFamilies.slice(startIndex, endIndex);
+  }, [filteredFamilies, familiesPage]);
+
+  const renderPagination = (
+    currentPage: number,
+    setPage: (page: number) => void,
+    totalItems: number
+  ) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const maxVisiblePages = 5;
+    const currentPageNumber = currentPage;
 
-    let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+    if (totalPages <= 1) {
+      return null;
     }
 
-    const pageNumbers = Array.from(
-      { length: endPage - startPage + 1 },
-      (_, i) => startPage + i
-    );
+    // Calculate page numbers to show
+    let startPage = Math.max(1, currentPageNumber - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
 
     return (
       <Pagination className="mt-4">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              onClick={() => setPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
             />
           </PaginationItem>
@@ -137,29 +196,27 @@ export function DatabasePage() {
               {startPage > 2 && <PaginationEllipsis />}
             </>
           )}
-          {pageNumbers.map((pageNumber) => (
-            <PaginationItem key={pageNumber}>
+          {Array.from({ length: endPage - startPage + 1 }).map((_, i) => (
+            <PaginationItem key={startPage + i}>
               <PaginationLink
-                onClick={() => setPage(pageNumber)}
-                isActive={currentPage === pageNumber}
+                onClick={() => setPage(startPage + i)}
+                isActive={currentPage === startPage + i}
               >
-                {pageNumber}
+                {startPage + i}
               </PaginationLink>
             </PaginationItem>
           ))}
+          {endPage < totalPages - 1 && <PaginationEllipsis />}
           {endPage < totalPages && (
-            <>
-              {endPage < totalPages - 1 && <PaginationEllipsis />}
-              <PaginationItem>
-                <PaginationLink onClick={() => setPage(totalPages)}>
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            </>
+            <PaginationItem>
+              <PaginationLink onClick={() => setPage(totalPages)}>
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
           )}
           <PaginationItem>
             <PaginationNext
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() => setPage(Math.min(currentPage + 1, totalPages))}
               disabled={currentPage === totalPages}
             />
           </PaginationItem>
@@ -173,11 +230,12 @@ export function DatabasePage() {
       <TabsList className="w-full space-x-6">
         <TabsTrigger value="characters">Characters</TabsTrigger>
         <TabsTrigger value="companies">Companies</TabsTrigger>
+        <TabsTrigger value="families">Families</TabsTrigger>
       </TabsList>
       <TabsContent value="characters">
         <div className="mb-4">
           <Input
-            placeholder="Search characters by name, job, backstory, or company"
+            placeholder="Search characters by name, job, backstory, company, or family members"
             value={characterSearch}
             onChange={(e) => {
               setCharacterSearch(e.currentTarget.value);
@@ -191,23 +249,75 @@ export function DatabasePage() {
               c.employees.some((e) => e.characterID === character.id)
             );
 
+            // Get family information
+            const spouse =
+              character.spouse_id !== undefined
+                ? api.character.getCharacterById(character.spouse_id)
+                : undefined;
+
+            const hasFamily =
+              character.spouse_id !== undefined ||
+              (character.parent_ids && character.parent_ids.length > 0) ||
+              (character.child_ids && character.child_ids.length > 0) ||
+              (character.sibling_ids && character.sibling_ids.length > 0);
+
             return (
               <Card key={character.id}>
                 <CardHeader>
                   <div className="flex justify-between items-center">
-                    <CardTitle>{`${character.first_name} ${
-                      character.last_name
-                    }${
-                      character.id == gameState.player_id ? " (you)" : ""
-                    }`}</CardTitle>
+                    <CardTitle>
+                      {`${character.first_name} ${character.last_name}${
+                        character.id == gameState.player_id ? " (you)" : ""
+                      }`}
+                      {character.age && (
+                        <span className="text-sm font-normal ml-2 text-muted-foreground">
+                          {character.age} years old
+                        </span>
+                      )}
+                    </CardTitle>
                     <CharacterMenu character={character} />
                   </div>
                   <CardDescription>{character.previous_job}</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {/* Family Status */}
+                  {hasFamily && (
+                    <div className="mb-2">
+                      <Badge
+                        variant="outline"
+                        className="flex items-center gap-1 mb-1"
+                      >
+                        <Users className="h-3 w-3" />
+                        Family Member
+                      </Badge>
+                      {spouse && (
+                        <div className="text-sm">
+                          <span className="text-muted-foreground">Spouse: </span>
+                          <CharacterMiniInfo character={spouse} />
+                        </div>
+                      )}
+                      {character.child_ids && character.child_ids.length > 0 && (
+                        <div className="text-sm">
+                          <span className="text-muted-foreground">
+                            {character.child_ids.length === 1
+                              ? "Child: "
+                              : "Children: "}
+                          </span>
+                          <span className="text-muted-foreground">
+                            {character.child_ids.length}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Company */}
                   <div className="mt-2">
+                    <span className="text-sm font-medium">Company: </span>
                     {company ? <CompanyMiniInfo company={company} /> : "N/A"}
                   </div>
+
+                  {/* Traits */}
                   <div className="mt-2">
                     {character.traits?.map((trait, i) => (
                       <div key={i} className="text-sm">
@@ -263,6 +373,92 @@ export function DatabasePage() {
           companiesPage,
           setCompaniesPage,
           filteredCompanies.length
+        )}
+      </TabsContent>
+
+      {/* New Families Tab */}
+      <TabsContent value="families">
+        <div className="mb-4">
+          <Input
+            placeholder="Search families by name or family member"
+            value={familySearch}
+            onChange={(e) => {
+              setFamilySearch(e.currentTarget.value);
+              setFamiliesPage(1);
+            }}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {familiesData.map((family) => {
+            const parents = family.parent_ids
+              .map((id) => api.character.getCharacterById(id))
+              .filter(Boolean);
+
+            const children = family.child_ids
+              .map((id) => api.character.getCharacterById(id))
+              .filter(Boolean);
+
+            return (
+              <Card key={family.id}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    The {family.name} Family
+                  </CardTitle>
+                  <CardDescription>
+                    {family.backstory} •{" "}
+                    {parents.length + children.length} members
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {parents.length > 0 && (
+                    <div className="mb-3">
+                      <h4 className="text-sm font-semibold mb-1">Parents:</h4>
+                      <div className="space-y-1">
+                        {parents.map((parent) => (
+                          <div
+                            key={parent.id}
+                            className="flex justify-between items-center"
+                          >
+                            <CharacterMiniInfo character={parent} />
+                            <span className="text-xs text-muted-foreground">
+                              {parent.age} years old
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {children.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold mb-1">Children:</h4>
+                      <div className="space-y-1">
+                        {children.map((child) => (
+                          <div
+                            key={child.id}
+                            className="flex justify-between items-center"
+                          >
+                            <CharacterMiniInfo character={child} />
+                            <span className="text-xs text-muted-foreground">
+                              {child.age} years old
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {renderPagination(
+          familiesPage,
+          setFamiliesPage,
+          filteredFamilies.length
         )}
       </TabsContent>
     </Tabs>
