@@ -11,6 +11,12 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import React from "react";
 
+import pauseIcon from '@/../assets/icons/pause.svg'
+import playIcon from '@/../assets/icons/play.svg'
+import fastForward2xIcon from '@/../assets/icons/fast-forward.svg'
+import fastForward3xIcon from '@/../assets/icons/fast-forward-3x.svg';
+
+
 const SpeedButton = React.memo(
   ({
     speedValue,
@@ -88,15 +94,15 @@ export function GameClock() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => handleSpeedChange(0)}>
-            <img src="@/../assets/icons/pause.svg" className="w-6 h-4" /> Pause
+            <img src={pauseIcon} className="w-6 h-4" /> Pause
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleSpeedChange(1)}>
-            <img src="@/../assets/icons/play.svg" className="w-6 h-4" /> Play
+            <img src={playIcon} className="w-6 h-4" /> Play
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleSpeedChange(2)}>
             <div className="flex gap-1">
               <img
-                src="@/../assets/icons/fast-forward.svg"
+                src={fastForward2xIcon}
                 className="w-6 h-4"
               />
             </div>
@@ -105,7 +111,7 @@ export function GameClock() {
           <DropdownMenuItem onClick={() => handleSpeedChange(3)}>
             <div className="flex gap-1">
               <img
-                src="@/../assets/icons/fast-forward-3x.svg"
+                src={fastForward3xIcon}
                 className="w-6 h-4"
               />
             </div>
@@ -124,21 +130,21 @@ export function GameClock() {
         currentSpeed={speed}
         onChange={handleSpeedChange}
       >
-        <img src="@/../assets/icons/pause.svg" className="h-5 w-5" />
+        <img src={pauseIcon} className="h-5 w-5" />
       </SpeedButton>
       <SpeedButton
         speedValue={1}
         currentSpeed={speed}
         onChange={handleSpeedChange}
       >
-        <img src="@/../assets/icons/play.svg" className="h-6 w-6" />
+        <img src={playIcon} className="h-6 w-6" />
       </SpeedButton>
       <SpeedButton
         speedValue={2}
         currentSpeed={speed}
         onChange={handleSpeedChange}
       >
-        <img src="@/../assets/icons/fast-forward.svg" className="h-6 w-6" />
+        <img src={fastForward2xIcon} className="h-6 w-6" />
       </SpeedButton>
       <SpeedButton
         speedValue={3}
@@ -146,7 +152,7 @@ export function GameClock() {
         onChange={handleSpeedChange}
       >
         <img
-          src="@/../assets/icons/fast-forward-3x.svg"
+          src={fastForward3xIcon}
           className="w-12 h-12"
         />
       </SpeedButton>
