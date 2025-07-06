@@ -148,6 +148,10 @@ export class CharacterAPI implements ICharacterAPI {
           (character) => character.id !== game.gameState.player_id
         );
 
+    if (characters.length === 0) {
+      throw new Error("No characters available for random selection");
+    }
+
     const RNG = api.generator.rng();
     const randomIndex = Math.floor(RNG * characters.length);
 
