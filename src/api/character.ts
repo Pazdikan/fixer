@@ -139,4 +139,22 @@ export class CharacterAPI implements ICharacterAPI {
 
     return character.id === game.gameState.player_id;
   }
+
+  pickRandom({ includePlayer = false }: { includePlayer?: boolean } = {}) {
+    const game = useGame.getState();
+    const characters = includePlayer
+      ? game.gameState.characters
+      : game.gameState.characters.filter(
+          (character) => character.id !== game.gameState.player_id
+        );
+
+    if (characters.length === 0) {
+      throw new Error("No characters available for random selection");
+    }
+
+    const RNG = api.generator.rng();
+    const randomIndex = Math.floor(RNG * characters.length);
+
+    return characters[randomIndex];
+  }
 }

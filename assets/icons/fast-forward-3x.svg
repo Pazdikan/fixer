@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" width="768" height="512">
+	<title>fast-forward-button (1)</title>
+	<defs>
+		<image width="512" height="512" id="img1" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iaGVpZ2h0OiA1MTJweDsgd2lkdGg6IDUxMnB4OyI+PGcgY2xhc3M9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwwKSIgc3R5bGU9IiI+PHBhdGggZD0iTTEwNi44NTQgMTA2LjAwMmEyNi4wMDMgMjYuMDAzIDAgMCAwLTI1LjY0IDI5LjMyNmMxNiAxMjQgMTYgMTE3LjM0NCAwIDI0MS4zNDRhMjYuMDAzIDI2LjAwMyAwIDAgMCAzNS43NzYgMjcuMzMybDI5OC0xMjRhMjYuMDAzIDI2LjAwMyAwIDAgMCAwLTQ4LjAwOGwtMjk4LTEyNGEyNi4wMDMgMjYuMDAzIDAgMCAwLTEwLjEzNi0xLjk5NHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMSI+PC9wYXRoPjwvZz48L3N2Zz4="/>
+	</defs>
+	<style>
+	</style>
+	<g>
+		<use id="play-button (1)" href="#img1" transform="matrix(1,0,0,1,-39,4)"/>
+		<use id="play-button (1) copy" href="#img1" transform="matrix(1,0,0,1,132,3)"/>
+		<use id="play-button (1) copy 2" href="#img1" transform="matrix(1,0,0,1,296,3)"/>
+	</g>
+</svg>

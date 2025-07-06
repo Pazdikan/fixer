@@ -10,11 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/common/components/ui/select";
-import { Slider } from "@/common/components/ui/slider";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/common/components/ui/card";

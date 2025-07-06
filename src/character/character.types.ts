@@ -7,6 +7,13 @@ export interface Character {
   backstory: CharacterBackstory;
   previous_job: Job;
   traits: Trait[];
+  // Family relationships
+  family_id?: number;    // ID of the family this character belongs to
+  spouse_id?: number;    // ID of the character's spouse
+  parent_ids?: number[]; // IDs of the character's parents
+  child_ids?: number[];  // IDs of the character's children
+  sibling_ids?: number[]; // IDs of the character's siblings
+  age?: number;          // Age of the character
 }
 
 export enum CharacterBackstory {
@@ -40,4 +47,13 @@ export interface Trait {
   description: string;
   level?: TraitLevel;
   isNegative?: boolean;
+}
+
+// Add a Family interface to represent a family unit
+export interface Family {
+  id: number;
+  name: string; // Family surname
+  parent_ids: number[]; // IDs of the parents
+  child_ids: number[]; // IDs of the children
+  backstory: CharacterBackstory; // Shared family backstory
 }

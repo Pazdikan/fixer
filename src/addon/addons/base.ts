@@ -4,7 +4,10 @@ import first_names_male from "@/../data/first_names_male.json";
 import first_names_female from "@/../data/first_names_female.json";
 import last_names from "@/../data/last_names.json";
 import { Gender } from "@/character/character.types";
-import { IAPI } from "@/api/api";
+import { api, IAPI } from "@/api/api";
+import { Post } from "@/network/posts/post.types";
+import { useGame } from "@/core/store/game-store";
+import { getRandomMessage } from "@/network/posts/content";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -23,6 +26,8 @@ export const coreAddon: Addon = {
 
     api.event.on("tick", () => {
       console.log("Core addon ticked!");
+
+      triggerRandomEvent();
     });
   },
   onDisabled: () => {
@@ -47,4 +52,33 @@ function register_achievements(api: IAPI) {
     description: "Recruit 10 people to your team.",
     target: 10,
   });
+}
+
+function triggerRandomEvent() {
+  if (api.generator.rng() < 0.2) return; // prevents triggering an event every trick
+
+  const chance = api.generator.rng();
+
+  if (chance < 0.1) {
+    let randomPost = getRandomMessage();
+
+    api.event.trigger({
+      type: "networkPost",
+      post: {
+        author_id: api.character.pickRandom().id,
+        content: randomPost.content,
+        id: `${new Date().getMilliseconds() * api.generator.rng()}`,
+        timestamp: `${api.util.formatTime(
+          useGame.getState().gameState.world.time
+        )}`,
+        type: randomPost.type,
+      } as Post,
+    });
+
+    return;
+  }
+
+  if (chance < 0.05) {
+    // gig
+  }
 }

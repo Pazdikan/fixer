@@ -1,7 +1,6 @@
 import { api } from "@/api/api";
 import { Character } from "@/character/character.types";
 import { Company, CompanyPosition, Employee } from "@/company/company.types";
-import { GameContextType, GameState } from "@/core/core.types";
 import { useGame } from "@/core/store/game-store";
 
 type CompanyType =
@@ -12,7 +11,27 @@ type CompanyType =
   | "food"
   | "law";
 
-export class CompanyGenerator {
+interface ICompanyGenerator {
+  /**
+   * Populates the game world with characters and companies.
+   */
+  populateWorld(): void;
+
+  /**
+   * Creates a new company and adds it to the game state.
+   * @param object - The company object to create.
+   */
+  create_company(object: Company): void;
+
+  /**
+   * Generates a new company using a list of unemployed characters.
+   * @param unemployed - The list of unemployed characters to assign as employees.
+   * @returns The generated company.
+   */
+  generateCompany(unemployed: Character[]): Company;
+}
+
+export class CompanyGenerator implements ICompanyGenerator {
   rng: () => number;
 
   constructor(rng: () => number) {
@@ -20,19 +39,58 @@ export class CompanyGenerator {
   }
 
   populateWorld() {
+    // Generate families instead of random characters
+    const familyCount = 1000; // Generate 1000 families
+    const { families, members: familyMembers } = api.generator.family.generateFamilies(
+      familyCount
+    );
+
+    // Apply final IDs to all characters
     let nextCharacterId = useGame.getState().gameState.characters.length;
-    const generatedCharacters = [];
-    for (let i = 0; i < 5000; i++) {
-      const character = api.generator.character.generate_character();
-      character.id = nextCharacterId++;
-      generatedCharacters.push(character);
-    }
+    const idMapping = new Map<number, number>();
+
+    // Process family members to assign proper sequential IDs
+    familyMembers.forEach((character) => {
+      const oldId = character.id;
+      const newId = nextCharacterId++;
+      idMapping.set(oldId, newId);
+      character.id = newId;
+    });
+
+    // Update relationship IDs
+    familyMembers.forEach((character) => {
+      if (character.spouse_id !== undefined) {
+        character.spouse_id = idMapping.get(character.spouse_id) ?? character.spouse_id;
+      }
+
+      if (character.parent_ids && character.parent_ids.length) {
+        character.parent_ids = character.parent_ids.map((id) => idMapping.get(id) ?? id);
+      }
+
+      if (character.child_ids && character.child_ids.length) {
+        character.child_ids = character.child_ids.map((id) => idMapping.get(id) ?? id);
+      }
+
+      if (character.sibling_ids && character.sibling_ids.length) {
+        character.sibling_ids = character.sibling_ids.map((id) => idMapping.get(id) ?? id);
+      }
+    });
+
+    // Update family references
+    families.forEach((family) => {
+      family.parent_ids = family.parent_ids.map((id) => idMapping.get(id) ?? id);
+      family.child_ids = family.child_ids.map((id) => idMapping.get(id) ?? id);
+    });
 
     // 1. Update state with all characters first
     useGame.getState().updateGameState({
       characters: [
         ...useGame.getState().gameState.characters,
-        ...generatedCharacters,
+        ...familyMembers,
+      ],
+      families: [
+        ...useGame.getState().gameState.families || [],
+        ...families,
       ],
     });
 
@@ -42,7 +100,9 @@ export class CompanyGenerator {
     // 3. Generate companies using the updated character list
     const generatedCompanies = [];
     let nextCompanyId = useGame.getState().gameState.companies.length;
-    for (let i = 0; i < 500; i++) {
+    const companyCount = 500; // Generate 500 companies
+
+    for (let i = 0; i < companyCount; i++) {
       const company = this.generateCompany(unemployed);
       company.id = nextCompanyId;
       generatedCompanies.push(company);
@@ -100,6 +160,7 @@ export class CompanyGenerator {
         employees.push({
           characterID: employee.id,
           position: CompanyPosition.EMPLOYEE,
+          tags: [],
         });
         unemployed.splice(numb, 1);
       }
@@ -113,9 +174,11 @@ export class CompanyGenerator {
         {
           characterID: owner.id,
           position: CompanyPosition.OWNER,
+          tags: [],
         },
         ...employees,
       ],
+      tags: [],
     };
   }
 

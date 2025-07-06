@@ -1,30 +1,26 @@
 # ToDo
 
 ## PRIORITY
-- rapidly toggling between debug options doesn't apply changes / overwrites previous actions.
-possible fix - go back to doing things like updateGameState((prev) => {...prev, debug: {...}}) (possibly wont change shit just an idea)
+
+- map refreshes every tick
+- chat refreshes every tick
+- character age is not stored as in-game timestamp, just the age number
+- implement is-known tag to families
 
 ## General
 
-- Import network from preact version
-- Remake keybinds into api with console (shadcn component) commands and keybinds (?)
-- Remake company generator into api (create company, etc.)
-- Implement dexie.js as an alternative to local storage (?)
+- Remake keybinds into api with console (shadcn component) commands and keybinds
+- Remake company generator into api (create company, etc.)3w
 
 ## Map
 
 - Add companies to map
-- Building type based on size (house/for company HQ)
-- Building type (police, medical, etc) based on real world data (amenity, already implemented in processing, just need to highlight on map)
+- Add family households to map
+- Building type based on size (house/for company HQ) if possible, if not base on rng
 
 ## Characters
 
-### Families
-
-- Implement an algorithm to generate families, same household and shit yk
 
 ### Teams
 
 - Add basic teams system / recruit people
-
-## KNOWN ISSUES TO FIX
