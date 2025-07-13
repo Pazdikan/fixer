@@ -249,7 +249,6 @@ export function DatabasePage() {
               c.employees.some((e) => e.characterID === character.id)
             );
 
-            // Get family information
             const spouse =
               character.spouse_id !== undefined
                 ? api.character.getCharacterById(character.spouse_id)
@@ -269,9 +268,9 @@ export function DatabasePage() {
                       {`${character.first_name} ${character.last_name}${
                         character.id == gameState.player_id ? " (you)" : ""
                       }`}
-                      {character.age && (
+                      {character.bornAt && (
                         <span className="text-sm font-normal ml-2 text-muted-foreground">
-                          {character.age} years old
+                          {Math.floor(((gameState.world.time || 0) - character.bornAt) / (365 * 24 * 60 * 60 * 1000))} years old
                         </span>
                       )}
                     </CardTitle>
@@ -423,7 +422,7 @@ export function DatabasePage() {
                           >
                             <CharacterMiniInfo character={parent} />
                             <span className="text-xs text-muted-foreground">
-                              {parent.age} years old
+                              {parent?.bornAt ? Math.floor(((gameState.world.time || 0) - parent.bornAt) / (365 * 24 * 60 * 60 * 1000)) : 0} years old
                             </span>
                           </div>
                         ))}
@@ -442,7 +441,7 @@ export function DatabasePage() {
                           >
                             <CharacterMiniInfo character={child} />
                             <span className="text-xs text-muted-foreground">
-                              {child.age} years old
+                              {child?.bornAt ? Math.floor(((gameState.world.time || 0) - child.bornAt) / (365 * 24 * 60 * 60 * 1000)) : 0} years old
                             </span>
                           </div>
                         ))}
