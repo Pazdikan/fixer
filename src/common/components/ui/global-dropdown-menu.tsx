@@ -8,6 +8,7 @@ import {
 } from "@/common/components/ui/dropdown-menu";
 import { Button } from "@/common/components/ui/button";
 import React from "react";
+import { EllipsisVertical } from "lucide-react";
 
 export type MenuOption = {
   id: string;
@@ -32,7 +33,7 @@ export const GlobalDropdownMenu: React.FC<GlobalDropdownMenuProps> = ({
   label = "Actions",
   trigger = (
     <Button variant="ghost" size="icon">
-      <span>⋮</span>
+      <EllipsisVertical size={24} />
     </Button>
   ),
 }) => {

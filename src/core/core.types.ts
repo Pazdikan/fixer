@@ -26,6 +26,7 @@ export interface GameState {
     };
   };
   world: World;
+  chats: Record<string, Message[]>;
 }
 
 export interface DebugState {
@@ -51,7 +52,16 @@ export const initialState: GameState = {
   world: {
     time: Date.now(),
   },
+  chats: {},
 };
+
+export interface Message {
+  id: number;
+  characterId: number;
+  content: string;
+  timestamp: number;
+  isPlayer: boolean;
+}
 
 export interface GameContextType {
   gameState: GameState;

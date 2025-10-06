@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { random } from "lodash";
 import { Input } from "@/common/components/ui/input";
 import { Button } from "@/common/components/ui/button";
 import { ScrollArea } from "@/common/components/ui/scroll-area";
@@ -9,13 +10,7 @@ import { Send, Search } from "lucide-react";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
 
-interface Message {
-  id: number;
-  characterId: number;
-  content: string;
-  timestamp: number;
-  isPlayer: boolean;
-}
+import { Message } from "@/core/core.types";
 
 export function Chat() {
   const { gameState } = useGame();
@@ -25,6 +20,7 @@ export function Chat() {
     )
   );
   const [filteredCharacters, setFilteredCharacters] = useState(characters);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     setCharacters(
@@ -40,23 +36,7 @@ export function Chat() {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Initial conversations with each character
-  const initialConversations: Record<string, Message[]> = {};
-
-  characters.forEach((character) => {
-    initialConversations[character.id] = [
-      {
-        id: Date.now() + Math.random(),
-        characterId: character.id,
-        content: "Hi",
-        timestamp: useGame.getState().gameState.world?.time ?? 0,
-        isPlayer: false,
-      },
-    ];
-  });
-
   const [selectedCharacter, setSelectedCharacter] = useState(characters[0]);
-  const [conversations, setConversations] = useState(initialConversations);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -78,31 +58,30 @@ export function Chat() {
       const scrollContainer = scrollAreaRef.current;
       scrollContainer.scrollTop = scrollContainer.scrollHeight;
     }
-  }, [conversations, selectedCharacter]);
+  }, [gameState.chats, selectedCharacter]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() === "") return;
-
-    // Add player message
     const playerMsg: Message = {
-      id: Date.now(),
-      characterId: 0,
+      id: useGame.getState().gameState.world.time!,
+      characterId: selectedCharacter.id,
       content: newMessage,
-      timestamp: Date.now(),
+      timestamp: useGame.getState().gameState.world.time!,
       isPlayer: true,
     };
-
-    // Update the conversation with the selected character
-    setConversations((prev) => ({
-      ...prev,
-      [selectedCharacter.id]: [
-        ...(prev[selectedCharacter.id] || []),
-        playerMsg,
-      ],
-    }));
-
+    api.character.addChatMessage(selectedCharacter.id, playerMsg);
     setNewMessage("");
   };
+
+  // Typing animation when player sends a message
+  useEffect(() => {
+    if (!isTyping) return;
+    const typingDelay = random(2000, 5000);
+    const timeout = setTimeout(() => {
+      setIsTyping(false);
+    }, typingDelay);
+    return () => clearTimeout(timeout);
+  }, [isTyping]);
 
   console.log("Characters", characters);
   console.log("Filtered Characters", filteredCharacters);
@@ -183,7 +162,8 @@ export function Chat() {
 
           <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
             <div className="space-y-6">
-              {conversations[selectedCharacter.id]?.map((message) => (
+              {/* Chat messages */}
+              {gameState.chats[selectedCharacter.id]?.map((message) => (
                 <div
                   key={message.id}
                   className={`flex gap-4 ${
@@ -204,7 +184,7 @@ export function Chat() {
                   >
                     <div
                       className={`px-4 py-2 rounded-lg ${
-                        message.isPlayer ? "bg-primary" : "bg-muted"
+                        message.isPlayer ? "bg-popover" : "bg-muted"
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
@@ -220,6 +200,28 @@ export function Chat() {
                   )}
                 </div>
               ))}
+              {/* Typing animation for character (left side only) */}
+              {isTyping && (
+                <div className="flex gap-4 justify-start">
+                  <Avatar>
+                    <AvatarFallback>
+                      {api.character.getInitial(selectedCharacter)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col max-w-[70%] items-start">
+                    <div className="px-4 py-2 rounded-lg bg-muted flex items-center">
+                      <span className="animate-pulse flex gap-1">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full inline-block"></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full inline-block"></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full inline-block"></span>
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 px-1">
+                      Typing...
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
 

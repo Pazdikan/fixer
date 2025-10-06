@@ -2,6 +2,7 @@ import { Character, Gender } from "@/character/character.types";
 import { Company } from "@/company/company.types";
 import { useGame } from "@/core/store/game-store";
 import { api } from "./api";
+import { Message } from "@/core/core.types";
 
 export interface ICharacterAPI {
   first_names_male: string[];
@@ -156,5 +157,30 @@ export class CharacterAPI implements ICharacterAPI {
     const randomIndex = Math.floor(RNG * characters.length);
 
     return characters[randomIndex];
+  }
+
+  addChatMessage(characterId: number, message: Message): void {
+    const { gameState, updateGameState } = useGame.getState();
+    const chats = { ...gameState.chats };
+    const isFirstMessage =
+      !chats[characterId] || chats[characterId].length === 0;
+    if (!chats[characterId]) chats[characterId] = [];
+    chats[characterId] = [...chats[characterId], message];
+    updateGameState({ chats });
+
+    // Trigger chat/messageSent event
+    api.event.trigger({
+      type: "chat/messageSent",
+      message,
+      characterId,
+    });
+
+    // Trigger chat/conversationStarted if first message
+    if (isFirstMessage) {
+      api.event.trigger({
+        type: "chat/conversationStarted",
+        characterId,
+      });
+    }
   }
 }

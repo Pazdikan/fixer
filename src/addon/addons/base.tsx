@@ -8,6 +8,9 @@ import { api, IAPI } from "@/api/api";
 import { Post } from "@/network/posts/post.types";
 import { useGame } from "@/core/store/game-store";
 import { getRandomMessage } from "@/network/posts/content";
+import { toast } from "@/hooks/use-toast";
+import { ToastAction, ToastActionElement } from "@/common/components/ui/toast";
+import React from "react";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -28,6 +31,35 @@ export const coreAddon: Addon = {
       console.log("Core addon ticked!");
 
       triggerRandomEvent();
+    });
+
+    // Listen for chat messages globally and respond
+    api.event.on("chat/messageSent", (event: any) => {
+      if (!event.message.isPlayer) return;
+      // Respond after a short delay
+      setTimeout(() => {
+        const responseMsg = {
+          id: useGame.getState().gameState.world.time! + 1,
+          characterId: event.characterId,
+          content: "Hello, I received your message!",
+          timestamp: useGame.getState().gameState.world.time!,
+          isPlayer: false,
+        };
+        api.character.addChatMessage(event.characterId, responseMsg);
+      }, Math.floor(Math.random() * 3000) + 2000);
+    });
+
+    // Message received toast
+    api.event.on("chat/messageSent", (event) => {
+      if (event.message.isPlayer) return;
+
+      toast({
+        title: `Message from ${api.character.getFullName(
+          api.character.getCharacterById(event.characterId)!
+        )}`,
+        description: event.message.content,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     });
   },
   onDisabled: () => {

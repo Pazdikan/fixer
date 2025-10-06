@@ -2,8 +2,16 @@ import { HireEvent } from "./events/hire";
 import { NetworkPostEvent } from "./events/network-post";
 import { NewGameEvent } from "./events/new-game";
 import { TickEvent } from "./events/tick";
+import { ChatMessageSentEvent } from "./events/chat-message-sent";
+import { ChatConversationStartedEvent } from "./events/chat-conversation-started";
 
-type GameEvent = TickEvent | NewGameEvent | HireEvent | NetworkPostEvent;
+type GameEvent =
+  | TickEvent
+  | NewGameEvent
+  | HireEvent
+  | NetworkPostEvent
+  | ChatMessageSentEvent
+  | ChatConversationStartedEvent;
 
 interface IEventManager {
   /**
@@ -29,6 +37,22 @@ export class EventManager implements IEventManager {
       (event: Extract<GameEvent, { type: K }>) => void
     >;
   } = {};
+
+  /**
+   * Removes a callback for a specific event type.
+   * @param eventType - The type of event to stop listening for.
+   * @param callback - The function to remove.
+   */
+  off<K extends GameEvent["type"]>(
+    eventType: K,
+    callback: (event: Extract<GameEvent, { type: K }>) => void
+  ) {
+    const arr = this.listeners[eventType];
+    if (!arr) return;
+    this.listeners[eventType] = arr.filter(
+      (cb) => cb !== callback
+    ) as typeof arr;
+  }
 
   on<K extends GameEvent["type"]>(
     eventType: K,

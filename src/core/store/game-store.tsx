@@ -1,4 +1,4 @@
-import { GameState, initialState } from "@/core/core.types";
+import { GameState, initialState, Message } from "@/core/core.types";
 import { create } from "zustand";
 import seedrandom from "seedrandom";
 import { Generator } from "@/core/generation/generator";
