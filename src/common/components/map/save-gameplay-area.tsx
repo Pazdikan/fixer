@@ -12,8 +12,8 @@ export function SaveGameplayAreaButton({
 }) {
   const map = useMap();
   const { toast } = useToast();
-  const gameState = useGame((state) => state.gameState);
-  const updateGameState = useGame().updateGameState;
+  // Don't subscribe to whole gameState (world.time updates every tick).
+  const updateGameState = useGame((s) => s.updateGameState);
   const [isSaved, setIsSaved] = useState(false);
 
   if (isSaved) {
@@ -62,9 +62,13 @@ export function SaveGameplayAreaButton({
 
           const bounds = map.getBounds();
 
+          const currentWorld = useGame.getState().gameState.world ?? {
+            buildings: [],
+          };
+
           updateGameState({
             world: {
-              ...gameState.world,
+              ...currentWorld,
               bounding_box: [
                 bounds.getSouth(),
                 bounds.getWest(),
