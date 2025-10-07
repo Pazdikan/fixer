@@ -1,15 +1,13 @@
 import { Application } from "@/network/network-application";
 import { MessageSquareText } from "lucide-react";
+import { useGame } from "@/core/store/game-store";
 
 const applications = [
   { icon: MessageSquareText, name: "Posts", redirect: "network-posts" },
 ];
 
-export function NetworkPage({
-  setCurrentPage,
-}: {
-  setCurrentPage: (page: string) => void;
-}) {
+export function NetworkPage() {
+  const game = useGame();
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Network Applications</h1>
@@ -19,7 +17,7 @@ export function NetworkPage({
             key={index}
             icon={app.icon}
             name={app.name}
-            onClick={() => setCurrentPage && setCurrentPage(app.redirect)}
+            onClick={() => game.setCurrentPage && game.setCurrentPage(app.redirect)}
           />
         ))}
       </div>

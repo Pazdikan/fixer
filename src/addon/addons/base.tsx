@@ -9,8 +9,7 @@ import { Post } from "@/network/posts/post.types";
 import { useGame } from "@/core/store/game-store";
 import { getRandomMessage } from "@/network/posts/content";
 import { toast } from "@/hooks/use-toast";
-import { ToastAction, ToastActionElement } from "@/common/components/ui/toast";
-import React from "react";
+import { ToastAction } from "@/common/components/ui/toast";
 
 export const coreAddon: Addon = {
   id: "core",
@@ -38,11 +37,12 @@ export const coreAddon: Addon = {
       if (!event.message.isPlayer) return;
       // Respond after a short delay
       setTimeout(() => {
+        const now = useGame.getState().gameState.world.time || Date.now();
         const responseMsg = {
-          id: useGame.getState().gameState.world.time! + 1,
+          id: now + 1,
           characterId: event.characterId,
           content: "Hello, I received your message!",
-          timestamp: useGame.getState().gameState.world.time!,
+          timestamp: now,
           isPlayer: false,
         };
         api.character.addChatMessage(event.characterId, responseMsg);
@@ -58,7 +58,17 @@ export const coreAddon: Addon = {
           api.character.getCharacterById(event.characterId)!
         )}`,
         description: event.message.content,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
+        action: (
+          <ToastAction
+            altText="Check out"
+            onClick={() => {
+              const s = useGame.getState().setCurrentPage;
+              if (s) s("chat");
+            }}
+          >
+            Check out
+          </ToastAction>
+        ),
       });
     });
   },
@@ -101,7 +111,7 @@ function triggerRandomEvent() {
         content: randomPost.content,
         id: `${new Date().getMilliseconds() * api.generator.rng()}`,
         timestamp: `${api.util.formatTime(
-          useGame.getState().gameState.world.time
+          useGame.getState().gameState.world.time || Date.now()
         )}`,
         type: randomPost.type,
       } as Post,

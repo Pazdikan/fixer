@@ -31,7 +31,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/common/components/ui/sidebar";
-import { useState } from "react";
 import { DatabasePage } from "@/common/pages/database-page";
 // import { NetworkPage } from "@/network/network-page";
 // import { SocialMediaNetworkPage } from "@/network/posts/posts-page";
@@ -39,7 +38,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import DebugModal from "./debug-modal";
 import { useGame } from "@/core/store/game-store";
 import { api } from "@/api/api";
-import { GameMap, Map } from "../map/game-map";
+import { GameMap } from "../map/game-map";
 import { AchievementsPage } from "@/common/pages/achievements-page";
 import ChangelogComponent from "./changelog";
 import { GameClock } from "@/core/clock";
@@ -86,8 +85,10 @@ const data = {
 };
 
 export function GameRoot() {
-  const [currentPage, setCurrentPage] = useState("home");
   const game = useGame();
+  // read/write page from global store so many components can navigate
+  const currentPage = game.currentPage || "home";
+  const setCurrentPage = game.setCurrentPage!;
 
   const [openCategories, setOpenCategories] = React.useState<string[]>([]);
 
@@ -180,10 +181,7 @@ export function GameRoot() {
                       <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
                         {item.items.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              onClick={() => setCurrentPage(subItem.page)}
-                            >
+                            <SidebarMenuSubButton asChild onClick={() => setCurrentPage(subItem.page)}>
                               <a href={subItem.url}>{subItem.title}</a>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>

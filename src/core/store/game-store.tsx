@@ -10,6 +10,9 @@ interface GameStore {
   gameState: GameState;
   saveGameState: () => void;
   updateGameState: (updates: Partial<GameState>) => void;
+  // currentPage is a simple global UI state used to switch main content pages
+  currentPage?: string;
+  setCurrentPage?: (page: string) => void;
 }
 
 class GameStateManager {
@@ -93,6 +96,11 @@ export const useGame = create<GameStore>((set, get) => {
         throttledSave();
         return { gameState: nextState };
       });
+    },
+    // simple page navigation helpers available globally
+    currentPage: "home",
+    setCurrentPage: (page: string) => {
+      set(() => ({ currentPage: page }));
     },
     saveSeed: async (seed: string) => {
       const rng = seedrandom(seed, { state: true });
