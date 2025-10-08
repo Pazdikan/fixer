@@ -44,16 +44,13 @@ if (container) {
   // Always enable core addon(s)
   addonManager.enable(coreAddon.id);
 
-  // Enable debug addon automatically for beta builds (or localhost)
   try {
     const href = window?.location?.href ?? "";
-    const isBeta = href.includes("/beta") || href.includes("localhost");
-    if (isBeta) {
+    const isDebug = href.includes("localhost");
+    if (isDebug) {
       addonManager.enable(debugAddon.id);
     }
-  } catch (e) {
-    // ignore (server-side rendering or unavailable window)
-  }
+  } catch (e) {}
 
   root.render(<RootContent />);
 }
