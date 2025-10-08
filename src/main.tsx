@@ -9,7 +9,7 @@ import { addonManager } from "./addon/addon";
 import { coreAddon } from "./addon/addons/base";
 import { Toaster } from "@/common/components/ui/toaster";
 import { NewGamePage } from "./common/pages/new-game-page";
-import { testAddon } from "./addon/addons/test";
+import { debugAddon } from "./addon/addons/debug";
 import { ThemeProvider } from "./common/components/ui/theme-provider";
 import useGlobalKeybindings from "./common/lib/mousetrap";
 
@@ -39,10 +39,21 @@ if (container) {
   }
 
   addonManager.register(coreAddon);
-  addonManager.register(testAddon);
-  addonManager.getRegisteredAddons().forEach((addon) => {
-    addonManager.enable(addon.id);
-  });
+  addonManager.register(debugAddon);
+
+  // Always enable core addon(s)
+  addonManager.enable(coreAddon.id);
+
+  // Enable debug addon automatically for beta builds (or localhost)
+  try {
+    const href = window?.location?.href ?? "";
+    const isBeta = href.includes("/beta") || href.includes("localhost");
+    if (isBeta) {
+      addonManager.enable(debugAddon.id);
+    }
+  } catch (e) {
+    // ignore (server-side rendering or unavailable window)
+  }
 
   root.render(<RootContent />);
 }

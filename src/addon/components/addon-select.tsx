@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Addon, addonManager, Flags } from "@/addon/addon";
 import { Card } from "@/common/components/ui/card";
 import { Switch } from "@/common/components/ui/switch";
@@ -20,9 +20,18 @@ export function AddonSelect() {
   const { t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(true);
-  const [enabledAddons, setEnabledAddons] = useState<Set<string>>(
-    new Set(addonManager.getEnabledAddons().map((addon) => addon.id))
-  );
+  const [enabledAddons, setEnabledAddons] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    // initialize and subscribe to changes so UI always reflects manager state
+    const update = () =>
+      setEnabledAddons(
+        new Set(addonManager.getEnabledAddons().map((a) => a.id))
+      );
+    update();
+    const unsub = addonManager.subscribe(update);
+    return () => unsub();
+  }, []);
 
   const handleToggleAddon = (addon: Addon) => {
     if (addon.flags.includes(Flags.CORE)) return;
@@ -35,7 +44,7 @@ export function AddonSelect() {
       newEnabledAddons.add(addon.id);
       addonManager.enable(addon.id);
     }
-    setEnabledAddons(newEnabledAddons);
+    // don't set local copy directly; manager subscription will update state
   };
 
   return (

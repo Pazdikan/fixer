@@ -5,6 +5,7 @@ import first_names_female from "@/../data/first_names_female.json";
 import last_names from "@/../data/last_names.json";
 import { Gender } from "@/character/character.types";
 import { api, IAPI } from "@/api/api";
+import { MessageKind } from "@/core/core.types";
 import { Post } from "@/network/posts/post.types";
 import { useGame } from "@/core/store/game-store";
 import { getRandomMessage } from "@/network/posts/content";
@@ -47,6 +48,58 @@ export const coreAddon: Addon = {
         };
         api.character.addChatMessage(event.characterId, responseMsg);
       }, Math.floor(Math.random() * 3000) + 2000);
+    });
+
+    // Listen specifically for recruit requests and reply accept/reject
+    api.event.on("chat/messageSent", (event: any) => {
+      // only handle player-sent recruit requests
+      if (!event.message.isPlayer) return;
+      if (event.message.kind !== "recruit_request") return;
+
+      const char = api.character.getCharacterById(event.characterId);
+      if (!char) return;
+
+      // decide acceptance
+      const accept = api.character.willAcceptRecruitment(char);
+
+      setTimeout(() => {
+        const now = useGame.getState().gameState.world.time || Date.now();
+
+        if (accept) {
+          const updated = api.util.addTag(char, "chat");
+          useGame.getState().updateGameState({
+            characters: useGame
+              .getState()
+              .gameState.characters.map((c) =>
+                c.id === updated.id ? updated : c
+              ),
+          });
+
+          api.achievement.incrementProgress("recruit_people", 1);
+
+          const responseMsg = {
+            id: now + 1,
+            characterId: event.characterId,
+            content: "I'd be happy to join.",
+            timestamp: now,
+            isPlayer: false,
+            kind: MessageKind.RECRUIT_ACCEPT,
+          };
+
+          api.character.addChatMessage(event.characterId, responseMsg);
+        } else {
+          const responseMsg = {
+            id: now + 1,
+            characterId: event.characterId,
+            content: "Who tf are you?",
+            timestamp: now,
+            isPlayer: false,
+            kind: MessageKind.RECRUIT_REJECT,
+          };
+
+          api.character.addChatMessage(event.characterId, responseMsg);
+        }
+      }, Math.floor(Math.random() * 3000) + 1000);
     });
 
     // Message received toast

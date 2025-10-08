@@ -61,6 +61,17 @@ export interface Message {
   content: string;
   timestamp: number;
   isPlayer: boolean;
+  /**
+   * Optional message kind for structured interactions (eg. recruit requests/replies)
+   */
+  kind?: MessageKind;
+}
+
+export enum MessageKind {
+  TEXT = "text",
+  RECRUIT_REQUEST = "recruit_request",
+  RECRUIT_ACCEPT = "recruit_accept",
+  RECRUIT_REJECT = "recruit_reject",
 }
 
 export interface GameContextType {

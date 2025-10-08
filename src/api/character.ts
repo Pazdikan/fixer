@@ -128,13 +128,20 @@ export class CharacterAPI implements ICharacterAPI {
     return `${character.first_name} ${character.last_name}`;
   }
 
-  willAcceptReqruitment(character: Character) {
+  willAcceptRecruitment(_character: Character) {
     const RNG = api.generator.rng();
-
-    // in the future, this will be based by various factors lol
+    /**
+     * Placeholder recruitment acceptance logic.
+     * Future: use character traits, relationships, job offer terms, etc.
+     */
     return RNG < 0.5;
   }
 
+  /**
+   * Checks whether the provided character is the player character.
+   * @param character - Character to check
+   * @returns true when the character is the currently selected player
+   */
   isPlayer(character: Character) {
     const game = useGame.getState();
 

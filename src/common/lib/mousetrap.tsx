@@ -7,17 +7,13 @@ interface KeybindType {
 }
 
 /**
- * Custom hook for registering global keyboard shortcuts using Mousetrap
+ * Custom hook for registering global keyboard shortcuts using Mousetrap.
  */
 const useGlobalKeybindings = () => {
-  // TODO: remake registering keybinds into api
-
   const keybinds: KeybindType[] = [
     {
       key: "2+1+3+7",
       execute: () => {
-        // TODO: remake custom commands/functions into api
-        // this will be used for console commands as well as keybinds
         console.log("debug toggle");
       },
     },

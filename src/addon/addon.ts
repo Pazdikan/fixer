@@ -113,11 +113,18 @@ interface IAddonManager {
    * @throws {Error} If URL is invalid or loading fails
    */
   registerFromURL(url: string): void;
+
+  /**
+   * Subscribe to addon state changes. The callback is called whenever an addon is enabled/disabled.
+   * Returns an unsubscribe function.
+   */
+  subscribe(cb: () => void): () => void;
 }
 
 export class AddonManager implements IAddonManager {
   private addons: Map<string, Addon> = new Map();
   private enabledAddons: Set<string> = new Set();
+  private listeners: Set<() => void> = new Set();
 
   register(addon: Addon) {
     if (!ID_REGEX.test(addon.id)) {
@@ -138,6 +145,7 @@ export class AddonManager implements IAddonManager {
 
     this.enabledAddons.add(addonID);
     mod.onEnabled?.(api);
+    this.listeners.forEach((cb) => cb());
   }
 
   disable(addonID: string) {
@@ -149,6 +157,7 @@ export class AddonManager implements IAddonManager {
 
     this.enabledAddons.delete(addonID);
     mod.onDisabled?.(api);
+    this.listeners.forEach((cb) => cb());
   }
 
   isEnabled(addonID: string): boolean {
@@ -170,6 +179,13 @@ export class AddonManager implements IAddonManager {
 
     // the idea is to fetch the built javascript for the addon and enable it.
     // The built js would be something like the base addon - the implemented Addon.
+  }
+
+  subscribe(cb: () => void) {
+    this.listeners.add(cb);
+    return () => {
+      this.listeners.delete(cb);
+    };
   }
 }
 

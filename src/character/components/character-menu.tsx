@@ -10,6 +10,7 @@ import {
 import { EllipsisVertical } from "lucide-react";
 import { Character } from "../character.types";
 import { api } from "@/api/api";
+import { MessageKind } from "@/core/core.types";
 import { toast } from "@/hooks/use-toast";
 import { useGame } from "@/core/store/game-store";
 
@@ -30,25 +31,24 @@ export const CharacterMenu = ({ character }: { character: Character }) => {
       condition: (char) => !api.character.isPlayer(char),
       disabled: (char) => false,
       onClick: (char) => {
-        if (api.character.willAcceptReqruitment(char)) {
-          toast({
-            title: "Character has accepted your offer!",
-            description: "Character has been recruited to your team.",
-          });
-          api.achievement.incrementProgress("recruit_people", 1);
+        // Send a recruit request via chat; addons/NPC logic will reply and perform accept/reject
+        toast({
+          title: "Offer sent",
+          description:
+            "You've sent a recruitment request. Waiting for their reply...",
+        });
 
-          const updatedCharacter = api.util.addTag(char, "chat")
-          useGame.getState().updateGameState({
-            characters: useGame.getState().gameState.characters.map((c) =>
-              c.id === updatedCharacter.id ? updatedCharacter : c
-            ),
-          })
-        } else {
-          toast({
-            title: "Character has rejected your offer!",
-            description: "Character has not been recruited to your team.",
-          });
-        }
+        const now = Date.now();
+        const initialMessage = {
+          id: now,
+          characterId: char.id,
+          content: "Hi — would you like to join my team?",
+          timestamp: now,
+          isPlayer: true,
+          kind: MessageKind.RECRUIT_REQUEST,
+        };
+
+        api.character.addChatMessage(char.id, initialMessage);
       },
       separatorBefore: true,
     },

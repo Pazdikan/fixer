@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/common/components/ui/button";
 import { Input } from "@/common/components/ui/input";
@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "@/common/components/ui/card";
 
-// Assuming these types are defined elsewhere in your project
 import { Gender, CharacterBackstory, Job } from "@/character/character.types";
 import { useGame } from "@/core/store/game-store";
 import { useToast } from "@/hooks/use-toast";
@@ -28,12 +27,19 @@ import {
 } from "../components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { AddonSelect } from "@/addon/components/addon-select";
+import { useAddonEnabled } from "@/hooks/use-addon-enabled";
 import { api } from "@/api/api";
 import { GameMap } from "../components/map/game-map";
 import debugBuildings from "@/common/components/map/debug-world.json";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/common/components/ui/dialog";
 export function NewGamePage() {
-  const debug = true;
+  const debugEnabled = useAddonEnabled("debug");
 
   const { t } = useTranslation();
   const game = useGame((state) => state);
@@ -48,6 +54,36 @@ export function NewGamePage() {
   const [gender, setGender] = useState<Gender | null>(null);
   const [backstory, setBackstory] = useState<CharacterBackstory | null>(null);
   const [previousJob, setPreviousJob] = useState<Job | null>(null);
+
+  const [skipDebugAutoNewGame, setSkipDebugAutoNewGame] = useState(false);
+
+  const [showDebugDialog, setShowDebugDialog] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState<number>(3);
+
+  useEffect(() => {
+    if (!debugEnabled || skipDebugAutoNewGame) return;
+
+    setSecondsLeft(3);
+    setShowDebugDialog(true);
+
+    const interval = window.setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          // last tick: stop and create
+          clearInterval(interval);
+          setShowDebugDialog(false);
+          setIsOpen(false);
+          // ensure we still respect skip flag
+          if (!skipDebugAutoNewGame) handleCreateCharacter();
+          return 0;
+        }
+
+        return s - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [debugEnabled, skipDebugAutoNewGame]);
 
   const handleSetSeed = () => {
     game.updateGameState({
@@ -68,8 +104,12 @@ export function NewGamePage() {
     setLastName(api.generator.character.generate_last_name());
     setBackstory(api.generator.character.generate_backstory());
     setPreviousJob(api.generator.character.generate_job());
+  };
 
-    if (debug) {
+  const handleCreateCharacter = async () => {
+    console.log("debug", debugEnabled);
+
+    if (debugEnabled) {
       updateGameState({
         world: {
           buildings: debugBuildings,
@@ -80,10 +120,20 @@ export function NewGamePage() {
           ],
         },
       });
+
+      handleGenerateAll();
+    } else {
+      performCharacterChecks();
     }
   };
 
-  const handleCreateCharacter = async () => {
+  useEffect(() => {
+    if (debugEnabled && gender && backstory && previousJob) {
+      performCharacterChecks();
+    }
+  }, [gender, backstory, previousJob, debugEnabled]);
+
+  const performCharacterChecks = async () => {
     if (!gender || !backstory || !previousJob) {
       toast({
         title: t("new-game.incomplete-character"),
@@ -134,6 +184,32 @@ export function NewGamePage() {
 
   return (
     <div className="container mx-auto p-4 space-y-8 max-w-4xl">
+      <Dialog open={showDebugDialog} onOpenChange={setShowDebugDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Skipping character creation</DialogTitle>
+          </DialogHeader>
+          <div>
+            {secondsLeft > 0
+              ? `New game will automatically generate in ${secondsLeft}s...`
+              : `Creating game...`}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setIsOpen(false);
+                setSkipDebugAutoNewGame(true);
+                setShowDebugDialog(false);
+              }}
+            >
+              Prevent
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <CardHeader>
           <CardTitle>{t("new-game.title")}</CardTitle>
